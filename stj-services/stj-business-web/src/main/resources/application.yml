@@ -1,0 +1,10 @@
+spring:
+  profiles:
+    active: dev
+server:
+  port: 8181
+  servlet:
+    context-path: /stj
+# 日志
+logging:
+  config: classpath:logback-${spring.profiles.active}.xml
