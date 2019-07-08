@@ -60,10 +60,19 @@ public class PasswordModeSignHandler implements SignModeHandler {
         CheckObjects.predicate(paramIsNull, b -> b, "必须在用户名、手机号、邮箱中填一个");
 
         // 2.查询
-        List<User> users = userMapper.selectList(new EntityWrapper<User>()
-                .or(!StringUtils.isEmpty(username), "USERNAME", username)
-                .or(!StringUtils.isEmpty(phone), "PHONE", phone)
-                .or(!StringUtils.isEmpty(email), "EMAIL", email));
+        EntityWrapper<User> wrapper = new EntityWrapper<>();
+        if (!StringUtils.isEmpty(username)) {
+            wrapper.eq("USERNAME", username);
+        }
+        if (!StringUtils.isEmpty(phone)) {
+            wrapper.or()
+                   .eq("PHONE", phone);
+        }
+        if (!StringUtils.isEmpty(email)) {
+            wrapper.or()
+                   .eq("EMAIL", email);
+        }
+        List<User> users = userMapper.selectList(wrapper);
 
         CheckObjects.isEmpty(users, "用户不存在");
 

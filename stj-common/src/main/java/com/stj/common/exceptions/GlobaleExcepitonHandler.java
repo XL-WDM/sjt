@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @ControllerAdvice
 @Slf4j
 public class GlobaleExcepitonHandler {
+
     @ResponseBody
     @ExceptionHandler(Exception.class)
     public R handler(Exception e) {
@@ -24,7 +25,7 @@ public class GlobaleExcepitonHandler {
         } else if (e instanceof HttpRequestMethodNotSupportedException) {
             return R.error(e.getLocalizedMessage());
         } else {
-            log.error("# 系统故障", e);
+            log.error("# 系统异常", e);
             return R.error();
         }
     }
