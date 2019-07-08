@@ -1,5 +1,6 @@
 package com.stj.business;
 
+import com.stj.config.mybatis.plus.annotation.EnableMybatisPlusOptimization;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -14,6 +15,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @ComponentScan("com.stj")
 @MapperScan("com.stj.business.mapper")
 @EnableSwagger2
+@EnableMybatisPlusOptimization
 public class AppBusiness {
     public static void main(String[] args) {
         SpringApplication.run(AppBusiness.class, args);

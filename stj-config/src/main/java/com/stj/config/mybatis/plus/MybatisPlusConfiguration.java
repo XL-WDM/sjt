@@ -20,7 +20,7 @@ public class MybatisPlusConfiguration {
     public PerformanceInterceptor performanceInterceptor() {
         PerformanceInterceptor performanceInterceptor = new PerformanceInterceptor();
         // SQL是否格式化 默认 false
-        performanceInterceptor.setFormat(true);
+        performanceInterceptor.setFormat(false);
         return performanceInterceptor;
     }
 
