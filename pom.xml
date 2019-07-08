@@ -12,6 +12,7 @@
         <module>stj-api-services</module>
         <module>stj-common</module>
         <module>stj-services</module>
+        <module>stj-config</module>
     </modules>
 
     <properties>

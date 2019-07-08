@@ -1,6 +1,7 @@
 package com.stj.common.exceptions;
 
 import com.stj.common.base.result.R;
+import com.stj.common.base.result.ResultModel;
 
 /**
  * 全局异常
@@ -8,6 +9,9 @@ import com.stj.common.base.result.R;
  * @data: 2019/7/3
  */
 public class GlobalException extends RuntimeException {
+
+    private static final long serialVersionUID = -4617529608129051364L;
+
     /**
      * 代码
      */
@@ -23,9 +27,9 @@ public class GlobalException extends RuntimeException {
         this.code = code;
     }
 
-    public GlobalException(R r) {
-        super((r = (r != null ? r : R.error())).getMessage());
-        this.code = r.getCode();
+    public GlobalException(ResultModel resultModel) {
+        super((resultModel = (resultModel != null ? resultModel : ResultModel.error())).getMessage());
+        this.code = resultModel.getCode();
     }
 
     public int getCode() {

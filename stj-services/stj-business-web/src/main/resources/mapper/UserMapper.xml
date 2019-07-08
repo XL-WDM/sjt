@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.stj.business.mapper.UserMapper">
+    <parameterMap id="userParame" type="com.stj.business.entity.User" />
+    <resultMap id="userResult" type="com.stj.business.entity.User" />
+
+    <sql id="base_all">
+        ID, USERNAME, EMAIL, PHONE, PASSWORD, FACE_URL, NICKNAME,
+        SEX, BIRTRDAY, STATUS, REGISTER_DATE, UPDATE_DATE, VERSION
+    </sql>
+
+
+</mapper>

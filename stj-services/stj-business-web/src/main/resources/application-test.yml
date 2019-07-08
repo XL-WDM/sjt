@@ -3,8 +3,8 @@ spring:
   datasource:
     driver-class-name: com.mysql.jdbc.Driver
     username: root
-    password: XiaoLong@510
-    url: jdbc:mysql://127.0.0.1:3306/stj
+    password: uAiqwVwjJ8-i
+    url: jdbc:mysql://47.99.201.124:3306/stj
 # mybatis
 mybatis-plus:
   mapper-locations: classpath:/mapper/*Mapper.xml
@@ -39,5 +39,7 @@ stj:
   wechat:
     app-id: wx73770f8f029e1b50
     appsecret: 7afde07a322e7c33bc5e0fbdd340ec28
+    # app-id: wx5383e6f83af389db
+    # appsecret: 3f5ebfc3e911afdda58ed70823819398
     open-app-id: wxc72866875cad5fe1
     open-appsecret: 8ba97e7f0ed649472718d1f4abaef62d
