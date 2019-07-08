@@ -1,7 +1,7 @@
 package com.stj.business.strategy.sign.mode.impl;
 
 import com.stj.business.api.dto.req.SignParamDTO;
-import com.stj.business.constant.DataBaseConstant;
+import com.stj.business.entity.User;
 import com.stj.business.strategy.sign.mode.SignModeHandler;
 
 /**
@@ -11,7 +11,7 @@ import com.stj.business.strategy.sign.mode.SignModeHandler;
 public class WechatModeSignHandler implements SignModeHandler {
 
     @Override
-    public boolean handler(SignParamDTO signParamDTO) {
-        return false;
+    public User check(SignParamDTO signParamDTO) {
+        return null;
     }
 }

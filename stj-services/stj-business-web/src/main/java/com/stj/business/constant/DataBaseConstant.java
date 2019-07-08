@@ -47,7 +47,7 @@ public class DataBaseConstant {
 
         public SignModeHandler getHandler() {
             if (handler == null) {
-                String beanName = StringTools.firstToLowerCase(this.handlerClazz.getName());
+                String beanName = StringTools.firstToLowerCase(this.handlerClazz.getSimpleName());
                 handler = (SignModeHandler)SpringUtils.getBean(beanName);
             }
             return handler;

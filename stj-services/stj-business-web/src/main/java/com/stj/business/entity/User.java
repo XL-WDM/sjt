@@ -2,6 +2,8 @@ package com.stj.business.entity;
 
 import com.baomidou.mybatisplus.activerecord.Model;
 import com.baomidou.mybatisplus.annotations.TableId;
+import com.baomidou.mybatisplus.annotations.TableName;
+import lombok.Data;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -10,6 +12,8 @@ import java.time.LocalDateTime;
  * @author: yilan.hu
  * @data: 2019/7/8
  */
+@Data
+@TableName("T_USER")
 public class User extends Model<User> implements Serializable {
 
     private static final long serialVersionUID = -1810440280677864245L;
