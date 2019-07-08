@@ -22,7 +22,7 @@ public interface OauthApi {
      * @param signParamDTO
      * @return
      */
-    @ApiOperation(value = "登录")
+    @ApiOperation(value = "登录", response = SignUserDTO.class)
     @PostMapping("/sign")
     ResultModel<SignUserDTO> sign(SignParamDTO signParamDTO);
 }

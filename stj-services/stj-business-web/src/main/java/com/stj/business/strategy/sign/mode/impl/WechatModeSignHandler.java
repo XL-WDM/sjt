@@ -1,15 +1,14 @@
 package com.stj.business.strategy.sign.mode.impl;
 
 import com.stj.business.api.dto.req.SignParamDTO;
+import com.stj.business.constant.DataBaseConstant;
 import com.stj.business.strategy.sign.mode.SignModeHandler;
-import org.springframework.stereotype.Component;
 
 /**
  * @author: yilan.hu
  * @data: 2019/7/8
  */
-@Component
-public class PasswordModeSignHandler implements SignModeHandler {
+public class WechatModeSignHandler implements SignModeHandler {
 
     @Override
     public boolean handler(SignParamDTO signParamDTO) {

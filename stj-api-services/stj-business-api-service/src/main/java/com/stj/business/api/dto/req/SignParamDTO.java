@@ -37,8 +37,8 @@ public class SignParamDTO {
     private String password;
 
     /**
-     * 登陆方式(1-密码登录, 2-短信验证登录, 3-邮箱登陆, 4-微信登陆)
+     * 登陆方式(1-密码登录, 2-短信验证登录, 3-邮箱登陆, 4-微信登陆, 5-QQ登陆, 6.微博登陆)
      */
-    @ApiModelProperty("登录方式(1-密码登录, 2-短信验证登录, 3-第三方授权登陆, 4-邮箱登陆)")
+    @ApiModelProperty("登陆方式(1-密码登录, 2-短信验证登录, 3-邮箱登陆, 4-微信登陆, 5-QQ登陆, 6.微博登陆)")
     private String signMode;
 }
