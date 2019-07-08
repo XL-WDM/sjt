@@ -9,6 +9,8 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import javax.servlet.http.HttpServletResponse;
+
 /**
  * @author: yilan.hu
  * @data: 2019/7/1
@@ -24,5 +26,5 @@ public interface OauthApi {
      */
     @ApiOperation(value = "登录", response = SignUserDTO.class)
     @PostMapping("/sign")
-    ResultModel<SignUserDTO> sign(SignParamDTO signParamDTO);
+    ResultModel<SignUserDTO> sign(SignParamDTO signParamDTO, HttpServletResponse response);
 }

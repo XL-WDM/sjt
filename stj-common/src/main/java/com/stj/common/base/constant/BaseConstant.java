@@ -26,6 +26,7 @@ public class BaseConstant {
      * 基本字符
      */
     public static class Character {
+        public final static String SLASH = "/";
         public final static String UNDERLINE = "_";
         public final static String BAR = "-";
         public final static String COMMA = ",";
@@ -47,10 +48,10 @@ public class BaseConstant {
      * 时间(秒)
      */
     public static class Second {
-        public final static long SECOND = 1;
-        public final static long MINUTE = 60 * SECOND;
-        public final static long HOUR = 60 * MINUTE;
-        public final static long DAY = 24 * MINUTE;
+        public final static int SECOND = 1;
+        public final static int MINUTE = 60 * SECOND;
+        public final static int HOUR = 60 * MINUTE;
+        public final static int DAY = 24 * MINUTE;
     }
 
     /**

@@ -2,14 +2,20 @@ package com.stj.business.service.impl;
 
 import com.stj.business.api.dto.req.SignParamDTO;
 import com.stj.business.api.dto.res.SignUserDTO;
+import com.stj.business.config.WebUserContext;
 import com.stj.business.constant.DataBaseConstant;
 import com.stj.business.entity.User;
 import com.stj.business.service.IUserService;
 import com.stj.business.strategy.sign.mode.SignModeHandler;
+import com.stj.common.base.constant.BaseConstant;
 import com.stj.common.base.constant.ResultConstant;
 import com.stj.common.utils.BeanCopierUtils;
 import com.stj.common.utils.CheckObjects;
 import org.springframework.stereotype.Service;
+
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletResponse;
+import java.util.UUID;
 
 /**
  * @author: yilan.hu
@@ -19,7 +25,7 @@ import org.springframework.stereotype.Service;
 public class UserServiceImpl implements IUserService {
 
     @Override
-    public SignUserDTO sign(SignParamDTO signParamDTO) {
+    public SignUserDTO sign(SignParamDTO signParamDTO, HttpServletResponse response) {
         // 1.参数校验
         CheckObjects.isNull(signParamDTO, ResultConstant.PARAMETERS_CANNOT_BE_NULL);
         String signMode = signParamDTO.getSignMode();
@@ -33,7 +39,17 @@ public class UserServiceImpl implements IUserService {
         // 3.校验
         User user = handler.check(signParamDTO);
 
-        // 4.DAO -> DTO 并返回用户信息
-        return BeanCopierUtils.copyBean(user, SignUserDTO.class);
+        // 4.DAO -> DTO 并
+        SignUserDTO signUserDTO = BeanCopierUtils.copyBean(user, SignUserDTO.class);
+
+        // 5.生成 token
+        String token = UUID.randomUUID().toString().replaceAll(BaseConstant.Character.BAR, BaseConstant.Character.UNDERLINE);
+        Cookie cookie = new Cookie(WebUserContext.USER_COOKIE, token);
+        cookie.setPath(BaseConstant.Character.SLASH);
+        cookie.setMaxAge(BaseConstant.Second.DAY * 30);
+        response.addCookie(cookie);
+
+        // 6.返回用户信息
+        return signUserDTO;
     }
 }

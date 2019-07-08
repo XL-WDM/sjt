@@ -8,6 +8,8 @@ import com.stj.common.base.result.ResultModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletResponse;
+
 /**
  * @author: yilan.hu
  * @data: 2019/7/1
@@ -19,8 +21,8 @@ public class OauthApiService implements OauthApi {
     private IUserService iUserService;
 
     @Override
-    public ResultModel<SignUserDTO> sign(SignParamDTO signParamDTO) {
-        SignUserDTO sign = iUserService.sign(signParamDTO);
+    public ResultModel<SignUserDTO> sign(SignParamDTO signParamDTO, HttpServletResponse response) {
+        SignUserDTO sign = iUserService.sign(signParamDTO, response);
         return ResultModel.data(sign);
     }
 }
