@@ -23,3 +23,4 @@ create table t_user
 )
 comment '用户信息表' engine=InnoDB;
 
+INSERT INTO stj.t_user (ID, USERNAME, EMAIL, PHONE, PASSWORD, FACE_URL, NICKNAME, SEX, BIRTRDAY, STATUS, REGISTER_DATE, UPDATE_DATE, VERSION) VALUES (1, 'test', '15073820717@163.com', '15073820717', '21e4b8b96569fcbe56c6c7e3762240fd', null, null, null, null, '1', '2019-07-08 18:13:36', '2019-07-08 18:13:36', 0);
