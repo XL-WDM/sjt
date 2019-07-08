@@ -5,9 +5,23 @@
     <resultMap id="userResult" type="com.stj.business.entity.User" />
 
     <sql id="base_all">
-        ID, USERNAME, EMAIL, PHONE, PASSWORD, FACE_URL, NICKNAME,
-        SEX, BIRTRDAY, STATUS, REGISTER_DATE, UPDATE_DATE, VERSION
+        id, username, email, phone, password, face_url, nickname,
+        sex, birtrday, status, register_date, update_date, version
     </sql>
 
-
+    <select id="selectUserBySign" parameterMap="userParame" resultMap="userResult">
+        select
+        <include refid="base_all" />
+        from t_user
+        where 1 = 2
+        <if test="username != null and username != ''">
+            or username = #{username}
+        </if>
+        <if test="phone != null and phone != ''">
+            or phone = #{phone}
+        </if>
+        <if test="email != null and email != ''">
+            or email = #{email}
+        </if>
+    </select>
 </mapper>

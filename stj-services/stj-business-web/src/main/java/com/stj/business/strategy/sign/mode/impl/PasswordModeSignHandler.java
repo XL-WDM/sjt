@@ -6,6 +6,7 @@ import com.stj.business.entity.User;
 import com.stj.business.mapper.UserMapper;
 import com.stj.business.strategy.sign.mode.SignModeHandler;
 import com.stj.common.exceptions.GlobalException;
+import com.stj.common.utils.BeanCopierUtils;
 import com.stj.common.utils.CheckObjects;
 import com.stj.common.utils.EncryptUtils;
 import com.stj.common.utils.MD5Utils;
@@ -38,6 +39,7 @@ public class PasswordModeSignHandler implements SignModeHandler {
 
         CheckObjects.isEmpty(password, "密码不能为空");
         try {
+            // 123456 IgMjB3u+uyPOSD3q4LxmHQ==
             password = EncryptUtils.aesDecrypt(password);
             CheckObjects.isEmpty(password, "密码密文格式不正确");
         } catch (Exception e) {
@@ -60,24 +62,13 @@ public class PasswordModeSignHandler implements SignModeHandler {
         CheckObjects.predicate(paramIsNull, b -> b, "必须在用户名、手机号、邮箱中填一个");
 
         // 2.查询
-        EntityWrapper<User> wrapper = new EntityWrapper<>();
-        if (!StringUtils.isEmpty(username)) {
-            wrapper.eq("USERNAME", username);
-        }
-        if (!StringUtils.isEmpty(phone)) {
-            wrapper.or()
-                   .eq("PHONE", phone);
-        }
-        if (!StringUtils.isEmpty(email)) {
-            wrapper.or()
-                   .eq("EMAIL", email);
-        }
-        List<User> users = userMapper.selectList(wrapper);
+        // DTO -> DAO
+        User user = BeanCopierUtils.copyBean(signParamDTO, User.class);
+        user = userMapper.selectUserBySign(user);
 
-        CheckObjects.isEmpty(users, "用户不存在");
+        CheckObjects.isNull(user, "用户不存在");
 
         // 3.密码验证
-        User user = users.get(0);
         CheckObjects.predicate(user, u -> !u.getPassword().equals(pwd.get()), "密码输入有误");
 
         return user;
