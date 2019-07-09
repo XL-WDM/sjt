@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
  * @data: 2019/7/8
  */
 @Data
-@TableName("T_USER")
+@TableName("t_user")
 public class User extends Model<User> implements Serializable {
 
     private static final long serialVersionUID = -1810440280677864245L;
@@ -65,7 +65,7 @@ public class User extends Model<User> implements Serializable {
     private String birtrday;
 
     /**
-     * 状态(0-冻结 1-可用)
+     * 状态(0-冻结, 1-可用)
      */
     private String status;
 

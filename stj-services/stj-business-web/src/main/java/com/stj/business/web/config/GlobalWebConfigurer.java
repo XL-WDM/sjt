@@ -1,12 +1,11 @@
-package com.stj.business.config;
+package com.stj.business.web.config;
 
+import com.stj.business.web.interceptor.UserSignatureInterceptors;
 import com.stj.common.base.constant.BaseConstant;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
-import org.springframework.web.servlet.config.annotation.CorsRegistration;
-import org.springframework.web.servlet.config.annotation.CorsRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import org.springframework.web.servlet.config.annotation.*;
 
 /**
  * @author: yilan.hu
@@ -17,6 +16,18 @@ public class GlobalWebConfigurer implements WebMvcConfigurer {
 
     @Autowired(required = false)
     private Cross cross;
+
+    @Autowired
+    private UserSignatureInterceptors userSignatureInterceptors;
+
+    @Override
+    public void addInterceptors(InterceptorRegistry registry) {
+        InterceptorRegistration oAuth = registry.addInterceptor(userSignatureInterceptors);
+        oAuth.addPathPatterns("/**");
+        if (cross.getApiWhiteList() != null) {
+            oAuth.excludePathPatterns(cross.getApiWhiteList());
+        }
+    }
 
     /**
      * 跨域

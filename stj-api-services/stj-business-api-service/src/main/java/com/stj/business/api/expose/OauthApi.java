@@ -1,4 +1,4 @@
-package com.stj.business.api;
+package com.stj.business.api.expose;
 
 import com.stj.business.api.dto.req.SignParamDTO;
 import com.stj.business.api.dto.res.SignUserDTO;

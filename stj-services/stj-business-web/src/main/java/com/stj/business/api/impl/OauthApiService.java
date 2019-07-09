@@ -1,6 +1,6 @@
 package com.stj.business.api.impl;
 
-import com.stj.business.api.OauthApi;
+import com.stj.business.api.expose.OauthApi;
 import com.stj.business.api.dto.req.SignParamDTO;
 import com.stj.business.api.dto.res.SignUserDTO;
 import com.stj.business.service.IUserService;

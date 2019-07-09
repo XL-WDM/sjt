@@ -1,6 +1,5 @@
 package com.stj.business.api.dto.req;
 
-import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
@@ -8,7 +7,6 @@ import lombok.Data;
  * @author: yilan.hu
  * @data: 2019/7/8
  */
-@ApiModel("登陆参数")
 @Data
 public class SignParamDTO {
 

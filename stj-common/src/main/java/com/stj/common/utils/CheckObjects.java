@@ -20,9 +20,21 @@ public class CheckObjects {
         }
     }
 
-    public static void isEmpty(String o, String message) {
+    public static void isNull(Object o, ResultModel resultModel) {
         if (StringUtils.isEmpty(o)) {
+            throw new GlobalException(resultModel);
+        }
+    }
+
+    public static void isEmpty(String s, String message) {
+        if (StringUtils.isEmpty(s)) {
             throw new GlobalException(ResultModel.error(message));
+        }
+    }
+
+    public static void isEmpty(String s, ResultModel resultModel) {
+        if (StringUtils.isEmpty(s)) {
+            throw new GlobalException(resultModel);
         }
     }
 

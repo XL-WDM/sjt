@@ -1,4 +1,4 @@
-package com.stj.business.config;
+package com.stj.business.web.config;
 
 /**
  * @author: yilan.hu

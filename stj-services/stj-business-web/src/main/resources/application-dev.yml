@@ -41,3 +41,6 @@ stj:
     appsecret: 7afde07a322e7c33bc5e0fbdd340ec28
     open-app-id: wxc72866875cad5fe1
     open-appsecret: 8ba97e7f0ed649472718d1f4abaef62d
+  # 跨域设置
+  cross:
+    api-white-list: /auth/sign
