@@ -1,3 +1,4 @@
+drop table t_user;
 create table t_user
 (
 	id int auto_increment comment '用户ID'
