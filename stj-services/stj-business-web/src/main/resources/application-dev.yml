@@ -26,7 +26,7 @@ stj:
   # swagger
   swagger:
     enable: true
-    base-package: com.stj.business.api.impl
+    base-package: com.stj.business.api.impl,com.stj.wechat.api.impl
     title: 山田尖电商平台
     description: api接口信息
     version: 1.0
@@ -34,7 +34,6 @@ stj:
     charset: utf_8
     host: 10.1.27.102
     enable-proxy: true
-    ssh-check: false
   # wechat
   wechat:
     app-id: wx73770f8f029e1b50
@@ -43,4 +42,5 @@ stj:
     open-appsecret: 8ba97e7f0ed649472718d1f4abaef62d
   # 跨域设置
   cross:
-    api-white-list: /auth/sign
+    api-white-list: /swagger-resources/**,/webjars/**,/null/swagger-resources/**,
+                    /swagger-ui.html,/error,/v2/api-docs,/auth/sign

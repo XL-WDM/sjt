@@ -21,7 +21,7 @@ public class SwaggerApiInfo {
     /**
      * API document sweep path
      */
-    private String basePackage;
+    private String[] basePackage;
 
     /**
      * Main title

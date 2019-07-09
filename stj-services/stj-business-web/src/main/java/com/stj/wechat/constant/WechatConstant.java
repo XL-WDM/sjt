@@ -1,8 +1,8 @@
-package com.stj.common.base.constant;
+package com.stj.wechat.constant;
 
 /**
  * @author: yilan.hu
- * @data: 2019/6/20
+ * @data: 2019/7/9
  */
 public class WechatConstant {
     /**
@@ -20,6 +20,10 @@ public class WechatConstant {
      */
     public final static String ACCESS_TOKEN_GET_URL = "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=APPID&secret=APPSECRET";
 
+    /**
+     * 通过code换取网页授权access_token
+     */
+    public final static String OAUTH_ACCESS_TOKEN_GET_URL = "https://api.weixin.qq.com/sns/oauth2/access_token?appid=APPID&secret=SECRET&code=CODE&grant_type=authorization_code";
 
     /**
      * 发送模板消息
@@ -27,7 +31,7 @@ public class WechatConstant {
     public final static String TEMPLDATE_MESSAGE_POST_URL = "https://api.weixin.qq.com/cgi-bin/message/template/send?access_token=ACCESS_TOKEN";
 
     /**
-     *
+     * 获取模板列表
      */
     public final static String GET_TEMPLATE_LIST_GET_URL = "https://api.weixin.qq.com/cgi-bin/template/get_all_private_template?access_token=ACCESS_TOKEN";
 }

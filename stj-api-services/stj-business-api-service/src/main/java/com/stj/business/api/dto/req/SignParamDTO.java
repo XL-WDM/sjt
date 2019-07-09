@@ -34,6 +34,9 @@ public class SignParamDTO {
     @ApiModelProperty(value = "密码", required = true)
     private String password;
 
+    @ApiModelProperty(value = "网页授权接口调用凭证")
+    private String accessToken;
+
     /**
      * 登录方式(1-密码登录, 2-短信验证登录, 3-邮箱登录, 4-微信登录, 5-QQ登录, 6.微博登录)
      */

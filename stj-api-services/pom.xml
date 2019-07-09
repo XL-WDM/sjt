@@ -13,6 +13,7 @@
     <packaging>pom</packaging>
     <modules>
         <module>stj-business-api-service</module>
+        <module>stj-wechat-api-service</module>
     </modules>
 
     <dependencies>
