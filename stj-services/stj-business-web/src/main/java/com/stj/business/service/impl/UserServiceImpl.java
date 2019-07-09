@@ -52,17 +52,21 @@ public class UserServiceImpl implements IUserService {
         UserSignLog userSignLog = new UserSignLog();
         userSignLog.setUserId(user.getId());
         userSignLog.setToken(token);
-        int second = BaseConstant.Second.DAY * 30;
-        userSignLog.setExpirationTime(LocalDateTime.now().plusSeconds(second * 1000));
+        // 5-2.默认有效期30天
+        int days = 30;
+        userSignLog.setExpirationTime(LocalDateTime.now().plusDays(days));
         System.out.println(userSignLog.getExpirationTime().toString());
         userSignLog.insert();
-        // 5-2.设置cookie
+        // 5-3.设置cookie
         Cookie cookie = new Cookie(WebUserContext.USER_COOKIE, token);
         cookie.setPath(BaseConstant.Character.SLASH);
-        cookie.setMaxAge(second);
+        cookie.setMaxAge(BaseConstant.Second.DAY * days);
         response.addCookie(cookie);
 
-        // 6.返回用户信息
+        // 6.设置缓存
+        WebUserContext.instance(user);
+
+        // 7.返回用户信息
         return signUserDTO;
     }
 }

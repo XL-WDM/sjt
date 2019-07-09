@@ -38,8 +38,12 @@ public class UserSignatureInterceptors implements HandlerInterceptor {
         }
 
         // 2.获取请求cookie中的token
-        String token = null;
         Cookie[] cookies = request.getCookies();
+        if (cookies == null) {
+            ResponseUtils.fallback(response, ResultModel.error401());
+            return false;
+        }
+        String token = null;
         for (Cookie cookie : cookies) {
             if (WebUserContext.USER_COOKIE.equals(cookie.getName())) {
                 token = cookie.getValue();
