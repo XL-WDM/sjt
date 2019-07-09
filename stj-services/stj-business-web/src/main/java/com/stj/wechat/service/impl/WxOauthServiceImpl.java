@@ -1,5 +1,6 @@
 package com.stj.wechat.service.impl;
 
+import com.alibaba.fastjson.JSONObject;
 import com.stj.common.exceptions.GlobalException;
 import com.stj.common.utils.CheckObjects;
 import com.stj.wechat.config.WxBaseInfo;
@@ -37,14 +38,14 @@ public class WxOauthServiceImpl implements IWxOauthService {
                 .replace("APPID", wxBaseInfo.getAppId())
                 .replace("SECRET", wxBaseInfo.getAppsecret())
                 .replace("CODE", code);
-        ResponseEntity<WxAccessTokenVO> entity = restTemplate.getForEntity(url, WxAccessTokenVO.class);
+        ResponseEntity<String> entity = restTemplate.getForEntity(url, String.class);
         if (HttpStatus.OK != entity.getStatusCode()) {
             log.error("# 网页授权AccessToken获取失败(调用微信服务响应失败) -> status: {}", entity.getStatusCodeValue());
             throw new GlobalException("网页授权AccessToken获取失败");
         }
 
         // 3.获取body
-        WxAccessTokenVO wxAccessTokenVO = entity.getBody();
+        WxAccessTokenVO wxAccessTokenVO = JSONObject.parseObject(entity.getBody(), WxAccessTokenVO.class);
         if (!wxAccessTokenVO.isSuccess()) {
             log.error("# 网页授权AccessToken获取失败 -> errcode: {}, errmsg: {}", wxAccessTokenVO.getErrcode(), wxAccessTokenVO.getErrmsg());
             throw new GlobalException("网页授权AccessToken获取失败");

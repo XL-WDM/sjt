@@ -12,7 +12,7 @@ public class WxResultVO {
     /**
      * 成功返回
      */
-    public static final int WX_SUCCESS = 0;
+    public static final Integer WX_SUCCESS = 0;
 
     /**
      * 返回码
@@ -22,7 +22,7 @@ public class WxResultVO {
      * 40002	请确保grant_type字段值为client_credential
      * 40164	调用接口的IP地址不在白名单中，请在接口IP白名单中进行设置。（小程序及小游戏调用不要求IP地址在白名单内。）
      */
-    private int errcode;
+    private Integer errcode;
 
     /**
      * 返回信息
@@ -35,6 +35,6 @@ public class WxResultVO {
     private String msgid;
 
     public final boolean isSuccess() {
-        return WX_SUCCESS == errcode;
+        return WX_SUCCESS.equals(errcode);
     }
 }

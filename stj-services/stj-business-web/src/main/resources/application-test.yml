@@ -33,7 +33,7 @@ stj:
   proxy:
     charset: utf_8
     host: 10.1.27.102
-    enable-proxy: true
+    enable-proxy: false
     ssh-check: false
   # wechat
   wechat:
