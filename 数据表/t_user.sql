@@ -10,7 +10,7 @@ create table t_user
 	nickname varchar(36) null comment '昵称',
 	sex varchar(1) null comment '性别',
 	birtrday date null comment '生日',
-	status varchar(2) default '1' not null comment '状态(0-冻结 1-可用)',
+	status varchar(1) default '1' not null comment '状态(0-冻结 1-可用)',
 	register_date datetime default CURRENT_TIMESTAMP not null comment '注册时间',
 	update_date datetime default CURRENT_TIMESTAMP not null comment '更新时间',
 	version int default '0' not null comment '版本号',
