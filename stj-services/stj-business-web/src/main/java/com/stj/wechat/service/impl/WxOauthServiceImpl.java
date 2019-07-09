@@ -51,6 +51,8 @@ public class WxOauthServiceImpl implements IWxOauthService {
             throw new GlobalException("微信网页授权: AccessToken获取失败");
         }
 
+        // 4.刷新url
+
         return wxAccessTokenVO;
     }
 }

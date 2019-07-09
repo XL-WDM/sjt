@@ -26,6 +26,11 @@ public class WechatConstant {
     public final static String OAUTH_ACCESS_TOKEN_GET_URL = "https://api.weixin.qq.com/sns/oauth2/access_token?appid=APPID&secret=SECRET&code=CODE&grant_type=authorization_code";
 
     /**
+     * 刷新access_token
+     */
+    public final static String REFRESH_TOKEN_GET_URL = "https://api.weixin.qq.com/sns/oauth2/refresh_token?appid=APPID&grant_type=refresh_token&refresh_token=REFRESH_TOKEN";
+
+    /**
      * 发送模板消息
      */
     public final static String TEMPLDATE_MESSAGE_POST_URL = "https://api.weixin.qq.com/cgi-bin/message/template/send?access_token=ACCESS_TOKEN";
