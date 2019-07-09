@@ -9,4 +9,10 @@ import com.stj.business.entity.Address;
  */
 public interface AddressMapper extends BaseMapper<Address> {
 
+    /**
+     * 通过收货地址id和用户id查询
+     * @param address
+     * @return
+     */
+    Address selectAddressByIdAndUserId(Address address);
 }

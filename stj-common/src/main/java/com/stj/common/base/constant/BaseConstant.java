@@ -1,5 +1,7 @@
 package com.stj.common.base.constant;
 
+import lombok.Getter;
+
 /**
  * 基础常量信息
  * @author: yilan.hu
@@ -62,5 +64,31 @@ public class BaseConstant {
         public final static String SIMPLE_DATE_TIME = "yyyyMMddHHmmss";
         public final static String DATE = "yyyy-MM-dd";
         public final static String DATE_TIME = "yyyy-MM-dd HH:mm:ss";
+    }
+
+    @Getter
+    public enum Status {
+        /**
+         * 状态(0-否 1-是)
+         */
+        NO("0", "否"),
+        YES("1", "是");
+
+        private Status(String code, String name) {
+            this.code = code;
+            this.name = name;
+        }
+
+        private String code;
+        private String name;
+
+        public static Status find(String code) {
+            for (Status status : values()) {
+                if (status.getCode().equals(code)) {
+                    return status;
+                }
+            }
+            return null;
+        }
     }
 }

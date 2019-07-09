@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.stj.business.mapper.AddressMapper">
+    <parameterMap id="addressParame" type="com.stj.business.entity.Address" />
+    <resultMap id="addressResult" type="com.stj.business.entity.Address" />
+
+    <sql id="base_all">
+        id, user_id, contacts, phone, city, address, door_number, tag, call, is_default, status
+    </sql>
+
+    <select id="selectAddressByIdAndUserId" parameterMap="addressParame" resultMap="addressResult">
+        select
+        <include refid="base_all" />
+        from t_address
+        where id = #{id}
+        and user_id = #{userId}
+        and status = '1'
+    </select>
+</mapper>

@@ -1,13 +1,23 @@
 package com.stj.business.service.impl;
 
-import com.stj.business.api.dto.AddressDTO;
+import com.baomidou.mybatisplus.mapper.EntityWrapper;
+import com.stj.business.api.dto.req.AddressParamDTO;
+import com.stj.business.api.dto.res.AddressDTO;
+import com.stj.business.constant.DataBaseConstant;
+import com.stj.business.entity.Address;
+import com.stj.business.entity.User;
 import com.stj.business.mapper.AddressMapper;
 import com.stj.business.service.IAddressService;
+import com.stj.business.web.config.WebUserContext;
+import com.stj.common.base.constant.BaseConstant;
 import com.stj.common.base.constant.ResultConstant;
+import com.stj.common.utils.BeanCopierUtils;
 import com.stj.common.utils.CheckObjects;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * @author: yilan.hu
@@ -21,11 +31,109 @@ public class AddressServiceImpl implements IAddressService {
     private AddressMapper addressMapper;
 
     @Override
-    public boolean createAddress(AddressDTO addressDTO) {
+    public List<AddressDTO> getAddressList() {
+        // 1.获取登录用户
+        User user = WebUserContext.getContext();
+
+        // 2.查询收货地址
+        List<Address> address = addressMapper.selectList(new EntityWrapper<Address>()
+                .eq("user_id", user.getId())
+                .eq("status", BaseConstant.Status.YES.getCode()));
+
+        // 3.DAO - DTO
+        List<AddressDTO> addressDTOS = BeanCopierUtils.copyList(address, AddressDTO.class);
+
+        return addressDTOS;
+    }
+
+    @Override
+    public void createAddress(AddressParamDTO addressParamDTO) {
         // 1.参数校验
-        CheckObjects.isNull(addressDTO, ResultConstant.PARAMETERS_CANNOT_BE_NULL);
+        CheckObjects.isNull(addressParamDTO, ResultConstant.PARAMETERS_CANNOT_BE_NULL);
+        User user = WebUserContext.getContext();
+        CheckObjects.isEmpty(addressParamDTO.getContacts(), "请填写联系人");
+        CheckObjects.isEmpty(addressParamDTO.getPhone(), "请填写联系电话");
+        CheckObjects.isEmpty(addressParamDTO.getCity(), "请选择城市");
+        CheckObjects.isEmpty(addressParamDTO.getAddress(), "请填写收货地址");
+        CheckObjects.isEmpty(addressParamDTO.getDoorNumber(), "请填写门牌号");
+        String tag = addressParamDTO.getTag();
+        CheckObjects.isEmpty(tag, "请选择地址标签");
+        DataBaseConstant.AddressTag tagEnum = DataBaseConstant.AddressTag.find(tag);
+        CheckObjects.isNull(tagEnum, "地址标签格式有误");
+        String call = addressParamDTO.getCall();
+        CheckObjects.isEmpty(call, "请选择称呼");
+        DataBaseConstant.Call callEnum = DataBaseConstant.Call.find(call);
+        CheckObjects.isNull(callEnum, "称呼格式有误");
+        CheckObjects.isStatus(addressParamDTO.getIsDefault(), "请选择默认地址", "默认地址格式有误");
 
+        // 2.DTO -> DAO
+        Address address = BeanCopierUtils.copyBean(addressParamDTO, Address.class);
+        address.setUserId(user.getId());
+        address.setStatus(BaseConstant.Status.YES.getCode());
 
-        return false;
+        // 3.新增地址
+        CheckObjects.predicate(address.insert(), b -> !b, "地址新增失败");
+    }
+
+    @Override
+    public AddressDTO getAddress(Long id) {
+        // 1.参数验证
+        CheckObjects.isNull(id, "请选择需要查询的地址");
+
+        // 2.获取当前登录用户
+        final User user = WebUserContext.getContext();
+
+        // 3.查询
+        Address address = new Address();
+        address.setId(id);
+        address.setUserId(user.getId());
+        address = addressMapper.selectAddressByIdAndUserId(address);
+        CheckObjects.isNull(address, "收货地址不存在");
+
+        // 4.DAO -> DTO
+        return BeanCopierUtils.copyBean(address, AddressDTO.class);
+    }
+
+    @Override
+    public void editAddress(Long id, AddressParamDTO addressParamDTO) {
+        // 1.参数验证
+        CheckObjects.isNull(id, "请选择需要更新的地址");
+
+        // 2.获取当前登录用户
+        final User user = WebUserContext.getContext();
+
+        // 3.查询
+        Address ar = new Address();
+        ar.setId(id);
+        ar.setUserId(user.getId());
+        ar = addressMapper.selectAddressByIdAndUserId(ar);
+        CheckObjects.isNull(ar, "该收货地址不存在");
+
+        // 4.更新
+        // DTO -> DAO
+        Address address = BeanCopierUtils.copyBean(addressParamDTO, Address.class);
+        address.setUserId(ar.getUserId());
+        Integer rows = addressMapper.updateById(address);
+        CheckObjects.predicate(rows, r -> r == 0, "更新收货地址失败");
+    }
+
+    @Override
+    public void removeAddress(Long id) {
+        // 1.参数验证
+        CheckObjects.isNull(id, "请选择需要删除的地址");
+
+        // 2.获取当前登录用户
+        final User user = WebUserContext.getContext();
+
+        // 3.查询
+        Address ar = new Address();
+        ar.setId(id);
+        ar.setUserId(user.getId());
+        ar = addressMapper.selectAddressByIdAndUserId(ar);
+        CheckObjects.isNull(ar, "该收货地址不存在");
+
+        // 4.修改地址为不可用
+        ar.setStatus(BaseConstant.Status.NO.getCode());
+        CheckObjects.predicate(ar.updateById(), b -> !b, "删除收货地址失败");
     }
 }

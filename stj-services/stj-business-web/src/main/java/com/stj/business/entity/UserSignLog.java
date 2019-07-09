@@ -34,7 +34,7 @@ public class UserSignLog extends Model<UserSignLog> implements Serializable {
     private String token;
 
     /**
-     * 登陆时间
+     * 登录时间
      */
     private LocalDateTime signDate;
 

@@ -31,12 +31,12 @@ public class SignParamDTO {
     /**
      * 密码
      */
-    @ApiModelProperty("密码")
+    @ApiModelProperty(value = "密码", required = true)
     private String password;
 
     /**
-     * 登陆方式(1-密码登录, 2-短信验证登录, 3-邮箱登陆, 4-微信登陆, 5-QQ登陆, 6.微博登陆)
+     * 登录方式(1-密码登录, 2-短信验证登录, 3-邮箱登录, 4-微信登录, 5-QQ登录, 6.微博登录)
      */
-    @ApiModelProperty("登陆方式(1-密码登录, 2-短信验证登录, 3-邮箱登陆, 4-微信登陆, 5-QQ登陆, 6.微博登陆)")
+    @ApiModelProperty(value = "登录方式(1-密码登录, 2-短信验证登录, 3-邮箱登录, 4-微信登录, 5-QQ登录, 6.微博登录)", required = true)
     private String signMode;
 }

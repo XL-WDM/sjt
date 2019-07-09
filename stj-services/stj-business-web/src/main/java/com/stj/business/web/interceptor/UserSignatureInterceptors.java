@@ -1,6 +1,8 @@
 package com.stj.business.web.interceptor;
 
+import com.stj.business.entity.User;
 import com.stj.business.entity.UserSignLog;
+import com.stj.business.mapper.UserMapper;
 import com.stj.business.mapper.UserSignLogMapper;
 import com.stj.business.web.config.WebUserContext;
 import com.stj.common.base.result.ResultModel;
@@ -21,6 +23,9 @@ import javax.servlet.http.HttpServletResponse;
  */
 @Component
 public class UserSignatureInterceptors implements HandlerInterceptor {
+
+    @Autowired
+    private UserMapper userMapper;
 
     @Autowired
     private UserSignLogMapper userSignLogMapper;
@@ -62,8 +67,18 @@ public class UserSignatureInterceptors implements HandlerInterceptor {
         }
 
         // 4.获取用户信息
-
+        User user = WebUserContext.getCacheUser(userSignLog.getUserId());
+        if (user == null) {
+            user = userMapper.selectById(userSignLog.getUserId());
+            WebUserContext.instance(user);
+        }
+        WebUserContext.add(user);
 
         return true;
+    }
+
+    @Override
+    public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
+        WebUserContext.remove();
     }
 }

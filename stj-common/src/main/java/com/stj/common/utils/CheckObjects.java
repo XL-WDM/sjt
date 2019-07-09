@@ -1,5 +1,6 @@
 package com.stj.common.utils;
 
+import com.stj.common.base.constant.BaseConstant;
 import com.stj.common.base.result.ResultModel;
 import com.stj.common.exceptions.GlobalException;
 import org.springframework.util.StringUtils;
@@ -48,6 +49,12 @@ public class CheckObjects {
         if (map == null || map.isEmpty()) {
             throw new GlobalException(ResultModel.error(message));
         }
+    }
+
+    public static void isStatus(String status, String emptyMessage, String enumNullMessage) {
+        isEmpty(status, emptyMessage);
+        BaseConstant.Status statusEnum = BaseConstant.Status.find(status);
+        isNull(status, enumNullMessage);
     }
 
     public static <T> void predicate(T t, Predicate<T> predicate, String message) {

@@ -36,7 +36,7 @@ public class WebUserContext {
         return userCache.get(USER_CACHE_KEY + id);
     }
 
-    public static User getUser() {
+    public static User getContext() {
         return userContext.get();
     }
 

@@ -12,7 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 public interface IUserService {
 
     /**
-     * 登陆
+     * 登录
      * @param signParamDTO
      * @return
      */

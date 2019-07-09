@@ -33,9 +33,9 @@ public class UserServiceImpl implements IUserService {
         // 1.参数校验
         CheckObjects.isNull(signParamDTO, ResultConstant.PARAMETERS_CANNOT_BE_NULL);
         String signMode = signParamDTO.getSignMode();
-        CheckObjects.isEmpty(signMode, "登录方式不能为空");
+        CheckObjects.isEmpty(signMode, "请选择登录方式");
         DataBaseConstant.SignMode signModeEnum = DataBaseConstant.SignMode.find(signMode);
-        CheckObjects.isNull(signModeEnum, "登录方式格式不正确");
+        CheckObjects.isNull(signModeEnum, "登录方式有误");
 
         // 2.获取处理器
         SignModeHandler handler = signModeEnum.getHandler();
@@ -48,14 +48,13 @@ public class UserServiceImpl implements IUserService {
 
         // 5.生成 token
         String token = UUID.randomUUID().toString().replaceAll(BaseConstant.Character.BAR, BaseConstant.Character.UNDERLINE);
+        // 默认有效期30天
+        int days = 30;
         // 5-1.存入数据库
         UserSignLog userSignLog = new UserSignLog();
         userSignLog.setUserId(user.getId());
         userSignLog.setToken(token);
-        // 5-2.默认有效期30天
-        int days = 30;
         userSignLog.setExpirationTime(LocalDateTime.now().plusDays(days));
-        System.out.println(userSignLog.getExpirationTime().toString());
         userSignLog.insert();
         // 5-3.设置cookie
         Cookie cookie = new Cookie(WebUserContext.USER_COOKIE, token);

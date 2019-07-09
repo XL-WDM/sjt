@@ -1,6 +1,9 @@
 package com.stj.business.service;
 
-import com.stj.business.api.dto.AddressDTO;
+import com.stj.business.api.dto.req.AddressParamDTO;
+import com.stj.business.api.dto.res.AddressDTO;
+
+import java.util.List;
 
 /**
  * @author: yilan.hu
@@ -9,9 +12,35 @@ import com.stj.business.api.dto.AddressDTO;
 public interface IAddressService {
 
     /**
-     * 添加收货地址
-     * @param addressDTO
+     * 获取用户所有收货地址
      * @return
      */
-    boolean createAddress(AddressDTO addressDTO);
+    List<AddressDTO> getAddressList();
+
+    /**
+     * 添加收货地址
+     * @param addressParamDTO
+     * @return
+     */
+    void createAddress(AddressParamDTO addressParamDTO);
+
+    /**
+     * 获取收货地址详情
+     * @param id
+     * @return
+     */
+    AddressDTO getAddress(Long id);
+
+    /**
+     * 编辑收货地址
+     * @param id
+     * @param addressParamDTO
+     */
+    void editAddress(Long id, AddressParamDTO addressParamDTO);
+
+    /**
+     * 删除收货地址
+     * @param id
+     */
+    void removeAddress(Long id);
 }

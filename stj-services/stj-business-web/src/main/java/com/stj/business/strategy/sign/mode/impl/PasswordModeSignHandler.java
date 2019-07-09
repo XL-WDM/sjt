@@ -37,7 +37,7 @@ public class PasswordModeSignHandler implements SignModeHandler {
         String phone = signParamDTO.getPhone();
         String email = signParamDTO.getEmail();
 
-        CheckObjects.isEmpty(password, "密码不能为空");
+        CheckObjects.isEmpty(password, "请输入您密码");
         try {
             // 123456 IgMjB3u+uyPOSD3q4LxmHQ==
             password = EncryptUtils.aesDecrypt(password);
