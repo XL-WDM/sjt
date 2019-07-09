@@ -31,7 +31,7 @@ public class WxOauthServiceImpl implements IWxOauthService {
     @Override
     public WxAccessTokenVO getOauthAccessToken(String code) {
         // 1.参数校验
-        CheckObjects.isEmpty(code, "网页授权code获取失败");
+        CheckObjects.isEmpty(code, "微信网页授权: code获取失败");
 
         // 2.请求
         String url = WechatConstant.OAUTH_ACCESS_TOKEN_GET_URL
@@ -40,15 +40,15 @@ public class WxOauthServiceImpl implements IWxOauthService {
                 .replace("CODE", code);
         ResponseEntity<String> entity = restTemplate.getForEntity(url, String.class);
         if (HttpStatus.OK != entity.getStatusCode()) {
-            log.error("# 网页授权AccessToken获取失败(调用微信服务响应失败) -> status: {}", entity.getStatusCodeValue());
-            throw new GlobalException("网页授权AccessToken获取失败");
+            log.error("# 微信网页授权: AccessToken获取失败(调用微信服务响应失败) -> status: {}", entity.getStatusCodeValue());
+            throw new GlobalException("微信网页授权: AccessToken获取失败");
         }
 
         // 3.获取body
         WxAccessTokenVO wxAccessTokenVO = JSONObject.parseObject(entity.getBody(), WxAccessTokenVO.class);
         if (!wxAccessTokenVO.isSuccess()) {
-            log.error("# 网页授权AccessToken获取失败 -> errcode: {}, errmsg: {}", wxAccessTokenVO.getErrcode(), wxAccessTokenVO.getErrmsg());
-            throw new GlobalException("网页授权AccessToken获取失败");
+            log.error("# 微信网页授权: AccessToken获取失败 -> errcode: {}, errmsg: {}", wxAccessTokenVO.getErrcode(), wxAccessTokenVO.getErrmsg());
+            throw new GlobalException("微信网页授权: AccessToken获取失败");
         }
 
         return wxAccessTokenVO;

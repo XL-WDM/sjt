@@ -53,7 +53,7 @@ public class BaseConstant {
         public final static int SECOND = 1;
         public final static int MINUTE = 60 * SECOND;
         public final static int HOUR = 60 * MINUTE;
-        public final static int DAY = 24 * MINUTE;
+        public final static int DAY = 24 * HOUR;
     }
 
     /**
