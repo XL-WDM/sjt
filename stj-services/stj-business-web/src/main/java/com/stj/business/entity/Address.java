@@ -60,7 +60,7 @@ public class Address extends Model<Address> implements Serializable {
     /**
      * 称呼(1-先生, 2-女士)
      */
-    private String call;
+    private String contactsCall;
 
     /**
      * 是否默认地址(0-不是, 1-是)

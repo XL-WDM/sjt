@@ -5,7 +5,7 @@
     <resultMap id="addressResult" type="com.stj.business.entity.Address" />
 
     <sql id="base_all">
-        id, user_id, contacts, phone, city, address, door_number, tag, call, is_default, status
+        id, user_id, contacts, phone, city, address, door_number, tag, contacts_call, is_default, status
     </sql>
 
     <select id="selectAddressByIdAndUserId" parameterMap="addressParame" resultMap="addressResult">

@@ -16,6 +16,7 @@ import com.stj.common.utils.CheckObjects;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.util.List;
 
@@ -60,7 +61,7 @@ public class AddressServiceImpl implements IAddressService {
         CheckObjects.isEmpty(tag, "请选择地址标签");
         DataBaseConstant.AddressTag tagEnum = DataBaseConstant.AddressTag.find(tag);
         CheckObjects.isNull(tagEnum, "地址标签格式有误");
-        String call = addressParamDTO.getCall();
+        String call = addressParamDTO.getContactsCall();
         CheckObjects.isEmpty(call, "请选择称呼");
         DataBaseConstant.Call callEnum = DataBaseConstant.Call.find(call);
         CheckObjects.isNull(callEnum, "称呼格式有误");
@@ -98,6 +99,22 @@ public class AddressServiceImpl implements IAddressService {
     public void editAddress(Long id, AddressParamDTO addressParamDTO) {
         // 1.参数验证
         CheckObjects.isNull(id, "请选择需要更新的地址");
+        String tag = addressParamDTO.getTag();
+        if (!StringUtils.isEmpty(tag)) {
+            CheckObjects.isEmpty(tag, "请选择地址标签");
+            DataBaseConstant.AddressTag tagEnum = DataBaseConstant.AddressTag.find(tag);
+            CheckObjects.isNull(tagEnum, "地址标签格式有误");
+        }
+        String call = addressParamDTO.getContactsCall();
+        if (!StringUtils.isEmpty(call)) {
+            CheckObjects.isEmpty(call, "请选择称呼");
+            DataBaseConstant.Call callEnum = DataBaseConstant.Call.find(call);
+            CheckObjects.isNull(callEnum, "称呼格式有误");
+        }
+        String isDefault = addressParamDTO.getIsDefault();
+        if (!StringUtils.isEmpty(isDefault)) {
+            CheckObjects.isStatus(isDefault, "请选择默认地址", "默认地址格式有误");
+        }
 
         // 2.获取当前登录用户
         final User user = WebUserContext.getContext();
@@ -112,6 +129,7 @@ public class AddressServiceImpl implements IAddressService {
         // 4.更新
         // DTO -> DAO
         Address address = BeanCopierUtils.copyBean(addressParamDTO, Address.class);
+        address.setId(id);
         address.setUserId(ar.getUserId());
         Integer rows = addressMapper.updateById(address);
         CheckObjects.predicate(rows, r -> r == 0, "更新收货地址失败");
