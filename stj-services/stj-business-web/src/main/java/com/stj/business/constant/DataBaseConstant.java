@@ -1,7 +1,7 @@
 package com.stj.business.constant;
 
 import com.stj.business.strategy.sign.mode.SignModeHandler;
-import com.stj.business.strategy.sign.mode.impl.PasswordModeSignHandler;
+import com.stj.business.strategy.sign.mode.impl.*;
 import com.stj.common.utils.SpringUtils;
 import com.stj.common.utils.StringTools;
 import lombok.Getter;
@@ -18,11 +18,11 @@ public class DataBaseConstant {
          * 登录方式登录方式(1-密码登录, 2-短信验证登录, 3-邮箱登录, 4-微信登录, 5-QQ登录, 6.微博登录)
          */
         SIGN_MODE_PASSWORD("1", "密码登录", PasswordModeSignHandler.class),
-        SIGN_MODE_SMS("2", "短信验证登录", PasswordModeSignHandler.class),
-        SIGN_MODE_EMAIL("3", "邮箱登录", PasswordModeSignHandler.class),
-        SIGN_MODE_WX("4", "微信登录", PasswordModeSignHandler.class),
-        SIGN_MODE_QQ("5", "QQ登录", PasswordModeSignHandler.class),
-        SIGN_MODE_WB("6", "微博登录", PasswordModeSignHandler.class);
+        SIGN_MODE_SMS("2", "短信验证登录", SmsModeSignHandler.class),
+        SIGN_MODE_EMAIL("3", "邮箱登录", EmailModeSignHandler.class),
+        SIGN_MODE_WX("4", "微信登录", WechatModeSignHandler.class),
+        SIGN_MODE_QQ("5", "QQ登录", QqModeSignHandler.class),
+        SIGN_MODE_WB("6", "微博登录", WbmodeSignHandler.class);
 
         SignMode(String code, String mode, Class<? extends SignModeHandler> handlerClazz) {
             this.code = code;
