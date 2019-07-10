@@ -95,6 +95,8 @@ public class WxSmallProceduresSignHandler implements SignModeHandler {
             }
         }
 
-        return new UserModel(userMapper.selectById(userOauths.getId()), BaseConstant.Second.DAY);
+        User user = userMapper.selectById(userOauths.getUserId());
+
+        return new UserModel(user, BaseConstant.Second.DAY);
     }
 }
