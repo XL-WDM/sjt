@@ -22,6 +22,7 @@ public interface OauthApi {
     /**
      * 登录
      * @param signParamDTO
+     * @param response
      * @return
      */
     @ApiOperation(value = "登录", response = SignUserDTO.class)
