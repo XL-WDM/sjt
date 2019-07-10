@@ -1,8 +1,6 @@
 package com.stj.business.strategy.sign.mode.impl;
 
-import com.alibaba.fastjson.JSONObject;
 import com.stj.business.api.dto.req.SignParamDTO;
-import com.stj.business.entity.User;
 import com.stj.business.entity.UserOauths;
 import com.stj.business.mapper.UserOauthsMapper;
 import com.stj.business.strategy.sign.mode.SignModeHandler;
@@ -36,7 +34,7 @@ public class WechatModeSignHandler implements SignModeHandler {
     private UserOauthsMapper userOauthsMapper;
 
     @Override
-    public User check(SignParamDTO signParamDTO) {
+    public UserModel check(SignParamDTO signParamDTO) {
         // 1.参数校验
         String accessToken = signParamDTO.getAccessToken();
         CheckObjects.isEmpty(accessToken, "授权接口调用凭证不能为空");
@@ -62,6 +60,7 @@ public class WechatModeSignHandler implements SignModeHandler {
         UserOauths userOauths = new UserOauths();
         userOauths.setOauthId(wxOauthAccessToken.getOpenid());
 
+        // TODO 未完成
 
         return null;
     }

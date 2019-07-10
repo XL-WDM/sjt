@@ -1,6 +1,5 @@
 package com.stj.business.strategy.sign.mode.impl;
 
-import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.stj.business.api.dto.req.SignParamDTO;
 import com.stj.business.entity.User;
 import com.stj.business.mapper.UserMapper;
@@ -15,7 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
-import java.util.List;
 import java.util.Optional;
 
 /**
@@ -30,7 +28,7 @@ public class PasswordModeSignHandler implements SignModeHandler {
     private UserMapper userMapper;
 
     @Override
-    public User check(SignParamDTO signParamDTO) {
+    public UserModel check(SignParamDTO signParamDTO) {
         // 1.校验
         String password = signParamDTO.getPassword();
         String username = signParamDTO.getUsername();
@@ -71,6 +69,6 @@ public class PasswordModeSignHandler implements SignModeHandler {
         // 3.密码验证
         CheckObjects.predicate(user, u -> !u.getPassword().equals(pwd.get()), "密码输入有误");
 
-        return user;
+        return new UserModel(user, Integer.MAX_VALUE);
     }
 }

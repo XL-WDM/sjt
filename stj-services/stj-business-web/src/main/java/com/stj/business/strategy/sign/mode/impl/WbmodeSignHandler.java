@@ -1,12 +1,9 @@
 package com.stj.business.strategy.sign.mode.impl;
 
 import com.stj.business.api.dto.req.SignParamDTO;
-import com.stj.business.entity.User;
 import com.stj.business.strategy.sign.mode.SignModeHandler;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
-import sun.misc.Signal;
-import sun.misc.SignalHandler;
 
 /**
  * @author: yilan.hu
@@ -17,7 +14,7 @@ import sun.misc.SignalHandler;
 public class WbmodeSignHandler implements SignModeHandler {
 
     @Override
-    public User check(SignParamDTO signParamDTO) {
+    public UserModel check(SignParamDTO signParamDTO) {
         return null;
     }
 }

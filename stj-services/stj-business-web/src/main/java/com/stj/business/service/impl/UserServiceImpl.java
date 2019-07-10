@@ -42,7 +42,10 @@ public class UserServiceImpl implements IUserService {
         SignModeHandler handler = signModeEnum.getHandler();
 
         // 3.校验
-        User user = handler.check(signParamDTO);
+        SignModeHandler.UserModel userModel = handler.check(signParamDTO);
+
+        Integer maxAge = userModel.getMaxAge();
+        User user = userModel.getUser();
 
         CheckObjects.isNull(user, "用户可能不存在");
 
@@ -56,11 +59,11 @@ public class UserServiceImpl implements IUserService {
         UserSignLog userSignLog = new UserSignLog();
         userSignLog.setUserId(user.getId());
         userSignLog.setToken(token);
-        userSignLog.setExpirationTime(LocalDateTime.now().plusSeconds(Integer.MAX_VALUE));
+        userSignLog.setExpirationTime(LocalDateTime.now().plusSeconds(maxAge));
         userSignLog.insert();
 
         // 7.设置cookie
-        ResponseUtils.setCookie(response, WebUserContext.USER_COOKIE, token);
+        ResponseUtils.setCookie(response, WebUserContext.USER_COOKIE, token, maxAge);
 
         // 8.设置缓存
         WebUserContext.instance(user);
