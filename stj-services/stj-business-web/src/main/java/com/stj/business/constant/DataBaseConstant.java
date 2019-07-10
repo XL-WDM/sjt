@@ -15,15 +15,15 @@ public class DataBaseConstant {
     @Getter
     public enum SignMode {
         /**
-         * 登录方式登录方式(1-密码登录, 2-短信验证登录, 3-邮箱登录, 4-微信登录, 5-QQ登录, 6.微博登录)
+         * 登录方式登录方式(1-密码登录, 2-短信验证登录, 3-邮箱登录, 4-QQ登录, 5-微博登录, 6-微信小程序, 7-微信公众号登录)
          */
         SIGN_MODE_PASSWORD("1", "密码登录", PasswordModeSignHandler.class),
         SIGN_MODE_SMS("2", "短信验证登录", SmsModeSignHandler.class),
         SIGN_MODE_EMAIL("3", "邮箱登录", EmailModeSignHandler.class),
-        SIGN_MODE_WX("4", "微信登录", WechatModeSignHandler.class),
-        SIGN_MODE_QQ("5", "QQ登录", QqModeSignHandler.class),
-        SIGN_MODE_WB("6", "微博登录", WbmodeSignHandler.class),
-        SIGN_MODE_WX_SMALL_PROCEDURES("7", "微信小程序", WbmodeSignHandler.class);
+        SIGN_MODE_QQ("4", "QQ登录", QqModeSignHandler.class),
+        SIGN_MODE_WB("5", "微博登录", WbmodeSignHandler.class),
+        SIGN_MODE_WX_SMALL_PROCEDURES("6", "微信小程序", WxSmallProceduresSignHandler.class),
+        SIGN_MODE_WX("7", "微信公众号登录", WechatModeSignHandler.class);
 
         SignMode(String code, String mode, Class<? extends SignModeHandler> handlerClazz) {
             this.code = code;
@@ -111,11 +111,13 @@ public class DataBaseConstant {
     @Getter
     public enum OauthType {
         /**
-         * 授权类型(1-微信, 2-QQ, 3-微博)
+         * 授权类型(1-微信小程序, 2-微信公众号, 3-微信开放平台, 4-QQ, 5-微博)
          */
-        WECHAT("1", "微信"),
-        QQ("2", "QQ"),
-        MICRO_BLOG("3", "微博");
+        WX_APPLET("1", "微信小程序"),
+        WX_PUBLIC_NUMBER("2", "微信公众号"),
+        WX_OPEN_PLATFORM("3", "微信开放平台"),
+        QQ("4", "QQ"),
+        MICRO_BLOG("5", "微博");
 
         private OauthType(String code, String name) {
             this.code = code;

@@ -1,14 +1,14 @@
 drop table t_user_oauths;
-CREATE TABLE t_user_oauths
+create table t_user_oauths
 (
-    id int PRIMARY KEY COMMENT '自增id' AUTO_INCREMENT,
-    user_id int NOT NULL COMMENT '用户id',
-    oauth_id varchar(128) NOT NULL COMMENT '授权id(比如: openid)',
-    union_id varchar(128) NOT NULL COMMENT 'unionid',
-    status varchar(1) DEFAULT 1 NOT NULL COMMENT '授权状态(0-取消授权, 1-已授权)',
-    oauth_type varchar(1) NOT NULL COMMENT '授权类型(1-微信, 2-QQ, 3-微博)',
-    oauth_date datetime DEFAULT now() NOT NULL COMMENT '授权时间',
-    update_date datetime NOT NULL COMMENT '更新时间',
-    CONSTRAINT t_user_oauths_t_user_ID_fk FOREIGN KEY (user_id) REFERENCES t_user (ID)
+    id int primary key comment '自增id' auto_increment,
+    user_id int not null comment '用户id',
+    oauth_id varchar(128) not null comment '授权id(比如: openid)',
+    union_id varchar(128) null comment 'unionid',
+    status varchar(1) default 1 not null comment '授权状态(0-取消授权, 1-已授权)',
+    oauth_type varchar(1) not null comment '授权类型(1-微信小程序, 2-微信公众号, 3-微信开放平台, 4-qq, 5-微博)',
+    oauth_date datetime default now() not null comment '授权时间',
+    update_date datetime default now() not null comment '更新时间',
+    constraint t_user_oauths_t_user_id_fk foreign key (user_id) references t_user (id)
 );
-ALTER TABLE t_user_oauths COMMENT = '用户授权登录表';
+alter table t_user_oauths comment = '用户授权登录表';

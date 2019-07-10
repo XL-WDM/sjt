@@ -31,4 +31,14 @@ public class WxBaseInfo {
      * 微信开放平台第三方用户唯一凭证密钥，即appsecret
      */
     private String openAppsecret;
+
+    /**
+     * 微信小程序第三方用户唯一凭证A
+     */
+    private String appletId;
+
+    /**
+     * 微信小程序第三方用户唯一凭证密钥，即appsecret
+     */
+    private String appletAppsecret;
 }

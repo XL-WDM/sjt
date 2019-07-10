@@ -53,6 +53,7 @@ public class UserSignatureInterceptors implements HandlerInterceptor {
         for (Cookie cookie : cookies) {
             if (WebUserContext.USER_COOKIE.equals(cookie.getName())) {
                 token = cookie.getValue();
+                break;
             }
         }
 

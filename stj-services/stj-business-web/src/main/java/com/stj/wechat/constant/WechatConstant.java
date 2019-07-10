@@ -5,6 +5,8 @@ package com.stj.wechat.constant;
  * @data: 2019/7/9
  */
 public class WechatConstant {
+
+    // ===================== 微信公众号 =====================
     /**
      * 用户同意授权, 获取 code, scope为snsapi_base
      */
@@ -44,4 +46,11 @@ public class WechatConstant {
      * 获取模板列表
      */
     public final static String GET_TEMPLATE_LIST_GET_URL = "https://api.weixin.qq.com/cgi-bin/template/get_all_private_template?access_token=ACCESS_TOKEN";
+
+
+    // ===================== 微信小程序 =====================
+    /**
+     * 登录凭证校验 auth.code2Session
+     */
+    public final static String APPLET_CODE_2_SESSION_GET_URL = "https://api.weixin.qq.com/sns/jscode2session?appid=APPID&secret=SECRET&js_code=JSCODE&grant_type=authorization_code";
 }

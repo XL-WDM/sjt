@@ -1,6 +1,7 @@
 package com.stj.wechat.service;
 
 import com.stj.wechat.vo.res.WxAccessTokenVO;
+import com.stj.wechat.vo.res.WxAppletSessionKeyVO;
 
 /**
  * @author: yilan.hu
@@ -21,4 +22,11 @@ public interface IWxOauthService {
      * @return
      */
     WxAccessTokenVO refreshoauthAccessToken(String refreshToken);
+
+    /**
+     * 登录(auth.code2Session)
+     * @param code
+     * @return
+     */
+    WxAppletSessionKeyVO getWxAppletSeesionKey(String code);
 }
