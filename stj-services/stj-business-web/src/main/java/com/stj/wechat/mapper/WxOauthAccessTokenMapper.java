@@ -9,4 +9,10 @@ import com.stj.wechat.entity.WxOauthAccessToken;
  */
 public interface WxOauthAccessTokenMapper extends BaseMapper<WxOauthAccessToken> {
 
+    /**
+     * 通过accessToken查询凭证信息
+     * @param accessToken
+     * @return
+     */
+    WxOauthAccessToken selectByAccessToken(String accessToken);
 }

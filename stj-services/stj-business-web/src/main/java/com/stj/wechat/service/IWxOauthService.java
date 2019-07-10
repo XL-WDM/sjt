@@ -14,4 +14,11 @@ public interface IWxOauthService {
      * @return
      */
     WxAccessTokenVO getOauthAccessToken(String code);
+
+    /**
+     * 刷新access_token
+     * @param refreshToken
+     * @return
+     */
+    WxAccessTokenVO refreshoauthAccessToken(String refreshToken);
 }

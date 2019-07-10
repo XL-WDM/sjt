@@ -22,7 +22,8 @@ public class DataBaseConstant {
         SIGN_MODE_EMAIL("3", "邮箱登录", EmailModeSignHandler.class),
         SIGN_MODE_WX("4", "微信登录", WechatModeSignHandler.class),
         SIGN_MODE_QQ("5", "QQ登录", QqModeSignHandler.class),
-        SIGN_MODE_WB("6", "微博登录", WbmodeSignHandler.class);
+        SIGN_MODE_WB("6", "微博登录", WbmodeSignHandler.class),
+        SIGN_MODE_WX_SMALL_PROCEDURES("7", "微信小程序", WbmodeSignHandler.class);
 
         SignMode(String code, String mode, Class<? extends SignModeHandler> handlerClazz) {
             this.code = code;
@@ -101,6 +102,33 @@ public class DataBaseConstant {
             for (Call call : values()) {
                 if (call.getCode().equals(code)) {
                     return call;
+                }
+            }
+            return null;
+        }
+    }
+
+    @Getter
+    public enum OauthType {
+        /**
+         * 授权类型(1-微信, 2-QQ, 3-微博)
+         */
+        WECHAT("1", "微信"),
+        QQ("2", "QQ"),
+        MICRO_BLOG("3", "微博");
+
+        private OauthType(String code, String name) {
+            this.code = code;
+            this.name = name;
+        }
+
+        private String code;
+        private String name;
+
+        public static OauthType find(String code) {
+            for (OauthType type : values()) {
+                if (type.getCode().equals(code)) {
+                    return type;
                 }
             }
             return null;

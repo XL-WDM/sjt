@@ -1,6 +1,7 @@
 package com.stj.wechat.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
+import com.stj.common.base.constant.BaseConstant;
 import com.stj.wechat.entity.WxOauthAccessToken;
 import com.stj.wechat.mapper.WxOauthAccessTokenMapper;
 import com.stj.common.exceptions.GlobalException;
@@ -15,6 +16,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+
+import java.time.LocalDateTime;
 
 /**
  * @author: yilan.hu
@@ -58,9 +61,28 @@ public class WxOauthServiceImpl implements IWxOauthService {
 
         // VO -> DAO
         WxOauthAccessToken wxOauthAccessToken = oauthAccessTokenVoToDao(wxAccessTokenVO);
+        wxOauthAccessToken.setExpiresTime(LocalDateTime.now()
+                .plusSeconds(wxAccessTokenVO.getExpires_in() - BaseConstant.Second.MINUTE));
         wxOauthAccessToken.insert();
 
         return wxAccessTokenVO;
+    }
+
+    @Override
+    public WxAccessTokenVO refreshoauthAccessToken(String refreshToken) {
+        CheckObjects.isEmpty(refreshToken, "refresh_token 不能为空");
+
+        // 4.刷新url
+        String url = WechatConstant.REFRESH_TOKEN_GET_URL
+                .replace("APPID", wxBaseInfo.getAppId())
+                .replace("REFRESH_TOKEN", refreshToken);
+        try {
+            String result = restTemplate.getForObject(url, String.class);
+            return JSONObject.parseObject(result, WxAccessTokenVO.class);
+        } catch (Exception e) {
+            log.error("# 微信网页授权: AccessToken刷新失败 -> {}", e.getMessage(), e);
+            return null;
+        }
     }
 
     private WxOauthAccessToken oauthAccessTokenVoToDao(WxAccessTokenVO wxAccessTokenVO) {

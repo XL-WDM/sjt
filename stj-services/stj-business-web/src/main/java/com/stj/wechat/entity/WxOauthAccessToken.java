@@ -34,6 +34,11 @@ public class WxOauthAccessToken extends Model<WxOauthAccessToken> implements Ser
     private Integer expiresIn;
 
     /**
+     * 凭证过期时间
+     */
+    private LocalDateTime expiresTime;
+
+    /**
      * 用户刷新access_token
      */
     private String refreshToken;

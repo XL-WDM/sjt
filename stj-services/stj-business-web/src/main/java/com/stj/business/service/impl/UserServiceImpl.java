@@ -44,6 +44,8 @@ public class UserServiceImpl implements IUserService {
         // 3.校验
         User user = handler.check(signParamDTO);
 
+        CheckObjects.isNull(user, "用户可能不存在");
+
         // 4.DAO -> DTO 并
         SignUserDTO signUserDTO = BeanCopierUtils.copyBean(user, SignUserDTO.class);
 
