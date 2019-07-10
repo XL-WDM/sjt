@@ -35,6 +35,6 @@ public class WxResultVO {
     private String msgid;
 
     public final boolean isSuccess() {
-        return WX_SUCCESS.equals(errcode);
+        return errcode == null || WX_SUCCESS.equals(errcode);
     }
 }

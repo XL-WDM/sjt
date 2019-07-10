@@ -13,7 +13,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
  */
 @SpringBootApplication
 @ComponentScan("com.stj")
-@MapperScan("com.stj.business.mapper")
+@MapperScan({"com.stj.business.mapper", "com.stj.wechat.mapper"})
 @EnableSwagger2
 @EnableMybatisPlusOptimization
 public class AppBusiness {

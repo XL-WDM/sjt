@@ -12,6 +12,7 @@ import com.stj.common.base.constant.BaseConstant;
 import com.stj.common.base.constant.ResultConstant;
 import com.stj.common.utils.BeanCopierUtils;
 import com.stj.common.utils.CheckObjects;
+import com.stj.common.utils.ResponseUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -48,24 +49,21 @@ public class UserServiceImpl implements IUserService {
 
         // 5.生成 token
         String token = UUID.randomUUID().toString().replaceAll(BaseConstant.Character.BAR, BaseConstant.Character.UNDERLINE);
-        // 默认有效期30天
-        int days = 30;
-        // 5-1.存入数据库
+
+        // 6.存入数据库
         UserSignLog userSignLog = new UserSignLog();
         userSignLog.setUserId(user.getId());
         userSignLog.setToken(token);
-        userSignLog.setExpirationTime(LocalDateTime.now().plusDays(days));
+        userSignLog.setExpirationTime(LocalDateTime.now().plusSeconds(Integer.MAX_VALUE));
         userSignLog.insert();
-        // 5-3.设置cookie
-        Cookie cookie = new Cookie(WebUserContext.USER_COOKIE, token);
-        cookie.setPath(BaseConstant.Character.SLASH);
-        cookie.setMaxAge(BaseConstant.Second.DAY * days);
-        response.addCookie(cookie);
 
-        // 6.设置缓存
+        // 7.设置cookie
+        ResponseUtils.setCookie(response, WebUserContext.USER_COOKIE, token);
+
+        // 8.设置缓存
         WebUserContext.instance(user);
 
-        // 7.返回用户信息
+        // 9.返回用户信息
         return signUserDTO;
     }
 }

@@ -1,7 +1,9 @@
 package com.stj.common.utils;
 
 import com.alibaba.fastjson.JSONObject;
+import com.stj.common.base.constant.BaseConstant;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -29,5 +31,22 @@ public class ResponseUtils {
                 writer.close();
             }
         }
+    }
+
+    public static void setCookie(HttpServletResponse response, String name,
+                                 String value, String path, int maxAge) {
+        Cookie cookie = new Cookie(name, value);
+        cookie.setPath(path);
+        cookie.setMaxAge(maxAge);
+        response.addCookie(cookie);
+    }
+
+    public static void setCookie(HttpServletResponse response, String name,
+                                 String value, int maxAge) {
+        setCookie(response, name, value, BaseConstant.Character.SLASH, maxAge);
+    }
+
+    public static void setCookie(HttpServletResponse response, String name, String value) {
+        setCookie(response, name, value, BaseConstant.Character.SLASH, Integer.MAX_VALUE);
     }
 }

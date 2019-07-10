@@ -1,6 +1,8 @@
 package com.stj.wechat.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
+import com.stj.wechat.entity.WxOauthAccessToken;
+import com.stj.wechat.mapper.WxOauthAccessTokenMapper;
 import com.stj.common.exceptions.GlobalException;
 import com.stj.common.utils.CheckObjects;
 import com.stj.wechat.config.WxBaseInfo;
@@ -28,6 +30,9 @@ public class WxOauthServiceImpl implements IWxOauthService {
     @Autowired
     private RestTemplate restTemplate;
 
+    @Autowired
+    private WxOauthAccessTokenMapper wxOauthAccessTokenMapper;
+
     @Override
     public WxAccessTokenVO getOauthAccessToken(String code) {
         // 1.参数校验
@@ -51,8 +56,20 @@ public class WxOauthServiceImpl implements IWxOauthService {
             throw new GlobalException("微信网页授权: AccessToken获取失败");
         }
 
-        // 4.刷新url
+        // VO -> DAO
+        WxOauthAccessToken wxOauthAccessToken = oauthAccessTokenVoToDao(wxAccessTokenVO);
+        wxOauthAccessToken.insert();
 
         return wxAccessTokenVO;
+    }
+
+    private WxOauthAccessToken oauthAccessTokenVoToDao(WxAccessTokenVO wxAccessTokenVO) {
+        WxOauthAccessToken wxOauthAccessToken = new WxOauthAccessToken();
+        wxOauthAccessToken.setAccessToken(wxAccessTokenVO.getAccess_token());
+        wxOauthAccessToken.setExpiresIn(wxAccessTokenVO.getExpires_in());
+        wxOauthAccessToken.setRefreshToken(wxAccessTokenVO.getRefresh_token());
+        wxOauthAccessToken.setOpenid(wxAccessTokenVO.getOpenid());
+        wxOauthAccessToken.setScope(wxAccessTokenVO.getScope());
+        return wxOauthAccessToken;
     }
 }

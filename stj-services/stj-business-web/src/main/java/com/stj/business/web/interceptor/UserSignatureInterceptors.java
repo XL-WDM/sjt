@@ -16,6 +16,7 @@ import org.springframework.web.servlet.HandlerInterceptor;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.time.LocalDateTime;
 
 /**
  * @author: yilan.hu
@@ -62,6 +63,12 @@ public class UserSignatureInterceptors implements HandlerInterceptor {
         }
         UserSignLog userSignLog = userSignLogMapper.selectSignLog(token);
         if (userSignLog == null) {
+            ResponseUtils.fallback(response, ResultModel.error401());
+            return false;
+        }
+        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime expirationTime = userSignLog.getExpirationTime();
+        if (expirationTime.compareTo(now) < 0) {
             ResponseUtils.fallback(response, ResultModel.error401());
             return false;
         }

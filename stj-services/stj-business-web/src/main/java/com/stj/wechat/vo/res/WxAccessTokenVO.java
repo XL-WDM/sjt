@@ -17,7 +17,7 @@ public class WxAccessTokenVO extends WxResultVO {
     /**
      * 凭证有效时间，单位：秒
      */
-    private Long expires_in;
+    private Integer expires_in;
 
     /**
      * 用户刷新access_token
