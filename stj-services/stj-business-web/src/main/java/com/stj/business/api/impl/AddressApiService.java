@@ -6,7 +6,6 @@ import com.stj.business.api.expose.AddressApi;
 import com.stj.business.service.IAddressService;
 import com.stj.common.base.result.ResultModel;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -34,19 +33,19 @@ public class AddressApiService implements AddressApi {
     }
 
     @Override
-    public ResultModel<AddressDTO> getAddress(@PathVariable("id") Long id) {
+    public ResultModel<AddressDTO> getAddress(Long id) {
         AddressDTO address = iAddressService.getAddress(id);
         return ResultModel.data(address);
     }
 
     @Override
-    public ResultModel editAddress(@PathVariable("id") Long id, AddressParamDTO addressDTO) {
-        iAddressService.editAddress(id, addressDTO);
+    public ResultModel editAddress(AddressParamDTO addressDTO) {
+        iAddressService.editAddress(addressDTO);
         return ResultModel.success();
     }
 
     @Override
-    public ResultModel removeAddress(@PathVariable("id") Long id) {
+    public ResultModel removeAddress(Long id) {
         iAddressService.removeAddress(id);
         return ResultModel.success();
     }

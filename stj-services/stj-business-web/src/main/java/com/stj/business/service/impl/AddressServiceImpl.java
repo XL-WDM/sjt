@@ -96,8 +96,10 @@ public class AddressServiceImpl implements IAddressService {
     }
 
     @Override
-    public void editAddress(Long id, AddressParamDTO addressParamDTO) {
+    public void editAddress(AddressParamDTO addressParamDTO) {
         // 1.参数验证
+        CheckObjects.isNull(addressParamDTO, ResultConstant.PARAMETERS_CANNOT_BE_NULL);
+        Long id = addressParamDTO.getId();
         CheckObjects.isNull(id, "请选择需要更新的地址");
         String tag = addressParamDTO.getTag();
         if (!StringUtils.isEmpty(tag)) {

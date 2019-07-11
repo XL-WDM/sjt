@@ -36,7 +36,7 @@ public interface IAddressService {
      * @param id
      * @param addressParamDTO
      */
-    void editAddress(Long id, AddressParamDTO addressParamDTO);
+    void editAddress(AddressParamDTO addressParamDTO);
 
     /**
      * 删除收货地址

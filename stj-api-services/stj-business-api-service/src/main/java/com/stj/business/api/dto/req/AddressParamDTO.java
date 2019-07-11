@@ -13,6 +13,12 @@ import lombok.Data;
 public class AddressParamDTO {
 
     /**
+     * 收货地址编号
+     */
+    @ApiModelProperty(value = "收货地址编号")
+    private Long id;
+
+    /**
      * 联系人
      */
     @ApiModelProperty(value = "联系人", required = true)

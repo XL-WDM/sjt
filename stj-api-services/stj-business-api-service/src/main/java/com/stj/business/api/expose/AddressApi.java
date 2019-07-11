@@ -22,7 +22,7 @@ public interface AddressApi {
      * @return
      */
     @ApiOperation(value = "获取收货地址列表", response = AddressDTO.class)
-    @GetMapping("/list/all")
+    @GetMapping("/list")
     ResultModel<List<AddressDTO>> getAddressList();
 
     /**
@@ -40,8 +40,8 @@ public interface AddressApi {
      * @return
      */
     @ApiOperation(value = "获取收货地址详情", response = AddressDTO.class)
-    @GetMapping("/{id}")
-    ResultModel<AddressDTO> getAddress(@PathVariable("id") Long id);
+    @GetMapping("/detail")
+    ResultModel<AddressDTO> getAddress(Long id);
 
     /**
      * 编辑收货地址
@@ -50,8 +50,8 @@ public interface AddressApi {
      * @return
      */
     @ApiOperation(value = "编辑收货地址")
-    @PutMapping("/{id}")
-    ResultModel editAddress(@PathVariable("id") Long id, AddressParamDTO addressDTO);
+    @PutMapping("/edit")
+    ResultModel editAddress(AddressParamDTO addressDTO);
 
     /**
      * 删除收货地址
@@ -60,7 +60,7 @@ public interface AddressApi {
      * @return
      */
     @ApiOperation(value = "删除收货地址")
-    @DeleteMapping("/{id}")
-    ResultModel removeAddress(@PathVariable("id") Long id);
+    @DeleteMapping("/remove")
+    ResultModel removeAddress(Long id);
 
 }
