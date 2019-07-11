@@ -14,7 +14,12 @@ create table t_product_info
 	publish_status varchar(1) not null comment '发布状态(0-删除, 1-上架, 2-下架)',
 	audit_status varchar(1) not null comment '审核状态(0-不通过, 1-通过)',
 	descript varchar(512) null comment '商品描述',
-	create_date datetime default current_timestamp not null comment '商品录入时间',
-	update_date datetime default current_timestamp not null comment '商品更新时间'
-) comment '商品信息表' engine=innodb;
+	create_date datetime default CURRENT_TIMESTAMP not null comment '商品录入时间',
+	update_date datetime default CURRENT_TIMESTAMP not null comment '商品更新时间',
+	constraint t_product_info_t_supplier_info_id_fk
+		foreign key (supplier_id) references t_supplier_info (id)
+)comment '商品信息表' engine=InnoDB;
+
+create index t_product_info_t_supplier_info_id_fk
+	on t_product_info (supplier_id);
 
