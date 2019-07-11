@@ -14,6 +14,6 @@ create table t_address
 	is_default varchar(1) not null comment '是否默认地址(0-不是, 1-是)',
 	status varchar(1) not null comment '状态(0-无效, 1-有效)'
 )
-comment '收货地址表' engine=innodb;
+comment '收货地址表' engine=InnoDB
+;
 
-insert into stj.t_address (id, user_id, contacts, phone, city, address, door_number, tag, contacts_call, is_default, status) values (1, 1, '胡一龙', '15073820717', '上海', '灵山路2011弄', '30号202室', '1', '1', '1', '1');

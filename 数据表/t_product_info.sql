@@ -18,8 +18,16 @@ create table t_product_info
 	update_date datetime default CURRENT_TIMESTAMP not null comment '商品更新时间',
 	constraint t_product_info_t_supplier_info_id_fk
 		foreign key (supplier_id) references t_supplier_info (id)
-)comment '商品信息表' engine=InnoDB;
+)
+comment '商品信息表' engine=InnoDB
+;
+
+create index t_product_info_t_supplier_info_id_fk
+	on t_product_info (supplier_id)
+;
+
 
 create index t_product_info_t_supplier_info_id_fk
 	on t_product_info (supplier_id);
 
+INSERT INTO stj.t_product_info (id, product_code, product_name, supplier_id, one_level_category, two_level_category, three_level_category, price, discount_amount, publish_status, audit_status, descript, create_date, update_date) VALUES (1, 'KMSCNGG', '抗霾舒畅柠果膏', 1, 5, null, null, 7900, 0, '1', '1', '抗霾舒畅柠果膏280ml', '2019-07-11 17:24:26', '2019-07-11 17:24:26');
