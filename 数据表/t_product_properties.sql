@@ -19,8 +19,6 @@ create index t_product_properties_t_product_info_id_fk
 	on t_product_properties (product_id)
 ;
 
-
-
 INSERT INTO stj.t_product_properties (id, product_id, properties_name, properties_value, sort_num, create_date, update_date) VALUES (1, 1, '产地', '上海普陀', 1, '2019-07-11 17:43:23', '2019-07-11 17:43:23');
 INSERT INTO stj.t_product_properties (id, product_id, properties_name, properties_value, sort_num, create_date, update_date) VALUES (2, 1, '保质期', '90天', 2, '2019-07-11 17:43:23', '2019-07-11 17:43:23');
 INSERT INTO stj.t_product_properties (id, product_id, properties_name, properties_value, sort_num, create_date, update_date) VALUES (3, 1, '净含量', '280ml', 3, '2019-07-11 17:43:23', '2019-07-11 17:43:23');

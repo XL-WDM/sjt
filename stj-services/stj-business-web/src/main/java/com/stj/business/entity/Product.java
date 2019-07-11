@@ -24,11 +24,6 @@ public class Product extends Model<Product> implements Serializable {
     private Long id;
 
     /**
-     * 商品编码
-     */
-    private String productCode;
-
-    /**
      * 商品名称
      */
     private String productName;

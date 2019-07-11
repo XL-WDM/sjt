@@ -3,7 +3,6 @@ create table t_product_info
 (
 	id int auto_increment comment '自增id'
 		primary key,
-	product_code varchar(32) not null comment '商品编码',
 	product_name varchar(32) not null comment '商品名称',
 	supplier_id int not null comment '供应商id',
 	one_level_category int null comment '一级分类',
@@ -30,4 +29,4 @@ create index t_product_info_t_supplier_info_id_fk
 create index t_product_info_t_supplier_info_id_fk
 	on t_product_info (supplier_id);
 
-INSERT INTO stj.t_product_info (id, product_code, product_name, supplier_id, one_level_category, two_level_category, three_level_category, price, discount_amount, publish_status, audit_status, descript, create_date, update_date) VALUES (1, 'KMSCNGG', '抗霾舒畅柠果膏', 1, 5, null, null, 7900, 0, '1', '1', '抗霾舒畅柠果膏280ml', '2019-07-11 17:24:26', '2019-07-11 17:24:26');
+INSERT INTO stj.t_product_info (id, product_name, supplier_id, one_level_category, two_level_category, three_level_category, price, discount_amount, publish_status, audit_status, descript, create_date, update_date) VALUES (1, '抗霾舒畅柠果膏', 1, 5, null, null, 7900, 0, '1', '1', '抗霾舒畅柠果膏280ml', '2019-07-11 17:24:26', '2019-07-11 17:24:26');
