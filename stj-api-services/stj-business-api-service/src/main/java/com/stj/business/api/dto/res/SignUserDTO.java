@@ -53,4 +53,16 @@ public class SignUserDTO {
      */
     @ApiModelProperty("生日")
     private String birtrday;
+
+    /**
+     * 用户积分
+     */
+    @ApiModelProperty("用户积分")
+    private Integer userPoint;
+
+    /**
+     * 会员级别(0-普通用户, 1-普通会员)
+     */
+    @ApiModelProperty("会员级别(0-普通用户, 1-普通会员)")
+    private String memberLevel;
 }

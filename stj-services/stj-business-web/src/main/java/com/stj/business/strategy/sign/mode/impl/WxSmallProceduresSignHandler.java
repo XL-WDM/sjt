@@ -15,6 +15,7 @@ import com.stj.wechat.vo.res.WxAppletSessionKeyVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import java.time.LocalDateTime;
@@ -38,6 +39,7 @@ public class WxSmallProceduresSignHandler implements SignModeHandler {
     private IWxOauthService iWxOauthService;
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public UserModel check(SignParamDTO signParamDTO) {
         // 1.参数校验
         String code = signParamDTO.getCode();
@@ -83,9 +85,7 @@ public class WxSmallProceduresSignHandler implements SignModeHandler {
             userOauths.setOauthId(wxAppletSeesionKey.getOpenid());
             userOauths.setUnionId(wxAppletSeesionKey.getUnionid());
             userOauths.setOauthType(DataBaseConstant.OauthType.WX_APPLET.getCode());
-            if (userOauths.insert()) {
-                return new UserModel(user, BaseConstant.Second.DAY);
-            }
+            userOauths.insert();
         } else {
             // 3-4.添加unionid
             if (StringUtils.isEmpty(userOauths.getUnionId())

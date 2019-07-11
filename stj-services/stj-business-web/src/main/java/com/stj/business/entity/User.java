@@ -65,6 +65,26 @@ public class User extends Model<User> implements Serializable {
     private String birtrday;
 
     /**
+     * 证件类型(1-身份证, 2.军官证, 3.护照)
+     */
+    private String identityCardType;
+
+    /**
+     * 证件号码
+     */
+    private String identityCard;
+
+    /**
+     * 用户积分
+     */
+    private Integer userPoint;
+
+    /**
+     * 会员级别(0-普通用户, 1-普通会员)
+     */
+    private String memberLevel;
+
+    /**
      * 状态(0-冻结, 1-可用)
      */
     private String status;
