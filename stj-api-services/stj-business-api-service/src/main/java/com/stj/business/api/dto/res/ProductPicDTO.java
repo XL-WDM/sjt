@@ -15,12 +15,12 @@ public class ProductPicDTO {
     /**
      * 图片URL
      */
-    @ApiModelProperty("picUrl")
+    @ApiModelProperty("图片URL")
     private String picUrl;
 
     /**
      * 图片描述
      */
-    @ApiModelProperty("descript")
+    @ApiModelProperty("图片描述")
     private String descript;
 }
