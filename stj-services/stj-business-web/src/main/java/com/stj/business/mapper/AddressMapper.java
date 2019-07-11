@@ -15,4 +15,10 @@ public interface AddressMapper extends BaseMapper<Address> {
      * @return
      */
     Address selectAddressByIdAndUserId(Address address);
+
+    /**
+     * 修改为非默认地址
+     * @param userId
+     */
+    void cleanDefaultAddress(Long userId);
 }

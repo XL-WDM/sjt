@@ -39,7 +39,8 @@ public class AddressServiceImpl implements IAddressService {
         // 2.查询收货地址
         List<Address> address = addressMapper.selectList(new EntityWrapper<Address>()
                 .eq("user_id", user.getId())
-                .eq("status", BaseConstant.Status.YES.getCode()));
+                .eq("status", BaseConstant.Status.YES.getCode())
+                .orderBy("is_default", false));
 
         // 3.DAO - DTO
         List<AddressDTO> addressDTOS = BeanCopierUtils.copyList(address, AddressDTO.class);
@@ -72,7 +73,10 @@ public class AddressServiceImpl implements IAddressService {
         address.setUserId(user.getId());
         address.setStatus(BaseConstant.Status.YES.getCode());
 
-        // 3.新增地址
+        // 3.如果新增地址为默认地址, 则更新其他地址为非默认地址
+        addressMapper.cleanDefaultAddress(user.getId());
+
+        // 4.新增地址
         CheckObjects.predicate(address.insert(), b -> !b, "地址新增失败");
     }
 
@@ -127,6 +131,11 @@ public class AddressServiceImpl implements IAddressService {
         ar.setUserId(user.getId());
         ar = addressMapper.selectAddressByIdAndUserId(ar);
         CheckObjects.isNull(ar, "该收货地址不存在");
+
+        // 3.如果修改地址为默认地址, 则更新其他地址为非默认地址
+        if (BaseConstant.Status.YES.getCode().equals(isDefault)) {
+            addressMapper.cleanDefaultAddress(user.getId());
+        }
 
         // 4.更新
         // DTO -> DAO

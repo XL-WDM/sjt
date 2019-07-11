@@ -16,4 +16,8 @@
         and user_id = #{userId}
         and status = '1'
     </select>
+
+    <update id="cleanDefaultAddress" parameterType="java.lang.Long">
+        update t_address set is_default = '0' where user_id = #{userId}
+    </update>
 </mapper>
