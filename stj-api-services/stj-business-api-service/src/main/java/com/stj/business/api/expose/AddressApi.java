@@ -5,7 +5,9 @@ import com.stj.business.api.dto.res.AddressDTO;
 import com.stj.common.base.result.ResultModel;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.List;
 
@@ -50,7 +52,7 @@ public interface AddressApi {
      * @return
      */
     @ApiOperation(value = "编辑收货地址")
-    @PutMapping("/edit")
+    @PostMapping("/edit")
     ResultModel editAddress(AddressParamDTO addressDTO);
 
     /**
@@ -60,7 +62,7 @@ public interface AddressApi {
      * @return
      */
     @ApiOperation(value = "删除收货地址")
-    @DeleteMapping("/remove")
+    @PostMapping("/remove")
     ResultModel removeAddress(Long id);
 
 }
