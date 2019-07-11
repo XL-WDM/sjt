@@ -66,6 +66,26 @@ public class BaseConstant {
         public final static String DATE_TIME = "yyyy-MM-dd HH:mm:ss";
     }
 
+    /**
+     * 位数
+     */
+    public static class Digit {
+        /**
+         * 十分位
+         */
+        public final static Integer TEN_DIGITS = 10;
+
+        /**
+         * 百分位
+         */
+        public final static Integer HUNDRED_DIGIT = 100;
+
+        /**
+         * 千分位
+         */
+        public final static Integer THOUSAND_DIGIT = 1000;
+    }
+
     @Getter
     public enum Status {
         /**

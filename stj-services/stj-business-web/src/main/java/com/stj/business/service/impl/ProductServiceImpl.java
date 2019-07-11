@@ -4,7 +4,6 @@ import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.stj.business.api.dto.res.ProductDetailDTO;
 import com.stj.business.api.dto.res.ProductPicDTO;
 import com.stj.business.api.dto.res.ProductPropertiesDTO;
-import com.stj.business.constant.DataBaseConstant;
 import com.stj.business.entity.Product;
 import com.stj.business.entity.ProductPic;
 import com.stj.business.entity.ProductProperties;
