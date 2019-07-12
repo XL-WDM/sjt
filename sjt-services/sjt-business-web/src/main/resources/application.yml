@@ -24,7 +24,8 @@ sjt:
   # swagger
   swagger:
     base-package: com.sjt.business.api.impl,com.sjt.wechat.api.impl
-    title: 山田尖电商平台
+    # 山尖田电商平台
+    title: 后台管理平台
     description: api接口信息
     version: 1.0
   # 跨域设置
@@ -37,4 +38,5 @@ sjt:
                     /error,
                     /v2/api-docs,
                     /auth/sign,
+                    /product/category/list,
                     /product/detail

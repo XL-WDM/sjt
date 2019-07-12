@@ -10,7 +10,7 @@ import java.util.List;
  * @author: yilan.hu
  * @data: 2019/7/11
  */
-@ApiModel("商品详情信息")
+@ApiModel("商品信息")
 @Data
 public class ProductDetailDTO {
     /**
@@ -26,22 +26,28 @@ public class ProductDetailDTO {
     private String productName;
 
     /**
-     * 商品价格(单位：分)
+     * 商品价格(单位：元)
      */
-    @ApiModelProperty("商品价格(单位：分)")
-    private Long price;
+    @ApiModelProperty("商品价格(单位：元)")
+    private Double price;
 
     /**
-     * 优惠金额(单位：分)
+     * 优惠金额(单位：元)
      */
-    @ApiModelProperty("优惠金额(单位：分)")
-    private Long discountAmount;
+    @ApiModelProperty("优惠金额(单位：元)")
+    private Double discountAmount;
 
     /**
      * 商品描述
      */
     @ApiModelProperty("商品描述")
     private String descript;
+
+    /**
+     * 商品详情
+     */
+    @ApiModelProperty("商品详情")
+    private String productDetails;
 
     /**
      * 商品属性
