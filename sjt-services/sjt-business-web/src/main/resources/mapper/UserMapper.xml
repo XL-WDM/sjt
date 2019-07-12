@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.sjt.business.mapper.UserMapper">
+    <parameterMap id="userParame" type="com.sjt.business.entity.User" />
+    <resultMap id="userResult" type="com.sjt.business.entity.User" />
+
+    <sql id="base_all">
+        id, username, email, phone, password, face_url, nickname,
+        sex, birtrday, status, register_date, update_date, version
+    </sql>
+
+    <select id="selectUserBySign" parameterMap="userParame" resultMap="userResult">
+        select
+        <include refid="base_all" />
+        from t_user
+        where 1 = 2
+        <if test="username != null and username != ''">
+            or username = #{username}
+        </if>
+        <if test="phone != null and phone != ''">
+            or phone = #{phone}
+        </if>
+        <if test="email != null and email != ''">
+            or email = #{email}
+        </if>
+    </select>
+</mapper>

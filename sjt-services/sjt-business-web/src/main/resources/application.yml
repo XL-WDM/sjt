@@ -1,0 +1,40 @@
+spring:
+  profiles:
+    active: dev
+server:
+  port: 8181
+  servlet:
+    context-path: /sjt
+# 日志
+logging:
+  config: classpath:logback-${spring.profiles.active}.xml
+# mybatis
+mybatis-plus:
+  mapper-locations: classpath:/mapper/*Mapper.xml
+  type-aliases-package: com.sjt.business.entity
+  global-config:
+    # 主键类型  0:"数据库ID自增", 1:"用户输入ID", 2:"全局唯一ID (数字类型唯一ID)", 3:"全局唯一ID UUID"
+    id-type: 0
+    # 字段策略 0:"忽略判断", 1:"非 NULL 判断"), 2:"非空判断"
+    field-strategy: 2
+  configuration:
+    map-underscore-to-camel-case: true
+    jdbc-type-for-null: 'null'
+sjt:
+  # swagger
+  swagger:
+    base-package: com.sjt.business.api.impl,com.sjt.wechat.api.impl
+    title: 山田尖电商平台
+    description: api接口信息
+    version: 1.0
+  # 跨域设置
+  cross:
+    methods: GET, POST
+    api-white-list: /swagger-resources/**,
+                    /webjars/**,
+                    /null/swagger-resources/**,
+                    /swagger-ui.html,
+                    /error,
+                    /v2/api-docs,
+                    /auth/sign,
+                    /product/detail
