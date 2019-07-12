@@ -37,6 +37,11 @@ public class UserOauths extends Model<UserOauths> implements Serializable {
     private String unionId;
 
     /**
+     * 微信小程序sessionKey
+     */
+    private String sessionKey;
+
+    /**
      * 授权状态(0-取消授权, 1-已授权)
      */
     private String status;

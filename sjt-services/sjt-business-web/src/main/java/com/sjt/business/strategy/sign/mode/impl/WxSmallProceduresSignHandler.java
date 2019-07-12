@@ -84,6 +84,7 @@ public class WxSmallProceduresSignHandler implements SignModeHandler {
             userOauths.setUserId(user.getId());
             userOauths.setOauthId(wxAppletSeesionKey.getOpenid());
             userOauths.setUnionId(wxAppletSeesionKey.getUnionid());
+            userOauths.setSessionKey(wxAppletSeesionKey.getSession_key());
             userOauths.setOauthType(DataBaseConstant.OauthType.WX_APPLET.getCode());
             userOauths.insert();
         } else {
