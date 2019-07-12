@@ -18,7 +18,7 @@ sjt:
     charset: utf_8
     host: 10.1.27.102
     enable-proxy: true
-  # wechat
+  # 微信
   wechat:
     app-id: wx73770f8f029e1b50
     appsecret: 7afde07a322e7c33bc5e0fbdd340ec28
