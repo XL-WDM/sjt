@@ -88,10 +88,20 @@ public class WxSmallProceduresSignHandler implements SignModeHandler {
             userOauths.setOauthType(DataBaseConstant.OauthType.WX_APPLET.getCode());
             userOauths.insert();
         } else {
+            boolean isChange = false;
             // 3-4.添加unionid
             if (StringUtils.isEmpty(userOauths.getUnionId())
                     && !StringUtils.isEmpty(wxAppletSeesionKey.getUnionid())) {
                 userOauths.setUnionId(wxAppletSeesionKey.getUnionid());
+                isChange = true;
+            }
+            // 3-5.更新sessionKey
+            if (!wxAppletSeesionKey.getSession_key().equals(userOauths.getSessionKey())) {
+                userOauths.setSessionKey(wxAppletSeesionKey.getSession_key());
+                isChange = true;
+            }
+
+            if (isChange) {
                 userOauths.updateById();
             }
         }
