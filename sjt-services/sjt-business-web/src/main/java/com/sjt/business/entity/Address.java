@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.annotations.TableName;
 import lombok.Data;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 
 /**
  * @author: yilan.hu
@@ -82,7 +83,17 @@ public class Address extends Model<Address> implements Serializable {
      */
     private String status;
 
-    @Override
+    /**
+     * 创建时间
+     */
+    private LocalDateTime createDate;
+
+    /**
+     * 更新时间
+     */
+    private LocalDateTime updateDate;
+
+  @Override
     protected Serializable pkVal() {
         return id;
     }

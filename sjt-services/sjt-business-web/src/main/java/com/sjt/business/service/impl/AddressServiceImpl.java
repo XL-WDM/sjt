@@ -18,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -40,7 +41,8 @@ public class AddressServiceImpl implements IAddressService {
         List<Address> address = addressMapper.selectList(new EntityWrapper<Address>()
                 .eq("user_id", user.getId())
                 .eq("status", BaseConstant.Status.YES.getCode())
-                .orderBy("is_default", false));
+                .orderBy("is_default", false)
+                .orderBy("create_date", false));
 
         // 3.DAO - DTO
         List<AddressDTO> addressDTOS = BeanCopierUtils.copyList(address, AddressDTO.class);
@@ -144,6 +146,7 @@ public class AddressServiceImpl implements IAddressService {
         Address address = BeanCopierUtils.copyBean(addressParamDTO, Address.class);
         address.setId(id);
         address.setUserId(ar.getUserId());
+        address.setUpdateDate(LocalDateTime.now());
         Integer rows = addressMapper.updateById(address);
         CheckObjects.predicate(rows, r -> r == 0, "更新收货地址失败");
     }
