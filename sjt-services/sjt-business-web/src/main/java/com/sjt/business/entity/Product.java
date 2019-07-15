@@ -64,6 +64,11 @@ public class Product extends Model<Product> implements Serializable {
     private String publishStatus;
 
     /**
+     * 是否为新品推荐(0-否, 1-是)
+     */
+    private String newArrivals;
+
+    /**
      * 商品详情
      */
     private String productDetails;

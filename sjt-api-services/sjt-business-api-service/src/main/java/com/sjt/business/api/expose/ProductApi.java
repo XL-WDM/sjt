@@ -1,14 +1,11 @@
 package com.sjt.business.api.expose;
 
-import com.sjt.business.api.dto.res.ProductCategoryDTO;
 import com.sjt.business.api.dto.res.ProductDetailDTO;
 import com.sjt.common.base.result.ResultDTO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-
-import java.util.List;
 
 /**
  * @author: yilan.hu
@@ -17,14 +14,6 @@ import java.util.List;
 @Api(description = "商品信息")
 @RequestMapping("/product")
 public interface ProductApi {
-
-    /**
-     * 获取商品分类信息
-     * @return
-     */
-    @ApiOperation(value = "获取商品分类信息", response = ProductCategoryDTO.class)
-    @GetMapping("/open-api/category/list")
-    ResultDTO<List<ProductCategoryDTO>> getProductcategorys();
 
     /**
      * 商品详情信息

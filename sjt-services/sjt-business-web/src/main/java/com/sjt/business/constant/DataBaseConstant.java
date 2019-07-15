@@ -164,4 +164,31 @@ public class DataBaseConstant {
             return null;
         }
     }
+
+    @Getter
+    public enum ProductPushStatus {
+        /**
+         * 商品发布状态(0-删除, 1-上架, 2-下架)
+         */
+        DELETE("0", "删除"),
+        UPPER_SHELF("1", "上架"),
+        LOWER_SHELF("2", "下架");
+
+        private ProductPushStatus(String code, String name) {
+            this.code = code;
+            this.name = name;
+        }
+
+        private String code;
+        private String name;
+
+        public static ProductPushStatus find(String code) {
+            for (ProductPushStatus status : values()) {
+                if (status.getCode().equals(code)) {
+                    return status;
+                }
+            }
+            return null;
+        }
+    }
 }

@@ -5,6 +5,7 @@ import com.sjt.business.api.dto.res.ProductCategoryDTO;
 import com.sjt.business.api.dto.res.ProductDetailDTO;
 import com.sjt.business.api.dto.res.ProductPicDTO;
 import com.sjt.business.api.dto.res.ProductPropertiesDTO;
+import com.sjt.business.constant.DataBaseConstant;
 import com.sjt.business.entity.Product;
 import com.sjt.business.entity.ProductCategory;
 import com.sjt.business.entity.ProductPic;
@@ -23,6 +24,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author: yilan.hu
@@ -87,6 +89,10 @@ public class ProductServiceImpl implements IProductService {
         // 2.查询商品
         Product product = productMapper.selectById(id);
         CheckObjects.isNull(product, "商品不存在");
+        CheckObjects.predicate(product.getPublishStatus(),
+                s -> DataBaseConstant.ProductPushStatus.DELETE.getCode().equals(s), "商品失效");
+        CheckObjects.predicate(product.getPublishStatus(),
+                s -> DataBaseConstant.ProductPushStatus.LOWER_SHELF.getCode().equals(s), "商品已下架");
         // 2-1.DAO -> DTO
         ProductDetailDTO productDetailDTO = BeanCopierUtils.copyBean(product, ProductDetailDTO.class);
         // 2-2.分 -> 元
@@ -112,5 +118,25 @@ public class ProductServiceImpl implements IProductService {
         productDetailDTO.setProductPics(productPicDTOS);
 
         return productDetailDTO;
+    }
+
+    @Override
+    public List<ProductDetailDTO> getNewArrivals() {
+        // 1.查询新品推荐产品
+        List<Product> products = productMapper.selectList(new EntityWrapper<Product>()
+                .eq("publish_status", DataBaseConstant.ProductPushStatus.UPPER_SHELF.getCode())
+                .eq("new_arrivals", BaseConstant.Status.YES.getCode())
+                .or("create_date", false).orderBy("create_date", false));
+
+        // 2.DAO -> DTO
+        List<ProductDetailDTO> newArrivals = products.stream().map(p -> {
+            ProductDetailDTO productDetailDTO = BeanCopierUtils.copyBean(p, ProductDetailDTO.class);
+            // 2-1.分转元
+            productDetailDTO.setPrice(PriceUtils.centToYuan(p.getPrice()));
+            productDetailDTO.setDiscountAmount(PriceUtils.centToYuan(p.getDiscountAmount()));
+            return productDetailDTO;
+        }).collect(Collectors.toList());
+
+        return newArrivals;
     }
 }
