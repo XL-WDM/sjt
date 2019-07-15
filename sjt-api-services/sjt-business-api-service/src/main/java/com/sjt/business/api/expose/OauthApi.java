@@ -2,8 +2,7 @@ package com.sjt.business.api.expose;
 
 import com.sjt.business.api.dto.req.SignParamDTO;
 import com.sjt.business.api.dto.res.SignUserDTO;
-import com.sjt.common.base.result.R;
-import com.sjt.common.base.result.ResultModel;
+import com.sjt.common.base.result.ResultDTO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -27,5 +26,5 @@ public interface OauthApi {
      */
     @ApiOperation(value = "登录", response = SignUserDTO.class)
     @PostMapping("/sign")
-    ResultModel<SignUserDTO> sign(SignParamDTO signParamDTO, HttpServletResponse response);
+    ResultDTO<SignUserDTO> sign(SignParamDTO signParamDTO, HttpServletResponse response);
 }

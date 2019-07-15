@@ -1,6 +1,5 @@
 package com.sjt.common.base.result;
 
-import com.sjt.common.utils.ResponseUtils;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -13,7 +12,7 @@ import java.io.Serializable;
  */
 @ApiModel("响应对象")
 @Data
-public class ResultModel<R> implements Serializable {
+public class ResultDTO<R> implements Serializable {
 
     private static final long serialVersionUID = 834150395386082650L;
 
@@ -43,35 +42,35 @@ public class ResultModel<R> implements Serializable {
     @ApiModelProperty("响应数据")
     private R data;
 
-    public static ResultModel info(Integer code, String message) {
-        ResultModel result = new ResultModel();
+    public static ResultDTO info(Integer code, String message) {
+        ResultDTO result = new ResultDTO();
         result.setCode(code);
         result.setMessage(message);
         return result;
     }
 
-    public static ResultModel error(String message) {
-        return ResultModel.info(ERROR_CODE_500, message);
+    public static ResultDTO error(String message) {
+        return ResultDTO.info(ERROR_CODE_500, message);
     }
 
-    public static ResultModel error() {
-        return ResultModel.info(ERROR_CODE_500, ERROR_MESSAGE);
+    public static ResultDTO error() {
+        return ResultDTO.info(ERROR_CODE_500, ERROR_MESSAGE);
     }
 
-    public static ResultModel error401() {
-        return ResultModel.info(NOT_SIGN_CODE_401, NOT_SIGN_MESSAGE);
+    public static ResultDTO error401() {
+        return ResultDTO.info(NOT_SIGN_CODE_401, NOT_SIGN_MESSAGE);
     }
 
-    public static ResultModel success(String message) {
-        return ResultModel.info(SUCCESS_CODE_200, message);
+    public static ResultDTO success(String message) {
+        return ResultDTO.info(SUCCESS_CODE_200, message);
     }
 
-    public static ResultModel success() {
-        return ResultModel.success(SUCCESS_MESSAGE);
+    public static ResultDTO success() {
+        return ResultDTO.success(SUCCESS_MESSAGE);
     }
 
-    public static <D> ResultModel data(D data) {
-        ResultModel result = ResultModel.success();
+    public static <D> ResultDTO data(D data) {
+        ResultDTO result = ResultDTO.success();
         result.setData(data);
         return result;
     }

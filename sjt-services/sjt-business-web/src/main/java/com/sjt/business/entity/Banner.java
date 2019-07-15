@@ -54,6 +54,11 @@ public class Banner extends Model<Banner> implements Serializable {
     private String status;
 
     /**
+     * 排序编号
+     */
+    private Integer sortNum;
+
+    /**
      * 创建时间
      */
     private LocalDateTime createDate;

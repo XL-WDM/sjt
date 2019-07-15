@@ -1,7 +1,6 @@
 package com.sjt.common.exceptions;
 
-import com.sjt.common.base.result.R;
-import com.sjt.common.base.result.ResultModel;
+import com.sjt.common.base.result.ResultDTO;
 
 /**
  * 全局异常
@@ -27,8 +26,8 @@ public class GlobalException extends RuntimeException {
         this.code = code;
     }
 
-    public GlobalException(ResultModel resultModel) {
-        super((resultModel = (resultModel != null ? resultModel : ResultModel.error())).getMessage());
+    public GlobalException(ResultDTO resultModel) {
+        super((resultModel = (resultModel != null ? resultModel : ResultDTO.error())).getMessage());
         this.code = resultModel.getCode();
     }
 

@@ -136,4 +136,32 @@ public class DataBaseConstant {
             return null;
         }
     }
+
+    @Getter
+    public enum BannerType {
+        /**
+         * banner类型(1-首页top轮播图, 2-GIF小视频, 3-山田日记banner, 4-首页center轮播图)
+         */
+        TOP_BANNER("1", "首页top轮播图"),
+        GIF_BANNER("2", "GIF小视频"),
+        ST_DIARY_BANNER("3", "山田日记banner"),
+        CENTER_BANNER("4", "首页中部轮播图");
+
+        private BannerType(String code, String name) {
+            this.code = code;
+            this.name = name;
+        }
+
+        private String code;
+        private String name;
+
+        public static BannerType find(String code) {
+            for (BannerType type : values()) {
+                if (type.getCode().equals(code)) {
+                    return type;
+                }
+            }
+            return null;
+        }
+    }
 }

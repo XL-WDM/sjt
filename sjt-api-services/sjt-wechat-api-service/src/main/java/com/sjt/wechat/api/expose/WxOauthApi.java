@@ -1,6 +1,6 @@
 package com.sjt.wechat.api.expose;
 
-import com.sjt.common.base.result.ResultModel;
+import com.sjt.common.base.result.ResultDTO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,5 +24,5 @@ public interface WxOauthApi {
      */
     @ApiOperation(value = "通过code换取网页授权access_token")
     @GetMapping("/access-token")
-    ResultModel getOauthAccessToken(String code, HttpServletResponse response);
+    ResultDTO getOauthAccessToken(String code, HttpServletResponse response);
 }

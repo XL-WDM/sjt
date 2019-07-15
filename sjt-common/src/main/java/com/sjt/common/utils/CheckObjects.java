@@ -1,7 +1,7 @@
 package com.sjt.common.utils;
 
 import com.sjt.common.base.constant.BaseConstant;
-import com.sjt.common.base.result.ResultModel;
+import com.sjt.common.base.result.ResultDTO;
 import com.sjt.common.exceptions.GlobalException;
 import org.springframework.util.StringUtils;
 
@@ -17,11 +17,11 @@ public class CheckObjects {
 
     public static void isNull(Object o, String message) {
         if (o == null) {
-            throw new GlobalException(ResultModel.error(message));
+            throw new GlobalException(ResultDTO.error(message));
         }
     }
 
-    public static void isNull(Object o, ResultModel resultModel) {
+    public static void isNull(Object o, ResultDTO resultModel) {
         if (StringUtils.isEmpty(o)) {
             throw new GlobalException(resultModel);
         }
@@ -29,11 +29,11 @@ public class CheckObjects {
 
     public static void isEmpty(String s, String message) {
         if (StringUtils.isEmpty(s)) {
-            throw new GlobalException(ResultModel.error(message));
+            throw new GlobalException(ResultDTO.error(message));
         }
     }
 
-    public static void isEmpty(String s, ResultModel resultModel) {
+    public static void isEmpty(String s, ResultDTO resultModel) {
         if (StringUtils.isEmpty(s)) {
             throw new GlobalException(resultModel);
         }
@@ -41,13 +41,13 @@ public class CheckObjects {
 
     public static void isEmpty(List list, String message) {
         if (list == null || list.isEmpty()) {
-            throw new GlobalException(ResultModel.error(message));
+            throw new GlobalException(ResultDTO.error(message));
         }
     }
 
     public static void isEmpty(Map map, String message) {
         if (map == null || map.isEmpty()) {
-            throw new GlobalException(ResultModel.error(message));
+            throw new GlobalException(ResultDTO.error(message));
         }
     }
 

@@ -1,6 +1,6 @@
 package com.sjt.wechat.api.impl;
 
-import com.sjt.common.base.result.ResultModel;
+import com.sjt.common.base.result.ResultDTO;
 import com.sjt.common.utils.ResponseUtils;
 import com.sjt.wechat.api.expose.WxOauthApi;
 import com.sjt.wechat.constant.WxCookieConstant;
@@ -22,12 +22,12 @@ public class WxOauthApiService implements WxOauthApi {
     private IWxOauthService iWxOauthService;
 
     @Override
-    public ResultModel getOauthAccessToken(String code, HttpServletResponse response) {
+    public ResultDTO getOauthAccessToken(String code, HttpServletResponse response) {
         WxAccessTokenVO oauthAccessToken = iWxOauthService.getOauthAccessToken(code);
 
         // 设置 cookie
         ResponseUtils.setCookie(response, WxCookieConstant.WX_OAUTH_ACCESS_TOKEN, oauthAccessToken.getAccess_token());
 
-        return ResultModel.success();
+        return ResultDTO.success();
     }
 }

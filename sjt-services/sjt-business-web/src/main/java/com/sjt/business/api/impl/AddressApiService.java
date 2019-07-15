@@ -4,7 +4,7 @@ import com.sjt.business.api.dto.req.AddressParamDTO;
 import com.sjt.business.api.dto.res.AddressDTO;
 import com.sjt.business.api.expose.AddressApi;
 import com.sjt.business.service.IAddressService;
-import com.sjt.common.base.result.ResultModel;
+import com.sjt.common.base.result.ResultDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -21,32 +21,32 @@ public class AddressApiService implements AddressApi {
     private IAddressService iAddressService;
 
     @Override
-    public ResultModel<List<AddressDTO>> getAddressList() {
+    public ResultDTO<List<AddressDTO>> getAddressList() {
         List<AddressDTO> addressDTOS = iAddressService.getAddressList();
-        return ResultModel.data(addressDTOS);
+        return ResultDTO.data(addressDTOS);
     }
 
     @Override
-    public ResultModel createAddress(AddressParamDTO addressDTO) {
+    public ResultDTO createAddress(AddressParamDTO addressDTO) {
         iAddressService.createAddress(addressDTO);
-        return ResultModel.success();
+        return ResultDTO.success();
     }
 
     @Override
-    public ResultModel<AddressDTO> getAddress(Long id) {
+    public ResultDTO<AddressDTO> getAddress(Long id) {
         AddressDTO address = iAddressService.getAddress(id);
-        return ResultModel.data(address);
+        return ResultDTO.data(address);
     }
 
     @Override
-    public ResultModel editAddress(AddressParamDTO addressDTO) {
+    public ResultDTO editAddress(AddressParamDTO addressDTO) {
         iAddressService.editAddress(addressDTO);
-        return ResultModel.success();
+        return ResultDTO.success();
     }
 
     @Override
-    public ResultModel removeAddress(Long id) {
+    public ResultDTO removeAddress(Long id) {
         iAddressService.removeAddress(id);
-        return ResultModel.success();
+        return ResultDTO.success();
     }
 }

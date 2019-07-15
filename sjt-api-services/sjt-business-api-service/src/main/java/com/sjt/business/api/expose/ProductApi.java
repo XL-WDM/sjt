@@ -2,10 +2,9 @@ package com.sjt.business.api.expose;
 
 import com.sjt.business.api.dto.res.ProductCategoryDTO;
 import com.sjt.business.api.dto.res.ProductDetailDTO;
-import com.sjt.common.base.result.ResultModel;
+import com.sjt.common.base.result.ResultDTO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import jdk.nashorn.internal.objects.annotations.Getter;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -25,7 +24,7 @@ public interface ProductApi {
      */
     @ApiOperation(value = "获取商品分类信息", response = ProductCategoryDTO.class)
     @GetMapping("/open-api/category/list")
-    ResultModel<List<ProductCategoryDTO>> getProductcategorys();
+    ResultDTO<List<ProductCategoryDTO>> getProductcategorys();
 
     /**
      * 商品详情信息
@@ -34,5 +33,5 @@ public interface ProductApi {
      */
     @ApiOperation(value = "商品详情信息", response = ProductDetailDTO.class)
     @GetMapping("/open-api/detail")
-    ResultModel<ProductDetailDTO> getProductDetail(Long id);
+    ResultDTO<ProductDetailDTO> getProductDetail(Long id);
 }

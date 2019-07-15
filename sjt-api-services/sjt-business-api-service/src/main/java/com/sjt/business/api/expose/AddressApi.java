@@ -2,7 +2,7 @@ package com.sjt.business.api.expose;
 
 import com.sjt.business.api.dto.req.AddressParamDTO;
 import com.sjt.business.api.dto.res.AddressDTO;
-import com.sjt.common.base.result.ResultModel;
+import com.sjt.common.base.result.ResultDTO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,7 +25,7 @@ public interface AddressApi {
      */
     @ApiOperation(value = "获取收货地址列表", response = AddressDTO.class)
     @GetMapping("/list")
-    ResultModel<List<AddressDTO>> getAddressList();
+    ResultDTO<List<AddressDTO>> getAddressList();
 
     /**
      * 新增收货地址
@@ -34,7 +34,7 @@ public interface AddressApi {
      */
     @ApiOperation(value = "新增收货地址")
     @PostMapping("/add")
-    ResultModel createAddress(AddressParamDTO addressDTO);
+    ResultDTO createAddress(AddressParamDTO addressDTO);
 
     /**
      * 获取地址详情
@@ -43,7 +43,7 @@ public interface AddressApi {
      */
     @ApiOperation(value = "获取收货地址详情", response = AddressDTO.class)
     @GetMapping("/detail")
-    ResultModel<AddressDTO> getAddress(Long id);
+    ResultDTO<AddressDTO> getAddress(Long id);
 
     /**
      * 编辑收货地址
@@ -53,7 +53,7 @@ public interface AddressApi {
      */
     @ApiOperation(value = "编辑收货地址")
     @PostMapping("/edit")
-    ResultModel editAddress(AddressParamDTO addressDTO);
+    ResultDTO editAddress(AddressParamDTO addressDTO);
 
     /**
      * 删除收货地址
@@ -63,6 +63,6 @@ public interface AddressApi {
      */
     @ApiOperation(value = "删除收货地址")
     @PostMapping("/remove")
-    ResultModel removeAddress(Long id);
+    ResultDTO removeAddress(Long id);
 
 }

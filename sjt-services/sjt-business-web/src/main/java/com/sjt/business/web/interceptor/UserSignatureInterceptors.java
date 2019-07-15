@@ -5,8 +5,7 @@ import com.sjt.business.entity.UserSignLog;
 import com.sjt.business.mapper.UserMapper;
 import com.sjt.business.mapper.UserSignLogMapper;
 import com.sjt.business.web.config.WebUserContext;
-import com.sjt.common.base.result.ResultModel;
-import com.sjt.common.utils.CheckObjects;
+import com.sjt.common.base.result.ResultDTO;
 import com.sjt.common.utils.ResponseUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -46,7 +45,7 @@ public class UserSignatureInterceptors implements HandlerInterceptor {
         // 2.获取请求cookie中的token
         Cookie[] cookies = request.getCookies();
         if (cookies == null) {
-            ResponseUtils.fallback(response, ResultModel.error401());
+            ResponseUtils.fallback(response, ResultDTO.error401());
             return false;
         }
         String token = null;
@@ -59,18 +58,18 @@ public class UserSignatureInterceptors implements HandlerInterceptor {
 
         // 3.验证 token
         if (StringUtils.isEmpty(token)) {
-            ResponseUtils.fallback(response, ResultModel.error401());
+            ResponseUtils.fallback(response, ResultDTO.error401());
             return false;
         }
         UserSignLog userSignLog = userSignLogMapper.selectSignLog(token);
         if (userSignLog == null) {
-            ResponseUtils.fallback(response, ResultModel.error401());
+            ResponseUtils.fallback(response, ResultDTO.error401());
             return false;
         }
         LocalDateTime now = LocalDateTime.now();
         LocalDateTime expirationTime = userSignLog.getExpirationTime();
         if (expirationTime.compareTo(now) < 0) {
-            ResponseUtils.fallback(response, ResultModel.error401());
+            ResponseUtils.fallback(response, ResultDTO.error401());
             return false;
         }
 
