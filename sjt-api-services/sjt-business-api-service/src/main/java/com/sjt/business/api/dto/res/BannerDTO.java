@@ -19,12 +19,6 @@ public class BannerDTO {
     private String bannerName;
 
     /**
-     * banner类型(1-首页top轮播图, 2-GIF小视频, 3-山田日记banner, 4-首页center轮播图)
-     */
-    @ApiModelProperty("banner类型(1-首页top轮播图, 2-GIF小视频, 3-山田日记banner, 4-首页center轮播图)")
-    private String bannerType;
-
-    /**
      * 图片url地址
      */
     @ApiModelProperty("图片url地址")

@@ -1,6 +1,7 @@
 package com.sjt.business.api.expose;
 
 import com.sjt.business.api.dto.res.HomePageBannersDTO;
+import com.sjt.business.api.dto.res.HomePageNotesDTO;
 import com.sjt.common.base.result.ResultDTO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -20,6 +21,14 @@ public interface HomePageApi {
      * @return
      */
     @ApiOperation(value = "获取首页banner", response = HomePageBannersDTO.class)
-    @GetMapping("/open-api/home/banners")
+    @GetMapping("/open-api/banners")
     ResultDTO<HomePageBannersDTO> getHomePageBanners();
+
+    /**
+     * 获取山田日记列表信息
+     * @return
+     */
+    @ApiOperation(value = "获取山田日记列表信息", response = HomePageNotesDTO.class)
+    @GetMapping("/open-api/notes")
+    ResultDTO<HomePageNotesDTO> getNotes();
 }

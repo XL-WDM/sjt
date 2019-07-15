@@ -30,7 +30,7 @@ public class HomePageBannersDTO {
      * 山田日记banner
      */
     @ApiModelProperty("山田日记banner")
-    private BannerDTO stDiaryBanner;
+    private BannerDTO stNotesBanner;
 
     /**
      * 首页中部轮播图

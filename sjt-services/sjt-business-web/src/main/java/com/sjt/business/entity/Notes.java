@@ -13,9 +13,9 @@ import java.time.LocalDateTime;
  * @data: 2019/7/15
  */
 @Data
-@TableName("t_banner")
-public class Banner extends Model<Banner> implements Serializable {
-    private static final long serialVersionUID = 994127101160747525L;
+@TableName("t_notes")
+public class Notes extends Model<Notes> implements Serializable {
+    private static final long serialVersionUID = -7324531867913189856L;
 
     /**
      * 自增id
@@ -24,44 +24,34 @@ public class Banner extends Model<Banner> implements Serializable {
     private Long id;
 
     /**
-     * banner名称
+     * 标题
      */
-    private String bannerName;
+    private String title;
 
     /**
-     * banner类型(1-首页top轮播图, 2-GIF小视频, 3-山田日记banner, 4-首页center轮播图)
+     * 大图
      */
-    private String bannerType;
+    private String bigImg;
 
     /**
-     * 图片url地址
+     * 小图
      */
-    private String imgUrl;
+    private String smallImg;
 
     /**
-     * 图片版本
+     * 内容
      */
-    private Long imgVersion;
+    private String noteContext;
 
     /**
-     * banner跳转地址
+     * 是否为匠人精神日记(0-否, 1-是)
      */
-    private String url;
+    private String isCraftsman;
 
     /**
-     * 地址类型(1-内部地址, 2-外部地址)
-     */
-    private String urlType;
-
-    /**
-     * 状态(0-无效 1-有效)
+     * 状态(0-可用, 1-不可用)
      */
     private String status;
-
-    /**
-     * 排序编号
-     */
-    private Integer sortNum;
 
     /**
      * 创建时间

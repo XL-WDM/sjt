@@ -31,7 +31,12 @@ public class BannerServiceImpl implements IBannerService {
 
         // 1.获取所有banner图
         List<Banner> banners = bannerMapper.selectList(new EntityWrapper<Banner>()
-                .eq("status", "1").orderBy("sort_num"));
+                .eq("status", "1").orderBy("sort_num"))
+                .stream()
+                .map(b -> {
+                    b.setImgUrl(b.getImgUrl() + "?_v=" + b.getImgVersion().toString());
+                    return b;
+                }).collect(Collectors.toList());
 
         // 2.获取首页顶部轮播图
         List<BannerDTO> topBanners = banners.stream()
@@ -52,15 +57,15 @@ public class BannerServiceImpl implements IBannerService {
         homePageBannersDTO.setGifBanner(gifBanner.orElse(new BannerDTO()));
 
         // 4.获取山田日记banner
-        List<BannerDTO> stDiaryBanners = banners.stream()
-                .filter(b -> DataBaseConstant.BannerType.ST_DIARY_BANNER.getCode().equals(b.getBannerType()))
+        List<BannerDTO> stNotesBanners = banners.stream()
+                .filter(b -> DataBaseConstant.BannerType.ST_NOTES_BANNER.getCode().equals(b.getBannerType()))
                 .map(b -> BeanCopierUtils.copyBean(b, BannerDTO.class))
                 .collect(Collectors.toList());
-        Optional<BannerDTO> stDiaryBanner = Optional.empty();
-        if (stDiaryBanners != null && !stDiaryBanners.isEmpty()) {
-            stDiaryBanner = Optional.of(stDiaryBanners.get(0));
+        Optional<BannerDTO> stNotesBanner = Optional.empty();
+        if (stNotesBanners != null && !stNotesBanners.isEmpty()) {
+            stNotesBanner = Optional.of(stNotesBanners.get(0));
         }
-        homePageBannersDTO.setStDiaryBanner(stDiaryBanner.orElse(new BannerDTO()));
+        homePageBannersDTO.setStNotesBanner(stNotesBanner.orElse(new BannerDTO()));
 
         // 5.获取首页中部轮播图
         List<BannerDTO> centerBanners = banners.stream()

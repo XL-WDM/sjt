@@ -144,7 +144,7 @@ public class DataBaseConstant {
          */
         TOP_BANNER("1", "首页top轮播图"),
         GIF_BANNER("2", "GIF小视频"),
-        ST_DIARY_BANNER("3", "山田日记banner"),
+        ST_NOTES_BANNER("3", "山田日记banner"),
         CENTER_BANNER("4", "首页中部轮播图");
 
         private BannerType(String code, String name) {
