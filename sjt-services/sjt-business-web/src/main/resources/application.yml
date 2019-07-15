@@ -38,5 +38,4 @@ sjt:
                     /error,
                     /v2/api-docs,
                     /auth/sign,
-                    /product/category/list,
-                    /product/detail
+                    /**/open-api/**

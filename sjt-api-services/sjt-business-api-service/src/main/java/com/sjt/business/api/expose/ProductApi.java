@@ -24,7 +24,7 @@ public interface ProductApi {
      * @return
      */
     @ApiOperation(value = "获取商品分类信息", response = ProductCategoryDTO.class)
-    @GetMapping("/category/list")
+    @GetMapping("/open-api/category/list")
     ResultModel<List<ProductCategoryDTO>> getProductcategorys();
 
     /**
@@ -33,6 +33,6 @@ public interface ProductApi {
      * @return
      */
     @ApiOperation(value = "商品详情信息", response = ProductDetailDTO.class)
-    @GetMapping("/detail")
+    @GetMapping("/open-api/detail")
     ResultModel<ProductDetailDTO> getProductDetail(Long id);
 }
