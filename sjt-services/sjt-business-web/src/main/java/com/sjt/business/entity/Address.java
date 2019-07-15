@@ -38,12 +38,22 @@ public class Address extends Model<Address> implements Serializable {
     private String phone;
 
     /**
-     * 城市
+     * 省
+     */
+    private String province;
+
+    /**
+     * 市
      */
     private String city;
 
     /**
-     * 收货地址
+     * 县
+     */
+    private String county;
+
+    /**
+     * 详细地址
      */
     private String address;
 

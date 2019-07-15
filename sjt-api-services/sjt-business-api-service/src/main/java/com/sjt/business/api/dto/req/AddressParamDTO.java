@@ -31,10 +31,22 @@ public class AddressParamDTO {
     private String phone;
 
     /**
-     * 城市
+     * 省
      */
-    @ApiModelProperty(value = "城市", required = true)
+    @ApiModelProperty(value = "省", required = true)
+    private String province;
+
+    /**
+     * 市
+     */
+    @ApiModelProperty(value = "市", required = true)
     private String city;
+
+    /**
+     * 县
+     */
+    @ApiModelProperty(value = "县", required = true)
+    private String county;
 
     /**
      * 收货地址

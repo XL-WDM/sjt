@@ -6,8 +6,10 @@ create table t_address
 	user_id int not null comment '用户id',
 	contacts varchar(64) not null comment '联系人',
 	phone varchar(11) not null comment '联系电话',
-	city varchar(64) not null comment '城市',
-	address varchar(512) not null comment '收货地址',
+	province varchar(64) not null comment '省',
+	city varchar(64) not null comment '市',
+	county varchar(64) not null comment '县',
+	address varchar(512) not null comment '详细地址',
 	door_number varchar(128) not null comment '门牌号',
 	tag varchar(1) not null comment '地址标签(1-家, 2-公司, 3-学校)',
 	contacts_call varchar(1) not null comment '称呼(1-先生, 2-女士)',
@@ -16,4 +18,6 @@ create table t_address
 )
 comment '收货地址表' engine=InnoDB
 ;
+
+
 

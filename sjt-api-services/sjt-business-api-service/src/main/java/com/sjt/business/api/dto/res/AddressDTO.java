@@ -30,10 +30,22 @@ public class AddressDTO {
     private String phone;
 
     /**
-     * 城市
+     * 省
      */
-    @ApiModelProperty("城市")
+    @ApiModelProperty("省")
+    private String province;
+
+    /**
+     * 市
+     */
+    @ApiModelProperty("市")
     private String city;
+
+    /**
+     * 县
+     */
+    @ApiModelProperty("县")
+    private String county;
 
     /**
      * 收货地址

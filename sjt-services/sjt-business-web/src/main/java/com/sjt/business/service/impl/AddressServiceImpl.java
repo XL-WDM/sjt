@@ -55,7 +55,9 @@ public class AddressServiceImpl implements IAddressService {
         User user = WebUserContext.getContext();
         CheckObjects.isEmpty(addressParamDTO.getContacts(), "请填写联系人");
         CheckObjects.isEmpty(addressParamDTO.getPhone(), "请填写联系电话");
+        CheckObjects.isEmpty(addressParamDTO.getProvince(), "请选择省份");
         CheckObjects.isEmpty(addressParamDTO.getCity(), "请选择城市");
+        CheckObjects.isEmpty(addressParamDTO.getCounty(), "请选择县、区");
         CheckObjects.isEmpty(addressParamDTO.getAddress(), "请填写收货地址");
         CheckObjects.isEmpty(addressParamDTO.getDoorNumber(), "请填写门牌号");
         String tag = addressParamDTO.getTag();
@@ -119,7 +121,7 @@ public class AddressServiceImpl implements IAddressService {
         }
         String isDefault = addressParamDTO.getIsDefault();
         if (!StringUtils.isEmpty(isDefault)) {
-            CheckObjects.isStatus(isDefault, "请选择默认地址", "默认地址格式有误");
+            CheckObjects.isStatus(isDefault, "请填写默认地址选项", "默认地址格式有误");
         }
 
         // 2.获取当前登录用户
