@@ -5,6 +5,7 @@ import com.sjt.business.api.dto.res.SignUserDTO;
 import com.sjt.common.base.result.ResultDTO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -27,4 +28,14 @@ public interface OauthApi {
     @ApiOperation(value = "登录", response = SignUserDTO.class)
     @PostMapping("/sign")
     ResultDTO<SignUserDTO> sign(SignParamDTO signParamDTO, HttpServletResponse response);
+
+    /**
+     * 通过code换取网页授权access_token
+     * @param code 换取access_token的票据
+     * @param response
+     * @return
+     */
+    @ApiOperation(value = "通过code换取网页授权access_token")
+    @GetMapping("/open-api/wx/access-token")
+    ResultDTO getOauthAccessToken(String code, HttpServletResponse response);
 }

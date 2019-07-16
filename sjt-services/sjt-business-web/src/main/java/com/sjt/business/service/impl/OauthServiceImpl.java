@@ -5,7 +5,8 @@ import com.sjt.business.api.dto.res.SignUserDTO;
 import com.sjt.business.constant.DataBaseConstant;
 import com.sjt.business.entity.User;
 import com.sjt.business.entity.UserSignLog;
-import com.sjt.business.service.IUserService;
+import com.sjt.business.entity.WxOauthAccessToken;
+import com.sjt.business.service.IOauthService;
 import com.sjt.business.strategy.sign.mode.SignModeHandler;
 import com.sjt.business.web.config.WebUserContext;
 import com.sjt.common.base.constant.BaseConstant;
@@ -13,10 +14,12 @@ import com.sjt.common.base.constant.ResultConstant;
 import com.sjt.common.utils.BeanCopierUtils;
 import com.sjt.common.utils.CheckObjects;
 import com.sjt.common.utils.ResponseUtils;
+import com.sjt.wechat.api.dto.res.WxAccessTokenDTO;
+import com.sjt.wechat.service.IWxOauthService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -27,7 +30,10 @@ import java.util.UUID;
  */
 @Slf4j
 @Service
-public class UserServiceImpl implements IUserService {
+public class OauthServiceImpl implements IOauthService {
+
+    @Autowired
+    private IWxOauthService iWxOauthService;
 
     @Override
     public SignUserDTO sign(SignParamDTO signParamDTO, HttpServletResponse response) {
@@ -70,5 +76,23 @@ public class UserServiceImpl implements IUserService {
 
         // 9.返回用户信息
         return signUserDTO;
+    }
+
+    @Override
+    public WxAccessTokenDTO getOauthAccessToken(String code) {
+        // 1.参数校验
+        CheckObjects.isEmpty(code, "微信网页授权: code 获取为空");
+
+        // 2.获取网页授权凭证
+        WxAccessTokenDTO wxAccessTokenDTO = iWxOauthService.getOauthAccessToken(code);
+
+        // 3.授权凭证入库
+        // 3-1.DTO -> DAO
+        WxOauthAccessToken wxOauthAccessToken = BeanCopierUtils.copyBean(wxAccessTokenDTO, WxOauthAccessToken.class);
+        wxOauthAccessToken.setExpiresTime(LocalDateTime.now()
+                .plusSeconds(wxOauthAccessToken.getExpiresIn() - BaseConstant.Second.MINUTE));
+        wxOauthAccessToken.insert();
+
+        return wxAccessTokenDTO;
     }
 }

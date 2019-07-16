@@ -11,7 +11,7 @@ import com.sjt.common.utils.EncryptUtils;
 import com.sjt.common.utils.MD5Utils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import java.util.Optional;
@@ -21,7 +21,7 @@ import java.util.Optional;
  * @data: 2019/7/8
  */
 @Slf4j
-@Component
+@Service
 public class PasswordModeSignHandler implements SignModeHandler {
 
     @Autowired

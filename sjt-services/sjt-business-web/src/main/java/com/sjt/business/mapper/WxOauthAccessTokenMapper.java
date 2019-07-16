@@ -1,7 +1,7 @@
-package com.sjt.wechat.mapper;
+package com.sjt.business.mapper;
 
 import com.baomidou.mybatisplus.mapper.BaseMapper;
-import com.sjt.wechat.entity.WxOauthAccessToken;
+import com.sjt.business.entity.WxOauthAccessToken;
 
 /**
  * @author: yilan.hu

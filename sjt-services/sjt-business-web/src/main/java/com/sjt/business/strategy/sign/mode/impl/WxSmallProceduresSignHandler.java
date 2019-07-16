@@ -10,11 +10,12 @@ import com.sjt.business.mapper.UserOauthsMapper;
 import com.sjt.business.strategy.sign.mode.SignModeHandler;
 import com.sjt.common.base.constant.BaseConstant;
 import com.sjt.common.utils.CheckObjects;
+import com.sjt.wechat.api.dto.res.WxAppletSessionKeyDTO;
 import com.sjt.wechat.service.IWxOauthService;
 import com.sjt.wechat.vo.res.WxAppletSessionKeyVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
@@ -26,7 +27,7 @@ import java.util.List;
  * @data: 2019/7/10
  */
 @Slf4j
-@Component
+@Service
 public class WxSmallProceduresSignHandler implements SignModeHandler {
 
     @Autowired
@@ -46,7 +47,7 @@ public class WxSmallProceduresSignHandler implements SignModeHandler {
         CheckObjects.isEmpty(code, "登录凭证code不能为空");
 
         // 2.获取SeesionKey和openid
-        WxAppletSessionKeyVO wxAppletSeesionKey = iWxOauthService.getWxAppletSeesionKey(code);
+        WxAppletSessionKeyDTO wxAppletSeesionKey = iWxOauthService.getWxAppletSeesionKey(code);
         CheckObjects.isNull(wxAppletSeesionKey, "登录凭证校验不通过");
 
         String openid = wxAppletSeesionKey.getOpenid();
@@ -84,7 +85,7 @@ public class WxSmallProceduresSignHandler implements SignModeHandler {
             userOauths.setUserId(user.getId());
             userOauths.setOauthId(wxAppletSeesionKey.getOpenid());
             userOauths.setUnionId(wxAppletSeesionKey.getUnionid());
-            userOauths.setSessionKey(wxAppletSeesionKey.getSession_key());
+            userOauths.setSessionKey(wxAppletSeesionKey.getSessionKey());
             userOauths.setOauthType(DataBaseConstant.OauthType.WX_APPLET.getCode());
             userOauths.insert();
         } else {
@@ -96,8 +97,8 @@ public class WxSmallProceduresSignHandler implements SignModeHandler {
                 isChange = true;
             }
             // 3-5.更新sessionKey
-            if (!wxAppletSeesionKey.getSession_key().equals(userOauths.getSessionKey())) {
-                userOauths.setSessionKey(wxAppletSeesionKey.getSession_key());
+            if (!wxAppletSeesionKey.getSessionKey().equals(userOauths.getSessionKey())) {
+                userOauths.setSessionKey(wxAppletSeesionKey.getSessionKey());
                 isChange = true;
             }
 

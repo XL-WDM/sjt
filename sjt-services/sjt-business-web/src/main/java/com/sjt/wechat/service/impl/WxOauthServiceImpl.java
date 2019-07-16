@@ -1,24 +1,25 @@
 package com.sjt.wechat.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
-import com.sjt.common.base.constant.BaseConstant;
-import com.sjt.wechat.entity.WxOauthAccessToken;
-import com.sjt.wechat.mapper.WxOauthAccessTokenMapper;
+import com.sjt.business.mapper.WxOauthAccessTokenMapper;
 import com.sjt.common.exceptions.GlobalException;
+import com.sjt.common.utils.BeanCopierUtils;
 import com.sjt.common.utils.CheckObjects;
+import com.sjt.wechat.api.dto.res.WxAccessTokenDTO;
+import com.sjt.wechat.api.dto.res.WxAppletSessionKeyDTO;
+import com.sjt.wechat.api.dto.res.WxSnsapiUserInfoDTO;
 import com.sjt.wechat.config.WxBaseInfo;
 import com.sjt.wechat.constant.WechatConstant;
 import com.sjt.wechat.service.IWxOauthService;
 import com.sjt.wechat.vo.res.WxAccessTokenVO;
 import com.sjt.wechat.vo.res.WxAppletSessionKeyVO;
+import com.sjt.wechat.vo.res.WxSnsapiUserInfoVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
-
-import java.time.LocalDateTime;
 
 /**
  * @author: yilan.hu
@@ -38,7 +39,7 @@ public class WxOauthServiceImpl implements IWxOauthService {
     private WxOauthAccessTokenMapper wxOauthAccessTokenMapper;
 
     @Override
-    public WxAccessTokenVO getOauthAccessToken(String code) {
+    public WxAccessTokenDTO getOauthAccessToken(String code) {
         // 1.参数校验
         CheckObjects.isEmpty(code, "微信网页授权: code获取失败");
 
@@ -55,6 +56,7 @@ public class WxOauthServiceImpl implements IWxOauthService {
 
         // 3.获取body
         WxAccessTokenVO wxAccessTokenVO = JSONObject.parseObject(entity.getBody(), WxAccessTokenVO.class);
+        CheckObjects.isNull(wxAccessTokenVO, "微信网页授权信息获取为空");
         if (!wxAccessTokenVO.isSuccess()) {
             log.error("# 微信网页授权: AccessToken获取失败 -> errcode: {}, errmsg: {}",
                     wxAccessTokenVO.getErrcode(),
@@ -62,17 +64,12 @@ public class WxOauthServiceImpl implements IWxOauthService {
             throw new GlobalException("微信网页授权: AccessToken获取失败");
         }
 
-        // VO -> DAO
-        WxOauthAccessToken wxOauthAccessToken = oauthAccessTokenVoToDao(wxAccessTokenVO);
-        wxOauthAccessToken.setExpiresTime(LocalDateTime.now()
-                .plusSeconds(wxAccessTokenVO.getExpires_in() - BaseConstant.Second.MINUTE));
-        wxOauthAccessToken.insert();
-
-        return wxAccessTokenVO;
+        // 4.VO -> DTO
+        return wxAccessTokenVOToDTO(wxAccessTokenVO);
     }
 
     @Override
-    public WxAccessTokenVO refreshoauthAccessToken(String refreshToken) {
+    public WxAccessTokenDTO refreshoauthAccessToken(String refreshToken) {
         CheckObjects.isEmpty(refreshToken, "refresh_token 不能为空");
 
         // 4.刷新url
@@ -80,8 +77,11 @@ public class WxOauthServiceImpl implements IWxOauthService {
                 .replace("APPID", wxBaseInfo.getAppId())
                 .replace("REFRESH_TOKEN", refreshToken);
         try {
+            // 4-1.请求微信方获取微信网页授权信息
             String result = restTemplate.getForObject(url, String.class);
-            return JSONObject.parseObject(result, WxAccessTokenVO.class);
+            WxAccessTokenVO wxAccessTokenVO = JSONObject.parseObject(result, WxAccessTokenVO.class);
+            // 4-2.VO -> DTO
+            return wxAccessTokenVOToDTO(wxAccessTokenVO);
         } catch (Exception e) {
             log.error("# 微信网页授权: AccessToken刷新失败 -> {}", e.getMessage(), e);
             return null;
@@ -89,7 +89,37 @@ public class WxOauthServiceImpl implements IWxOauthService {
     }
 
     @Override
-    public WxAppletSessionKeyVO getWxAppletSeesionKey(String code) {
+    public WxSnsapiUserInfoDTO getWxSnsapiUserInfo(String accessToken, String openid) {
+        // 1.参数校验
+        CheckObjects.isEmpty(accessToken, "授权凭证不能为空");
+        CheckObjects.isEmpty(openid, "用户的唯一标识 openid 不能为空");
+
+        // 2.请求
+        String url = WechatConstant.PULL_SNSAPI_USERINFO_GET_URL
+                .replace("ACCESS_TOKEN", "accessToken")
+                .replace("OPENID", "openid");
+
+        // 2-1.请求微信方获取微信用户信息
+        ResponseEntity<String> entity = restTemplate.getForEntity(url, String.class);
+        if (HttpStatus.OK != entity.getStatusCode()) {
+            log.error("# 微信用户信息查询: (调用微信服务响应失败) -> status: {}", entity.getStatusCodeValue());
+            throw new GlobalException("微信用户信息查询失败");
+        }
+        WxSnsapiUserInfoVO wxSnsapiUserInfoVO = JSONObject.parseObject(entity.getBody(), WxSnsapiUserInfoVO.class);
+        CheckObjects.isNull(wxSnsapiUserInfoVO, "微信用户信息获取为空");
+        if (!wxSnsapiUserInfoVO.isSuccess()) {
+            log.error("# 微信用户信息查询失败 -> errcode: {}, errmsg: {}",
+                    wxSnsapiUserInfoVO.getErrcode(),
+                    wxSnsapiUserInfoVO.getErrmsg());
+            throw new GlobalException("微信用户信息查询失败");
+        }
+
+        // 3.VO -> DTO
+        return BeanCopierUtils.copyBean(wxSnsapiUserInfoVO, WxSnsapiUserInfoDTO.class);
+    }
+
+    @Override
+    public WxAppletSessionKeyDTO getWxAppletSeesionKey(String code) {
         // 1.参数校验
         CheckObjects.isEmpty(code, "登录凭证code不能为空");
 
@@ -98,14 +128,15 @@ public class WxOauthServiceImpl implements IWxOauthService {
                 .replace("APPID", wxBaseInfo.getAppletId())
                 .replace("SECRET", wxBaseInfo.getAppletAppsecret())
                 .replace("JSCODE", code);
-
         ResponseEntity<String> entity = restTemplate.getForEntity(url, String.class);
         if (HttpStatus.OK != entity.getStatusCode()) {
             log.error("# 微信小程序登陆: SessionKey获取失败(调用微信服务响应失败) -> status: {}", entity.getStatusCodeValue());
             throw new GlobalException("微信网页授权: SessionKey获取失败");
         }
 
+        // 2-1.请求微信方获取小程序授权信息
         WxAppletSessionKeyVO wxAppletSessionKeyVO = JSONObject.parseObject(entity.getBody(), WxAppletSessionKeyVO.class);
+        CheckObjects.isNull(wxAppletSessionKeyVO, "微信网页授权信息获取为空");
         if (!wxAppletSessionKeyVO.isSuccess()) {
             log.error("# 微信小程序登陆: SessionKey获取失败 -> errcode: {}, errmsg: {}",
                     wxAppletSessionKeyVO.getErrcode(),
@@ -113,16 +144,24 @@ public class WxOauthServiceImpl implements IWxOauthService {
             throw new GlobalException("微信网页授权: SessionKey获取失败");
         }
 
-        return wxAppletSessionKeyVO;
+        // VO -> DTO
+        WxAppletSessionKeyDTO wxAppletSessionKeyDTO = BeanCopierUtils.copyBean(wxAppletSessionKeyVO, WxAppletSessionKeyDTO.class);
+        wxAppletSessionKeyDTO.setSessionKey(wxAppletSessionKeyVO.getSession_key());
+        return wxAppletSessionKeyDTO;
     }
 
-    private WxOauthAccessToken oauthAccessTokenVoToDao(WxAccessTokenVO wxAccessTokenVO) {
-        WxOauthAccessToken wxOauthAccessToken = new WxOauthAccessToken();
-        wxOauthAccessToken.setAccessToken(wxAccessTokenVO.getAccess_token());
-        wxOauthAccessToken.setExpiresIn(wxAccessTokenVO.getExpires_in());
-        wxOauthAccessToken.setRefreshToken(wxAccessTokenVO.getRefresh_token());
-        wxOauthAccessToken.setOpenid(wxAccessTokenVO.getOpenid());
-        wxOauthAccessToken.setScope(wxAccessTokenVO.getScope());
-        return wxOauthAccessToken;
+    /**
+     * VO -> DTO
+     * @param wxAccessTokenVO
+     * @return
+     */
+    private WxAccessTokenDTO wxAccessTokenVOToDTO(WxAccessTokenVO wxAccessTokenVO) {
+        WxAccessTokenDTO wxAccessTokenDTO = new WxAccessTokenDTO();
+        wxAccessTokenDTO.setAccessToken(wxAccessTokenVO.getAccess_token());
+        wxAccessTokenDTO.setExpiresIn(wxAccessTokenVO.getExpires_in());
+        wxAccessTokenDTO.setRefreshToken(wxAccessTokenVO.getRefresh_token());
+        wxAccessTokenDTO.setOpenid(wxAccessTokenVO.getOpenid());
+        wxAccessTokenDTO.setScope(wxAccessTokenVO.getScope());
+        return wxAccessTokenDTO;
     }
 }

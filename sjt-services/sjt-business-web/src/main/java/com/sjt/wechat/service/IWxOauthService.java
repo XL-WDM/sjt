@@ -1,7 +1,8 @@
 package com.sjt.wechat.service;
 
-import com.sjt.wechat.vo.res.WxAccessTokenVO;
-import com.sjt.wechat.vo.res.WxAppletSessionKeyVO;
+import com.sjt.wechat.api.dto.res.WxAccessTokenDTO;
+import com.sjt.wechat.api.dto.res.WxAppletSessionKeyDTO;
+import com.sjt.wechat.api.dto.res.WxSnsapiUserInfoDTO;
 
 /**
  * @author: yilan.hu
@@ -14,19 +15,27 @@ public interface IWxOauthService {
      * @param code
      * @return
      */
-    WxAccessTokenVO getOauthAccessToken(String code);
+    WxAccessTokenDTO getOauthAccessToken(String code);
 
     /**
      * 刷新access_token
      * @param refreshToken
      * @return
      */
-    WxAccessTokenVO refreshoauthAccessToken(String refreshToken);
+    WxAccessTokenDTO refreshoauthAccessToken(String refreshToken);
 
     /**
-     * 登录(auth.code2Session)
+     * 获取用户基本
+     * @param accessToken
+     * @param openid
+     * @return
+     */
+    WxSnsapiUserInfoDTO getWxSnsapiUserInfo(String accessToken, String openid);
+
+    /**
+     * 微信小程序登录(auth.code2Session)
      * @param code
      * @return
      */
-    WxAppletSessionKeyVO getWxAppletSeesionKey(String code);
+    WxAppletSessionKeyDTO getWxAppletSeesionKey(String code);
 }

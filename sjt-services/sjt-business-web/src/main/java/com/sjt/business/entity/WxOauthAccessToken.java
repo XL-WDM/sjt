@@ -1,4 +1,4 @@
-package com.sjt.wechat.entity;
+package com.sjt.business.entity;
 
 import com.baomidou.mybatisplus.activerecord.Model;
 import com.baomidou.mybatisplus.annotations.TableId;

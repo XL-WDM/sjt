@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.sjt.business.mapper.UserOauthsMapper">
+    <parameterMap id="userOauthsParame" type="com.sjt.business.entity.UserOauths" />
+    <resultMap id="userOauthsResult" type="com.sjt.business.entity.UserOauths" />
+
+    <sql id="base_all">
+        id, user_id, oauth_id, union_id, session_key, status,
+        oauth_type, oauth_date, update_date
+    </sql>
+
+    <select id="selectOneByOauthIdAndStatus" parameterMap="java.lang.String" resultMap="userOauthsResult">
+        select
+        <include refid="base_all" />
+        from t_user_oauths
+        where status = '1'
+        and oauth_id = #{oauthId}
+    </select>
+</mapper>

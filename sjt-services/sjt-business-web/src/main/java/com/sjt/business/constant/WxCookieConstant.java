@@ -1,4 +1,4 @@
-package com.sjt.wechat.constant;
+package com.sjt.business.constant;
 
 /**
  * @author: yilan.hu
