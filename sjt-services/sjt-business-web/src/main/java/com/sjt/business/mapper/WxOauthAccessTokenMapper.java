@@ -10,9 +10,9 @@ import com.sjt.business.entity.WxOauthAccessToken;
 public interface WxOauthAccessTokenMapper extends BaseMapper<WxOauthAccessToken> {
 
     /**
-     * 通过accessToken查询凭证信息
-     * @param accessToken
+     * 通过refreshToken查询凭证信息
+     * @param token
      * @return
      */
-    WxOauthAccessToken selectByAccessToken(String accessToken);
+    WxOauthAccessToken selectByAccessToken(String token);
 }

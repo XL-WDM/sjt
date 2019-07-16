@@ -47,11 +47,11 @@ public class WechatModeSignHandler implements SignModeHandler {
     @Transactional(rollbackFor = Exception.class)
     public UserModel check(SignParamDTO signParamDTO) {
         // 1.参数校验
-        String accessToken = signParamDTO.getAccessToken();
-        CheckObjects.isEmpty(accessToken, "授权凭证不能为空");
+        String token = signParamDTO.getToken();
+        CheckObjects.isEmpty(token, "授权凭证不能为空");
 
         // 2.查询凭证信息
-        WxOauthAccessToken wxOauthAccessToken = wxOauthAccessTokenMapper.selectByAccessToken(accessToken);
+        WxOauthAccessToken wxOauthAccessToken = wxOauthAccessTokenMapper.selectByAccessToken(token);
         CheckObjects.isNull(wxOauthAccessToken, "授权凭证不存在");
         // 2-1.处理凭证刷新
         LocalDateTime now = LocalDateTime.now();
@@ -60,8 +60,7 @@ public class WechatModeSignHandler implements SignModeHandler {
             WxAccessTokenDTO wxAccessTokenDTO = iWxOauthService.refreshoauthAccessToken(wxOauthAccessToken.getRefreshToken());
             CheckObjects.isNull(wxAccessTokenDTO, "授权凭证更新失败");
             // 2-2更新凭证有效期
-            wxOauthAccessToken.setExpiresTime(now
-                    .plusSeconds(wxAccessTokenDTO.getExpiresIn() - BaseConstant.Second.MINUTE));
+            wxOauthAccessToken.setExpiresTime(now.plusSeconds(wxAccessTokenDTO.getExpiresIn() - BaseConstant.Second.MINUTE));
             wxOauthAccessToken.setRefreshDate(now);
             wxOauthAccessToken.updateById();
         }

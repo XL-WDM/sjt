@@ -34,7 +34,7 @@ public class OauthApiService implements OauthApi {
         WxAccessTokenDTO oauthAccessToken = iOauthService.getOauthAccessToken(code);
 
         // 设置 cookie
-        ResponseUtils.setCookie(response, WxCookieConstant.WX_OAUTH_ACCESS_TOKEN, oauthAccessToken.getAccessToken());
+        ResponseUtils.setCookie(response, WxCookieConstant.WX_OAUTH_ACCESS_TOKEN, oauthAccessToken.getRefreshToken());
         return null;
     }
 }

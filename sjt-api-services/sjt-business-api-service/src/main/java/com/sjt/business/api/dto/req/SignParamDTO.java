@@ -34,9 +34,15 @@ public class SignParamDTO {
     @ApiModelProperty(value = "密码")
     private String password;
 
+    /**
+     * 网页授权接口调用凭证
+     */
     @ApiModelProperty(value = "网页授权接口调用凭证")
-    private String accessToken;
+    private String token;
 
+    /**
+     * 登录凭证code
+     */
     @ApiModelProperty(value = "登录凭证code")
     private String code;
 

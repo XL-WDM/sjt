@@ -13,6 +13,6 @@
         select
         <include refid="base_all" />
         from t_wx_oauth_access_token
-        where access_token = #{accessToken}
+        where refresh_token = #{token}
     </select>
 </mapper>
