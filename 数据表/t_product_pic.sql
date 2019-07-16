@@ -4,7 +4,7 @@ create table t_product_pic
 	id int auto_increment comment '自增id'
 		primary key,
 	product_id int not null comment '商品id',
-	pic_url varchar(256) not null comment '图片URL',
+	pic_url varchar(512) not null comment '图片URL',
 	descript varchar(64) null comment '图片描述',
 	sort_num int default '0' not null comment '图片排序编号',
 	is_master varchar(1) default '0' not null comment '是否主图(0-否, 1-是)',

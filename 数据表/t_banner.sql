@@ -5,9 +5,9 @@ create table t_banner
 		primary key,
 	banner_name varchar(36) not null comment 'banner名称',
 	banner_type varchar(1) default '1' not null comment 'banner类型(1-首页top轮播图, 2-GIF小视频, 3-山田日记banner, 4-首页center轮播图)',
-	img_url varchar(128) not null comment '图片url地址',
+	img_url varchar(512) not null comment '图片url地址',
 	img_version bigint not null comment '图片版本(?_v=xxxxxxxx)',
-	url varchar(128) null comment 'banner跳转地址',
+	url varchar(512) null comment 'banner跳转地址',
 	url_type varchar(1) default '1' not null comment '地址类型(1-内部地址, 2-外部地址)',
 	status varchar(1) default '1' not null comment '状态(0-无效 1-有效)',
 	sort_num int default '0' not null comment '排序编号',
@@ -17,5 +17,12 @@ create table t_banner
 comment 'banner配置表' engine=InnoDB
 ;
 
-
+INSERT INTO stj.t_banner (id, banner_name, banner_type, img_url, img_version, url, url_type, status, sort_num, create_date, update_date) VALUES (1, '轮播图1', '1', 'http://bdxt.95590.cn/bdmobile/resources/images/banner/inclusive_finance.png', 1563160127343, 'https://www.baidu.com/', '2', '1', 1, '2019-07-15 11:11:12', '2019-07-15 11:11:12');
+INSERT INTO stj.t_banner (id, banner_name, banner_type, img_url, img_version, url, url_type, status, sort_num, create_date, update_date) VALUES (2, '轮播图2', '1', 'http://bdxt.95590.cn/bdmobile/resources/images/home/banner_120.png', 1563160127343, 'https://www.baidu.com/', '2', '1', 2, '2019-07-15 11:11:12', '2019-07-15 11:11:12');
+INSERT INTO stj.t_banner (id, banner_name, banner_type, img_url, img_version, url, url_type, status, sort_num, create_date, update_date) VALUES (3, '轮播图3', '1', 'http://bdxt.95590.cn/bdmobile/resources/images/home/illegal%20.png', 1563160127343, 'https://www.baidu.com/', '2', '1', 3, '2019-07-15 11:11:12', '2019-07-15 11:11:12');
+INSERT INTO stj.t_banner (id, banner_name, banner_type, img_url, img_version, url, url_type, status, sort_num, create_date, update_date) VALUES (4, 'GIF小视频', '2', 'http://bdxt.95590.cn/bdmobile/resources/images/home/iolationSale.png', 1563160127343, 'https://www.baidu.com/', '2', '1', 0, '2019-07-15 11:11:12', '2019-07-15 11:11:12');
+INSERT INTO stj.t_banner (id, banner_name, banner_type, img_url, img_version, url, url_type, status, sort_num, create_date, update_date) VALUES (5, '山田日记', '3', 'http://bdxt.95590.cn/bdmobile/resources/images/home/banner_11.png', 1563160127343, 'https://www.baidu.com/', '2', '1', 0, '2019-07-15 11:11:12', '2019-07-15 11:11:12');
+INSERT INTO stj.t_banner (id, banner_name, banner_type, img_url, img_version, url, url_type, status, sort_num, create_date, update_date) VALUES (6, '中部轮播图1', '4', 'http://bdxt.95590.cn/bdmobile/resources/images/banner/inclusive_finance.png', 1563160127343, 'https://www.baidu.com/', '2', '1', 1, '2019-07-15 11:11:12', '2019-07-15 11:11:12');
+INSERT INTO stj.t_banner (id, banner_name, banner_type, img_url, img_version, url, url_type, status, sort_num, create_date, update_date) VALUES (7, '中部轮播图2', '4', 'http://bdxt.95590.cn/bdmobile/resources/images/home/banner_120.png', 1563160127343, 'https://www.baidu.com/', '2', '1', 2, '2019-07-15 11:11:12', '2019-07-15 11:11:12');
+INSERT INTO stj.t_banner (id, banner_name, banner_type, img_url, img_version, url, url_type, status, sort_num, create_date, update_date) VALUES (8, '中部轮播图3', '4', 'http://bdxt.95590.cn/bdmobile/resources/images/home/illegal%20.png', 1563160127343, 'https://www.baidu.com/', '2', '1', 3, '2019-07-15 11:11:12', '2019-07-15 11:11:12');
 
