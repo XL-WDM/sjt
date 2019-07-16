@@ -62,20 +62,22 @@ public class AddressServiceImpl implements IAddressService {
         CheckObjects.isEmpty(addressParamDTO.getCounty(), "请选择县、区");
         CheckObjects.isEmpty(addressParamDTO.getAddress(), "请填写收货地址");
         CheckObjects.isEmpty(addressParamDTO.getDoorNumber(), "请填写门牌号");
-        String tag = addressParamDTO.getTag();
-        CheckObjects.isEmpty(tag, "请选择地址标签");
-        DataBaseConstant.AddressTag tagEnum = DataBaseConstant.AddressTag.find(tag);
-        CheckObjects.isNull(tagEnum, "地址标签格式有误");
-        String call = addressParamDTO.getContactsCall();
-        CheckObjects.isEmpty(call, "请选择称呼");
-        DataBaseConstant.Call callEnum = DataBaseConstant.Call.find(call);
-        CheckObjects.isNull(callEnum, "称呼格式有误");
+//        String tag = addressParamDTO.getTag();
+//        CheckObjects.isEmpty(tag, "请选择地址标签");
+//        DataBaseConstant.AddressTag tagEnum = DataBaseConstant.AddressTag.find(tag);
+//        CheckObjects.isNull(tagEnum, "地址标签格式有误");
+//        String call = addressParamDTO.getContactsCall();
+//        CheckObjects.isEmpty(call, "请选择称呼");
+//        DataBaseConstant.Call callEnum = DataBaseConstant.Call.find(call);
+//        CheckObjects.isNull(callEnum, "称呼格式有误");
         CheckObjects.isStatus(addressParamDTO.getIsDefault(), "请选择默认地址", "默认地址格式有误");
 
         // 2.DTO -> DAO
         Address address = BeanCopierUtils.copyBean(addressParamDTO, Address.class);
         address.setUserId(user.getId());
         address.setStatus(BaseConstant.Status.YES.getCode());
+        address.setTag(DataBaseConstant.AddressTag.HOME.getCode());
+        address.setContactsCall(DataBaseConstant.Call.SIR.getCode());
 
         // 3.如果新增地址为默认地址, 则更新其他地址为非默认地址
         addressMapper.cleanDefaultAddress(user.getId());
@@ -109,18 +111,18 @@ public class AddressServiceImpl implements IAddressService {
         CheckObjects.isNull(addressParamDTO, ResultConstant.PARAMETERS_CANNOT_BE_NULL);
         Long id = addressParamDTO.getId();
         CheckObjects.isNull(id, "请选择需要更新的地址");
-        String tag = addressParamDTO.getTag();
-        if (!StringUtils.isEmpty(tag)) {
-            CheckObjects.isEmpty(tag, "请选择地址标签");
-            DataBaseConstant.AddressTag tagEnum = DataBaseConstant.AddressTag.find(tag);
-            CheckObjects.isNull(tagEnum, "地址标签格式有误");
-        }
-        String call = addressParamDTO.getContactsCall();
-        if (!StringUtils.isEmpty(call)) {
-            CheckObjects.isEmpty(call, "请选择称呼");
-            DataBaseConstant.Call callEnum = DataBaseConstant.Call.find(call);
-            CheckObjects.isNull(callEnum, "称呼格式有误");
-        }
+//        String tag = addressParamDTO.getTag();
+//        if (!StringUtils.isEmpty(tag)) {
+//            CheckObjects.isEmpty(tag, "请选择地址标签");
+//            DataBaseConstant.AddressTag tagEnum = DataBaseConstant.AddressTag.find(tag);
+//            CheckObjects.isNull(tagEnum, "地址标签格式有误");
+//        }
+//        String call = addressParamDTO.getContactsCall();
+//        if (!StringUtils.isEmpty(call)) {
+//            CheckObjects.isEmpty(call, "请选择称呼");
+//            DataBaseConstant.Call callEnum = DataBaseConstant.Call.find(call);
+//            CheckObjects.isNull(callEnum, "称呼格式有误");
+//        }
         String isDefault = addressParamDTO.getIsDefault();
         if (!StringUtils.isEmpty(isDefault)) {
             CheckObjects.isStatus(isDefault, "请填写默认地址选项", "默认地址格式有误");

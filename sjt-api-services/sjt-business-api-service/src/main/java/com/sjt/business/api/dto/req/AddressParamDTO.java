@@ -61,20 +61,20 @@ public class AddressParamDTO {
     private String doorNumber;
 
     /**
-     * 地址标签(1-家, 2-公司, 3-学校)
-     */
-    @ApiModelProperty(value = "地址标签(1-家, 2-公司, 3-学校)", required = true)
-    private String tag;
-
-    /**
-     * 称呼(1-先生, 2-女士)
-     */
-    @ApiModelProperty(value = "称呼(1-先生, 2-女士)", required = true)
-    private String contactsCall;
-
-    /**
      * 是否默认地址(0-不是, 1-是)
      */
     @ApiModelProperty(value = "是否默认地址(0-不是, 1-是)", required = true)
     private String isDefault;
+
+    /**
+     * 地址标签(1-家, 2-公司, 3-学校)
+    @ApiModelProperty(value = "地址标签(1-家, 2-公司, 3-学校)", required = true)
+    private String tag;
+     */
+
+    /**
+     * 称呼(1-先生, 2-女士)
+    @ApiModelProperty(value = "称呼(1-先生, 2-女士)", required = true)
+    private String contactsCall;
+     */
 }
