@@ -2,6 +2,7 @@ package com.sjt.business.mapper;
 
 import com.baomidou.mybatisplus.mapper.BaseMapper;
 import com.sjt.business.entity.WxSnsapiUserInfo;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * @author: yilan.hu
@@ -9,4 +10,11 @@ import com.sjt.business.entity.WxSnsapiUserInfo;
  */
 public interface WxSnsapiUserInfoMapper extends BaseMapper<WxSnsapiUserInfo> {
 
+    /**
+     * 通过 openid 或者 unionid 查询微信用户信息
+     * @param openid
+     * @param unionid
+     * @return
+     */
+    WxSnsapiUserInfo selectByOpenid(@Param("openid") String openid, @Param("unionid") String unionid);
 }

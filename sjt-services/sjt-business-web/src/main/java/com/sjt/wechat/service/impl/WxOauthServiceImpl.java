@@ -96,8 +96,8 @@ public class WxOauthServiceImpl implements IWxOauthService {
 
         // 2.请求
         String url = WechatConstant.PULL_SNSAPI_USERINFO_GET_URL
-                .replace("ACCESS_TOKEN", "accessToken")
-                .replace("OPENID", "openid");
+                .replace("ACCESS_TOKEN", accessToken)
+                .replace("OPENID", openid);
 
         // 2-1.请求微信方获取微信用户信息
         ResponseEntity<String> entity = restTemplate.getForEntity(url, String.class);

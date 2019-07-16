@@ -35,6 +35,6 @@ public class OauthApiService implements OauthApi {
 
         // 设置 cookie
         ResponseUtils.setCookie(response, WxCookieConstant.WX_OAUTH_ACCESS_TOKEN, oauthAccessToken.getRefreshToken());
-        return null;
+        return ResultDTO.success();
     }
 }

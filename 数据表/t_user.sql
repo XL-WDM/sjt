@@ -7,9 +7,9 @@ create table t_user
 	email varchar(64) null comment '邮箱',
 	phone varchar(11) null comment '手机号',
 	password varchar(64) null comment '密码',
-	face_url varchar(128) null comment '头像',
+	face_url varchar(512) null comment '头像',
 	nickname varchar(36) null comment '昵称',
-	sex varchar(1) null comment '性别',
+	sex varchar(1) default '0' not null comment '性别(0-未设置, 1-男, 2-女)',
 	birtrday date null comment '生日',
 	identity_card_type varchar(1) null comment '证件类型(1-身份证, 2.军官证, 3.护照)',
 	identity_card varchar(36) null comment '证件号码',
@@ -30,4 +30,5 @@ create table t_user
 )
 comment '用户信息表' engine=InnoDB
 ;
+
 

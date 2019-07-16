@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.sjt.business.mapper.WxSnsapiUserInfoMapper">
+    <parameterMap id="wxSnsapiUserInfoParame" type="com.sjt.business.entity.WxSnsapiUserInfo" />
+    <resultMap id="wxSnsapiUserInfoResult" type="com.sjt.business.entity.WxSnsapiUserInfo" />
+
+    <sql id="base_all">
+        id, openid, nickname ,sex, country, province, city, headimgurl, privilege, unionid
+    </sql>
+
+    <select id="selectByOpenid" parameterType="java.lang.String" resultMap="wxSnsapiUserInfoResult">
+        select
+        <include refid="base_all" />
+        from t_wx_snsapi_userinfo
+        where openid = #{openid}
+        <if test="unionid != null and unionid != ''">
+          or unionid = #{unionid}
+        </if>
+    </select>
+</mapper>

@@ -9,6 +9,7 @@ import com.sjt.business.entity.WxSnsapiUserInfo;
 import com.sjt.business.mapper.UserMapper;
 import com.sjt.business.mapper.UserOauthsMapper;
 import com.sjt.business.mapper.WxOauthAccessTokenMapper;
+import com.sjt.business.mapper.WxSnsapiUserInfoMapper;
 import com.sjt.business.strategy.sign.mode.SignModeHandler;
 import com.sjt.common.base.constant.BaseConstant;
 import com.sjt.common.utils.BeanCopierUtils;
@@ -43,6 +44,9 @@ public class WechatModeSignHandler implements SignModeHandler {
     @Autowired
     private UserMapper userMapper;
 
+    @Autowired
+    private WxSnsapiUserInfoMapper wxSnsapiUserInfoMapper;
+
     @Override
     @Transactional(rollbackFor = Exception.class)
     public UserModel check(SignParamDTO signParamDTO) {
@@ -69,20 +73,33 @@ public class WechatModeSignHandler implements SignModeHandler {
         UserOauths userOauths = userOauthsMapper.selectOneByOauthIdAndStatus(wxOauthAccessToken.getOpenid());
         Integer maxAge = BaseConstant.Second.DAY * 30;
         if (userOauths != null) {
+            // 3-1.获取用户信息
             User user = userMapper.selectById(userOauths.getUserId());
             CheckObjects.predicate(user.getStatus(),
                     s -> BaseConstant.Status.NO.getCode().equals(s), "用户已冻结");
             return new UserModel(user, maxAge);
         } else {
             // 3-2-1.获取微信用户信息
-            WxSnsapiUserInfoDTO wxSnsapiUserInfoDTO = iWxOauthService.getWxSnsapiUserInfo(wxOauthAccessToken.getAccessToken(),
+            WxSnsapiUserInfoDTO wxSnsapiUserInfoDTO = iWxOauthService
+                    .getWxSnsapiUserInfo(wxOauthAccessToken.getAccessToken(),
                     wxOauthAccessToken.getOpenid());
             CheckObjects.isNull(wxSnsapiUserInfoDTO, "微信用户信息获取为空");
             // 3-2-2.新增微信用户信息
-            // DTO -> DAO
-            WxSnsapiUserInfo wxSnsapiUserInfo = BeanCopierUtils.copyBean(wxSnsapiUserInfoDTO, WxSnsapiUserInfo.class);
-            wxSnsapiUserInfo.insert();
-
+            // 3-2-2-1.查询微信用户信息
+            WxSnsapiUserInfo wxSnsapiUserInfo = wxSnsapiUserInfoMapper.selectByOpenid(wxSnsapiUserInfoDTO.getOpenid(),
+                    wxSnsapiUserInfoDTO.getUnionid());
+            if (wxSnsapiUserInfo != null) {
+                // 3-2-2-2.更新用户信息
+                // DTO -> DAO
+                WxSnsapiUserInfo sui = BeanCopierUtils.copyBean(wxSnsapiUserInfoDTO, WxSnsapiUserInfo.class);
+                sui.setId(wxSnsapiUserInfo.getId());
+                sui.updateById();
+            } else {
+                // 3-2-2-3.新增微信用户信息
+                // DTO -> DAO
+                wxSnsapiUserInfo = BeanCopierUtils.copyBean(wxSnsapiUserInfoDTO, WxSnsapiUserInfo.class);
+                wxSnsapiUserInfo.insert();
+            }
             // 3-2-3.新增用户信息
             User user = new User();
             user.setFaceUrl(wxSnsapiUserInfo.getHeadimgurl());
