@@ -1,6 +1,5 @@
 package com.sjt.business.strategy.sign.mode.impl;
 
-import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.sjt.business.api.dto.req.SignParamDTO;
 import com.sjt.business.constant.DataBaseConstant;
 import com.sjt.business.entity.User;
@@ -12,7 +11,6 @@ import com.sjt.common.base.constant.BaseConstant;
 import com.sjt.common.utils.CheckObjects;
 import com.sjt.wechat.api.dto.res.WxAppletSessionKeyDTO;
 import com.sjt.wechat.service.IWxOauthService;
-import com.sjt.wechat.vo.res.WxAppletSessionKeyVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -54,63 +52,64 @@ public class WxAppletSignHandler implements SignModeHandler {
         String openid = wxAppletSeesionKey.getOpenid();
         String unionid = wxAppletSeesionKey.getUnionid();
 
-        // 3.通过openid获取授权信息
-        UserOauths userOauths = new UserOauths();
-        userOauths.setOauthId(openid);
-        userOauths.setOauthType(DataBaseConstant.OauthType.WX_APPLET.getCode());
-        userOauths = userOauthsMapper.selectOne(userOauths);
-        if (userOauths == null) {
-            Long userId = null;
-            if (!StringUtils.isEmpty(unionid)) {
-                // 3-1.通过unionid获取授权信息
-                List<UserOauths> uos = userOauthsMapper.selectList(new EntityWrapper<UserOauths>()
-                        .eq("union_id", unionid)
-                        .eq("status", BaseConstant.Status.YES.getCode()));
-                if (uos != null && !uos.isEmpty()) {
-                    userId = uos.get(0).getUserId();
+        // 3.通过openid or unionid获取授权信息
+        List<UserOauths> userOauths = userOauthsMapper.selectOneByOauthIdAndUnionId(openid, unionid);
+        Integer maxAge = BaseConstant.Second.DAY;
+        if (userOauths == null || userOauths.isEmpty()) {
+            // 3-1-1.获取用户
+            User user = new User();
+            user.setRegisterDate(LocalDateTime.now());
+            user.insert();
+
+            // 3-1-2.新增绑定记录
+            UserOauths uo = new UserOauths();
+            uo.setUserId(user.getId());
+            uo.setOauthId(wxAppletSeesionKey.getOpenid());
+            uo.setUnionId(wxAppletSeesionKey.getUnionid());
+            uo.setSessionKey(wxAppletSeesionKey.getSessionKey());
+            uo.setOauthType(DataBaseConstant.OauthType.WX_APPLET.getCode());
+            uo.insert();
+
+            return new UserModel(user, maxAge);
+        } else {
+            // 3-2-1.获取用户信息
+            Long userId = userOauths.get(0).getUserId();
+            User user = userMapper.selectById(userId);
+            CheckObjects.predicate(user.getStatus(),
+                    s -> BaseConstant.Status.NO.getCode().equals(s), "用户已冻结");
+
+            for (UserOauths userOauth : userOauths) {
+                if (wxAppletSeesionKey.getOpenid().equals(userOauth.getOauthId())) {
+                    boolean isChange = false;
+                    // 3-2-2.添加unionid
+                    if (StringUtils.isEmpty(userOauth.getUnionId())
+                            && !StringUtils.isEmpty(wxAppletSeesionKey.getUnionid())) {
+                        userOauth.setUnionId(wxAppletSeesionKey.getUnionid());
+                        isChange = true;
+                    }
+                    // 3-2-3.更新sessionKey
+                    if (!wxAppletSeesionKey.getSessionKey().equals(userOauth.getSessionKey())) {
+                        userOauth.setSessionKey(wxAppletSeesionKey.getSessionKey());
+                        isChange = true;
+                    }
+                    if (isChange) {
+                        userOauth.updateById();
+                    }
+
+                    return new UserModel(user, maxAge);
                 }
             }
 
-            // 3-2.获取用户
-            User user = new User();
+            // 3-2-2.新增绑定记录
+            UserOauths uo = new UserOauths();
+            uo.setUserId(user.getId());
+            uo.setOauthId(wxAppletSeesionKey.getOpenid());
+            uo.setUnionId(wxAppletSeesionKey.getUnionid());
+            uo.setSessionKey(wxAppletSeesionKey.getSessionKey());
+            uo.setOauthType(DataBaseConstant.OauthType.WX_APPLET.getCode());
+            uo.insert();
 
-            if (userId != null) {
-                user.setId(userId);
-                user = user.selectById();
-            } else {
-                user.setRegisterDate(LocalDateTime.now());
-                user.insert();
-            }
-
-            // 3-3.新增绑定记录
-            userOauths = new UserOauths();
-            userOauths.setUserId(user.getId());
-            userOauths.setOauthId(wxAppletSeesionKey.getOpenid());
-            userOauths.setUnionId(wxAppletSeesionKey.getUnionid());
-            userOauths.setSessionKey(wxAppletSeesionKey.getSessionKey());
-            userOauths.setOauthType(DataBaseConstant.OauthType.WX_APPLET.getCode());
-            userOauths.insert();
-        } else {
-            boolean isChange = false;
-            // 3-4.添加unionid
-            if (StringUtils.isEmpty(userOauths.getUnionId())
-                    && !StringUtils.isEmpty(wxAppletSeesionKey.getUnionid())) {
-                userOauths.setUnionId(wxAppletSeesionKey.getUnionid());
-                isChange = true;
-            }
-            // 3-5.更新sessionKey
-            if (!wxAppletSeesionKey.getSessionKey().equals(userOauths.getSessionKey())) {
-                userOauths.setSessionKey(wxAppletSeesionKey.getSessionKey());
-                isChange = true;
-            }
-
-            if (isChange) {
-                userOauths.updateById();
-            }
+            return new UserModel(user, maxAge);
         }
-
-        User user = userMapper.selectById(userOauths.getUserId());
-
-        return new UserModel(user, BaseConstant.Second.DAY);
     }
 }
