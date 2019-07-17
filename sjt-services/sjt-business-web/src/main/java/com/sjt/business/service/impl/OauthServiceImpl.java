@@ -63,7 +63,7 @@ public class OauthServiceImpl implements IOauthService {
 
         CheckObjects.isNull(user, "用户可能不存在");
 
-        // 4.DAO -> DTO
+        // 4.Entity -> DTO
         SignUserDTO signUserDTO = BeanCopierUtils.copyBean(user, SignUserDTO.class);
 
         // 5.生成 token
@@ -95,7 +95,7 @@ public class OauthServiceImpl implements IOauthService {
         WxAccessTokenDTO wxAccessTokenDTO = iWxOauthService.getOauthAccessToken(code);
 
         // 3.授权凭证入库
-        // 3-1.DTO -> DAO
+        // 3-1.DTO -> Entity
         WxOauthAccessToken wxOauthAccessToken = BeanCopierUtils.copyBean(wxAccessTokenDTO, WxOauthAccessToken.class);
         wxOauthAccessToken.setExpiresTime(LocalDateTime.now()
                 .plusSeconds(wxOauthAccessToken.getExpiresIn() - BaseConstant.Second.MINUTE));
@@ -125,14 +125,14 @@ public class OauthServiceImpl implements IOauthService {
                 wxSnsapiUserInfoDTO.getUnionid());
         if (wxSnsapiUserInfo != null) {
             // 3-2.更新用户信息
-            // DTO -> DAO
+            // DTO -> Entity
             WxSnsapiUserInfo sui = BeanCopierUtils.copyBean(wxSnsapiUserInfoDTO, WxSnsapiUserInfo.class);
             sui.setId(wxSnsapiUserInfo.getId());
             sui.updateById();
             return sui;
         } else {
             // 3-3.新增微信用户信息
-            // DTO -> DAO
+            // DTO -> Entity
             wxSnsapiUserInfo = BeanCopierUtils.copyBean(wxSnsapiUserInfoDTO, WxSnsapiUserInfo.class);
             wxSnsapiUserInfo.insert();
             return wxSnsapiUserInfo;

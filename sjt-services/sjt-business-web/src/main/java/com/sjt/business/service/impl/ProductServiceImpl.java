@@ -93,7 +93,7 @@ public class ProductServiceImpl implements IProductService {
                 s -> DataBaseConstant.ProductPushStatus.DELETE.getCode().equals(s), "商品失效");
         CheckObjects.predicate(product.getPublishStatus(),
                 s -> DataBaseConstant.ProductPushStatus.LOWER_SHELF.getCode().equals(s), "商品已下架");
-        // 2-1.DAO -> DTO
+        // 2-1.Entity -> DTO
         ProductDetailDTO productDetailDTO = BeanCopierUtils.copyBean(product, ProductDetailDTO.class);
         // 2-2.分 -> 元
         productDetailDTO.setPrice(PriceUtils.centToYuan(product.getPrice()));
@@ -104,7 +104,7 @@ public class ProductServiceImpl implements IProductService {
                 new EntityWrapper<ProductProperties>()
                 .eq("product_id", product.getId())
                 .orderBy("sort_num"));
-        // 3-1.DAO -> DTO
+        // 3-1.Entity -> DTO
         List<ProductPropertiesDTO> productPropertiesDTOS = BeanCopierUtils
                 .copyList(productProperties, ProductPropertiesDTO.class);
         productDetailDTO.setProperties(productPropertiesDTOS);
@@ -113,7 +113,7 @@ public class ProductServiceImpl implements IProductService {
         List<ProductPic> productPics = productPicMapper.selectList(new EntityWrapper<ProductPic>()
                 .eq("product_id", product.getId())
                 .orderBy("sort_num"));
-        // 4-1.DAO - DTO
+        // 4-1.Entity - DTO
         List<ProductPicDTO> productPicDTOS = BeanCopierUtils.copyList(productPics, ProductPicDTO.class);
         productDetailDTO.setProductPics(productPicDTOS);
 
@@ -128,7 +128,7 @@ public class ProductServiceImpl implements IProductService {
                 .eq("new_arrivals", BaseConstant.Status.YES.getCode())
                 .or("create_date", false).orderBy("create_date", false));
 
-        // 2.DAO -> DTO
+        // 2.Entity -> DTO
         List<ProductDetailDTO> newArrivals = products.stream().map(p -> {
             ProductDetailDTO productDetailDTO = BeanCopierUtils.copyBean(p, ProductDetailDTO.class);
             // 2-1.分转元

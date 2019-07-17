@@ -59,7 +59,7 @@ public class PasswordModeSignHandler implements SignModeHandler {
         CheckObjects.predicate(paramIsNull, b -> b, "必须在用户名、手机号、邮箱中填一个");
 
         // 2.查询
-        // DTO -> DAO
+        // DTO -> Entity
         User user = BeanCopierUtils.copyBean(signParamDTO, User.class);
         user = userMapper.selectUserBySign(user);
 

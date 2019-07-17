@@ -72,7 +72,7 @@ public class WechatModeSignHandler implements SignModeHandler {
         if (expiresTime.compareTo(now) < 0) {
             WxAccessTokenDTO wxAccessTokenDTO = iWxOauthService.refreshoauthAccessToken(wxOauthAccessToken.getRefreshToken());
             CheckObjects.isNull(wxAccessTokenDTO, "授权凭据过期");
-            // 2-2.DTO -> DAO
+            // 2-2.DTO -> Entity
             WxOauthAccessToken woat = BeanCopierUtils.copyBean(wxAccessTokenDTO, WxOauthAccessToken.class);
             // 2-3更新凭证有效期
             woat.setId(wxOauthAccessToken.getId());

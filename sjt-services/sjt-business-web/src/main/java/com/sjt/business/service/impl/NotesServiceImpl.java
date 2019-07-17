@@ -37,7 +37,7 @@ public class NotesServiceImpl implements INotesService {
                         .eq("status", BaseConstant.Status.YES.getCode())
                         .eq("is_craftsman", BaseConstant.Status.NO.getCode())
                         .orderBy("create_date", false));
-        // 1-1. DAO - DTO
+        // 1-1. Entity - DTO
         List<NotesDTO> notesDTOS = BeanCopierUtils.copyList(notes, NotesDTO.class, "noteContext");
         homePageNotesDTO.setNotes(notesDTOS);
 
@@ -47,7 +47,7 @@ public class NotesServiceImpl implements INotesService {
                         .eq("status", BaseConstant.Status.YES.getCode())
                         .eq("is_craftsman", BaseConstant.Status.YES.getCode())
                         .orderBy("create_date", false));
-        // 2-1. DAO - DTO
+        // 2-1. Entity - DTO
         List<NotesDTO> craftsmanNotesDTOS = BeanCopierUtils.copyList(craftsmanNotes, NotesDTO.class, "noteContext");
         homePageNotesDTO.setCraftsmanNotes(craftsmanNotesDTOS);
 

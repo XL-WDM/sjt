@@ -44,7 +44,7 @@ public class AddressServiceImpl implements IAddressService {
                 .orderBy("is_default", false)
                 .orderBy("create_date", false));
 
-        // 3.DAO - DTO
+        // 3.Entity - DTO
         List<AddressDTO> addressDTOS = BeanCopierUtils.copyList(address, AddressDTO.class);
 
         return addressDTOS;
@@ -72,7 +72,7 @@ public class AddressServiceImpl implements IAddressService {
         CheckObjects.isNull(callEnum, "称呼格式有误");*/
         CheckObjects.isStatus(addressParamDTO.getIsDefault(), "请选择默认地址", "默认地址格式有误");
 
-        // 2.DTO -> DAO
+        // 2.DTO -> Entity
         Address address = BeanCopierUtils.copyBean(addressParamDTO, Address.class);
         address.setUserId(user.getId());
         address.setStatus(BaseConstant.Status.YES.getCode());
@@ -101,7 +101,7 @@ public class AddressServiceImpl implements IAddressService {
         address = addressMapper.selectAddressByIdAndUserId(address);
         CheckObjects.isNull(address, "收货地址不存在");
 
-        // 4.DAO -> DTO
+        // 4.Entity -> DTO
         return BeanCopierUtils.copyBean(address, AddressDTO.class);
     }
 
@@ -144,7 +144,7 @@ public class AddressServiceImpl implements IAddressService {
         }
 
         // 4.更新
-        // DTO -> DAO
+        // DTO -> Entity
         Address address = BeanCopierUtils.copyBean(addressParamDTO, Address.class);
         address.setId(id);
         address.setUserId(ar.getUserId());
