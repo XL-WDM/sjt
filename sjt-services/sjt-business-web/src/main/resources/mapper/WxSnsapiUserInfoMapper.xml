@@ -8,7 +8,7 @@
         id, openid, nickname ,sex, country, province, city, headimgurl, privilege, unionid
     </sql>
 
-    <select id="selectByOpenid" parameterType="java.lang.String" resultMap="wxSnsapiUserInfoResult">
+    <select id="selectByOpenidOrUnionid" parameterType="java.lang.String" resultMap="wxSnsapiUserInfoResult">
         select
         <include refid="base_all" />
         from t_wx_snsapi_userinfo
@@ -16,5 +16,12 @@
         <if test="unionid != null and unionid != ''">
           or unionid = #{unionid}
         </if>
+    </select>
+
+    <select id="selectByOpenid" parameterType="java.lang.String" resultMap="wxSnsapiUserInfoResult">
+        select
+        <include refid="base_all" />
+        from t_wx_snsapi_userinfo
+        where openid = #{openid}
     </select>
 </mapper>

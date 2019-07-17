@@ -22,7 +22,7 @@ public class DataBaseConstant {
         SIGN_MODE_EMAIL("3", "邮箱登录", EmailModeSignHandler.class),
         SIGN_MODE_QQ("4", "QQ登录", QqModeSignHandler.class),
         SIGN_MODE_WB("5", "微博登录", WbmodeSignHandler.class),
-        SIGN_MODE_WX_SMALL_PROCEDURES("6", "微信小程序", WxSmallProceduresSignHandler.class),
+        SIGN_MODE_WX_SMALL_PROCEDURES("6", "微信小程序", WxAppletSignHandler.class),
         SIGN_MODE_WX("7", "微信公众号登录", WechatModeSignHandler.class);
 
         SignMode(String code, String mode, Class<? extends SignModeHandler> handlerClazz) {

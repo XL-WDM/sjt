@@ -9,11 +9,16 @@
         oauth_type, oauth_date, update_date
     </sql>
 
-    <select id="selectOneByOauthIdAndStatus" parameterType="java.lang.String" resultMap="userOauthsResult">
+    <select id="selectOneByOauthIdAndUnionId" parameterType="java.lang.String" resultMap="userOauthsResult">
         select
         <include refid="base_all" />
         from t_user_oauths
         where status = '1'
-        and oauth_id = #{oauthId}
+        and (
+            oauth_id = #{oauthId}
+            <if test="unionId != null and unionId != ''">
+                or union_id = #{unionId}
+            </if>
+        )
     </select>
 </mapper>

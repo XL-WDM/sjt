@@ -2,6 +2,7 @@ package com.sjt.business.service;
 
 import com.sjt.business.api.dto.req.SignParamDTO;
 import com.sjt.business.api.dto.res.SignUserDTO;
+import com.sjt.business.entity.WxSnsapiUserInfo;
 import com.sjt.wechat.api.dto.res.WxAccessTokenDTO;
 
 import javax.servlet.http.HttpServletResponse;
@@ -26,4 +27,12 @@ public interface IOauthService {
      * @return
      */
     WxAccessTokenDTO getOauthAccessToken(String code);
+
+    /**
+     * 替换微信用户信息
+     * @param accessToken
+     * @param openid
+     * @return
+     */
+    WxSnsapiUserInfo swapWxUserInfo(String accessToken, String openid);
 }

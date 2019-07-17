@@ -10,6 +10,7 @@ import com.sjt.business.mapper.UserMapper;
 import com.sjt.business.mapper.UserOauthsMapper;
 import com.sjt.business.mapper.WxOauthAccessTokenMapper;
 import com.sjt.business.mapper.WxSnsapiUserInfoMapper;
+import com.sjt.business.service.IOauthService;
 import com.sjt.business.strategy.sign.mode.SignModeHandler;
 import com.sjt.common.base.constant.BaseConstant;
 import com.sjt.common.utils.BeanCopierUtils;
@@ -23,6 +24,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * @author: yilan.hu
@@ -46,6 +48,9 @@ public class WechatModeSignHandler implements SignModeHandler {
 
     @Autowired
     private WxSnsapiUserInfoMapper wxSnsapiUserInfoMapper;
+
+    @Autowired
+    private IOauthService iOauthService;
 
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -72,51 +77,40 @@ public class WechatModeSignHandler implements SignModeHandler {
             woat.updateById();
         }
 
-        // 3.查询授权信息
-        UserOauths userOauths = userOauthsMapper.selectOneByOauthIdAndStatus(wxOauthAccessToken.getOpenid());
+        // 3.获取微信用户信息
+        WxSnsapiUserInfo wxSnsapiUserInfo = wxSnsapiUserInfoMapper.selectByOpenid(wxOauthAccessToken.getOpenid());
+        if (wxSnsapiUserInfo == null) {
+            wxSnsapiUserInfo = iOauthService.swapWxUserInfo(wxOauthAccessToken.getAccessToken(),
+                    wxOauthAccessToken.getOpenid());
+        }
+        CheckObjects.isNull(wxSnsapiUserInfo, "获取微信用户信息失败");
+
+        // 4.查询授权信息
+        List<UserOauths> userOauths = userOauthsMapper.selectOneByOauthIdAndUnionId(wxSnsapiUserInfo.getOpenid(),
+                wxSnsapiUserInfo.getUnionid());
         Integer maxAge = BaseConstant.Second.DAY * 30;
-        if (userOauths != null) {
-            // 3-1.获取用户信息
-            User user = userMapper.selectById(userOauths.getUserId());
+        if (userOauths != null && !userOauths.isEmpty()) {
+            // 4-1.获取用户信息
+            Long userId = userOauths.get(0).getUserId();
+            User user = userMapper.selectById(userId);
             CheckObjects.predicate(user.getStatus(),
                     s -> BaseConstant.Status.NO.getCode().equals(s), "用户已冻结");
             return new UserModel(user, maxAge);
         } else {
-            // 3-2-1.获取微信用户信息
-            WxSnsapiUserInfoDTO wxSnsapiUserInfoDTO = iWxOauthService
-                    .getWxSnsapiUserInfo(wxOauthAccessToken.getAccessToken(),
-                    wxOauthAccessToken.getOpenid());
-            CheckObjects.isNull(wxSnsapiUserInfoDTO, "微信用户信息获取为空");
-            // 3-2-2.新增微信用户信息
-            // 3-2-2-1.查询微信用户信息
-            WxSnsapiUserInfo wxSnsapiUserInfo = wxSnsapiUserInfoMapper.selectByOpenid(wxSnsapiUserInfoDTO.getOpenid(),
-                    wxSnsapiUserInfoDTO.getUnionid());
-            if (wxSnsapiUserInfo != null) {
-                // 3-2-2-2.更新用户信息
-                // DTO -> DAO
-                WxSnsapiUserInfo sui = BeanCopierUtils.copyBean(wxSnsapiUserInfoDTO, WxSnsapiUserInfo.class);
-                sui.setId(wxSnsapiUserInfo.getId());
-                sui.updateById();
-            } else {
-                // 3-2-2-3.新增微信用户信息
-                // DTO -> DAO
-                wxSnsapiUserInfo = BeanCopierUtils.copyBean(wxSnsapiUserInfoDTO, WxSnsapiUserInfo.class);
-                wxSnsapiUserInfo.insert();
-            }
-            // 3-2-3.新增用户信息
+            // 4-2-3.新增用户信息
             User user = new User();
             user.setFaceUrl(wxSnsapiUserInfo.getHeadimgurl());
             user.setNickname(wxSnsapiUserInfo.getNickname());
             user.setSex(wxSnsapiUserInfo.getSex());
             user.insert();
 
-            // 3-2-3.新增授权信息
-            userOauths = new UserOauths();
-            userOauths.setUserId(user.getId());
-            userOauths.setOauthId(wxSnsapiUserInfo.getOpenid());
-            userOauths.setUnionId(wxSnsapiUserInfo.getUnionid());
-            userOauths.setOauthType(DataBaseConstant.OauthType.WX_PUBLIC_NUMBER.getCode());
-            userOauths.insert();
+            // 4-2-3.新增授权信息
+            UserOauths uo = new UserOauths();
+            uo.setUserId(user.getId());
+            uo.setOauthId(wxSnsapiUserInfo.getOpenid());
+            uo.setUnionId(wxSnsapiUserInfo.getUnionid());
+            uo.setOauthType(DataBaseConstant.OauthType.WX_PUBLIC_NUMBER.getCode());
+            uo.insert();
 
             return new UserModel(user, maxAge);
         }

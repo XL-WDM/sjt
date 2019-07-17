@@ -23,12 +23,13 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 /**
+ * 微信小程序登陆
  * @author: yilan.hu
  * @data: 2019/7/10
  */
 @Slf4j
 @Service
-public class WxSmallProceduresSignHandler implements SignModeHandler {
+public class WxAppletSignHandler implements SignModeHandler {
 
     @Autowired
     private UserMapper userMapper;
@@ -63,7 +64,8 @@ public class WxSmallProceduresSignHandler implements SignModeHandler {
             if (!StringUtils.isEmpty(unionid)) {
                 // 3-1.通过unionid获取授权信息
                 List<UserOauths> uos = userOauthsMapper.selectList(new EntityWrapper<UserOauths>()
-                        .eq("union_id", unionid));
+                        .eq("union_id", unionid)
+                        .eq("status", BaseConstant.Status.YES.getCode()));
                 if (uos != null && !uos.isEmpty()) {
                     userId = uos.get(0).getUserId();
                 }

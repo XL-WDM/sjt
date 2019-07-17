@@ -16,5 +16,12 @@ public interface WxSnsapiUserInfoMapper extends BaseMapper<WxSnsapiUserInfo> {
      * @param unionid
      * @return
      */
-    WxSnsapiUserInfo selectByOpenid(@Param("openid") String openid, @Param("unionid") String unionid);
+    WxSnsapiUserInfo selectByOpenidOrUnionid(@Param("openid") String openid, @Param("unionid") String unionid);
+
+    /**
+     * 通过 openid 查询微信用户信息
+     * @param openid
+     * @return
+     */
+    WxSnsapiUserInfo selectByOpenid(String openid);
 }
