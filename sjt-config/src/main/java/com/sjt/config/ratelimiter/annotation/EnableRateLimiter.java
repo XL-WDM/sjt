@@ -1,6 +1,6 @@
-package com.sjt.config.rateLimiter.annotation;
+package com.sjt.config.ratelimiter.annotation;
 
-import com.sjt.config.rateLimiter.RateLimitAspect;
+import com.sjt.config.ratelimiter.RateLimitAspect;
 import org.springframework.context.annotation.Import;
 
 import java.lang.annotation.*;

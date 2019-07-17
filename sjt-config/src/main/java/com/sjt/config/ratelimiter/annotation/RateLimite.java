@@ -1,4 +1,4 @@
-package com.sjt.config.rateLimiter.annotation;
+package com.sjt.config.ratelimiter.annotation;
 
 import java.lang.annotation.*;
 

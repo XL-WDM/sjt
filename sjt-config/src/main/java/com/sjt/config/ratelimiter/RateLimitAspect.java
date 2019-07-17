@@ -1,8 +1,8 @@
-package com.sjt.config.rateLimiter;
+package com.sjt.config.ratelimiter;
 
 import com.alibaba.fastjson.JSONObject;
 import com.sjt.common.base.result.R;
-import com.sjt.config.rateLimiter.annotation.RateLimite;
+import com.sjt.config.ratelimiter.annotation.RateLimite;
 import com.google.common.util.concurrent.RateLimiter;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -31,7 +31,7 @@ public class RateLimitAspect {
      */
     private static ConcurrentHashMap<String, RateLimiter> map = new ConcurrentHashMap<>();
 
-    @Pointcut("@annotation(com.sjt.config.rateLimiter.annotation.RateLimite)")
+    @Pointcut("@annotation(com.sjt.config.ratelimiter.annotation.RateLimite)")
     public void pointcut() {}
 
     @Around("pointcut()")

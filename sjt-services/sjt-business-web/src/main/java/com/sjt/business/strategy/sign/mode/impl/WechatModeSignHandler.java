@@ -18,7 +18,6 @@ import com.sjt.common.utils.AesEncryptUtils;
 import com.sjt.common.utils.BeanCopierUtils;
 import com.sjt.common.utils.CheckObjects;
 import com.sjt.wechat.api.dto.res.WxAccessTokenDTO;
-import com.sjt.wechat.api.dto.res.WxSnsapiUserInfoDTO;
 import com.sjt.wechat.service.IWxOauthService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -94,10 +93,11 @@ public class WechatModeSignHandler implements SignModeHandler {
         List<UserOauths> userOauths = userOauthsMapper.selectOneByOauthIdAndUnionId(wxSnsapiUserInfo.getOpenid(),
                 wxSnsapiUserInfo.getUnionid());
         Integer maxAge = BaseConstant.Second.DAY * 30;
+        User user = null;
         if (userOauths != null && !userOauths.isEmpty()) {
             // 4-1-1.获取用户信息
             Long userId = userOauths.get(0).getUserId();
-            User user = userMapper.selectById(userId);
+            user = userMapper.selectById(userId);
             CheckObjects.predicate(user.getStatus(),
                     s -> BaseConstant.Status.NO.getCode().equals(s), "用户已冻结");
 
@@ -108,33 +108,16 @@ public class WechatModeSignHandler implements SignModeHandler {
                     return new UserModel(user, maxAge);
                 }
             }
-
-            // 4-2-3.不存在 wxSnsapiUserInfo.getOpenid() 的授权信息, 新增授权信息
-            UserOauths uo = new UserOauths();
-            uo.setUserId(user.getId());
-            uo.setOauthId(wxSnsapiUserInfo.getOpenid());
-            uo.setUnionId(wxSnsapiUserInfo.getUnionid());
-            uo.setOauthType(DataBaseConstant.OauthType.WX_PUBLIC_NUMBER.getCode());
-            uo.insert();
-
-            return new UserModel(user, maxAge);
-        } else {
-            // 4-2-3.新增用户信息
-            User user = new User();
-            user.setFaceUrl(wxSnsapiUserInfo.getHeadimgurl());
-            user.setNickname(wxSnsapiUserInfo.getNickname());
-            user.setSex(wxSnsapiUserInfo.getSex());
-            user.insert();
-
-            // 4-2-3.新增授权信息
-            UserOauths uo = new UserOauths();
-            uo.setUserId(user.getId());
-            uo.setOauthId(wxSnsapiUserInfo.getOpenid());
-            uo.setUnionId(wxSnsapiUserInfo.getUnionid());
-            uo.setOauthType(DataBaseConstant.OauthType.WX_PUBLIC_NUMBER.getCode());
-            uo.insert();
-
-            return new UserModel(user, maxAge);
         }
+
+        // 4-2-3.新增授权信息
+        UserOauths uo = new UserOauths();
+        uo.setUserId(user.getId());
+        uo.setOauthId(wxSnsapiUserInfo.getOpenid());
+        uo.setUnionId(wxSnsapiUserInfo.getUnionid());
+        uo.setOauthType(DataBaseConstant.OauthType.WX_PUBLIC_NUMBER.getCode());
+        uo.insert();
+
+        return new UserModel(user, maxAge);
     }
 }
