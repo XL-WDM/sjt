@@ -15,8 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
-import java.util.Optional;
-
 /**
  * @author: yilan.hu
  * @data: 2019/7/8
@@ -45,7 +43,8 @@ public class PasswordModeSignHandler implements SignModeHandler {
             throw new GlobalException("密码密文格式不正确");
         }
 
-        final Optional<String> pwd = Optional.of(MD5Utils.getMD5(password, EncryptionSlotConstant.PASSWORD_SLOT));
+        String pwd = MD5Utils.getMD5(password, EncryptionSlotConstant.PASSWORD_SLOT);
+        CheckObjects.isEmpty(pwd, "密码不正确");
 
         boolean paramIsNull = true;
         if (!StringUtils.isEmpty(username)) {
@@ -68,7 +67,7 @@ public class PasswordModeSignHandler implements SignModeHandler {
         CheckObjects.isNull(user, "用户不存在");
 
         // 3.密码验证
-        CheckObjects.predicate(user, u -> !u.getPassword().equals(pwd.get()), "密码输入有误");
+        CheckObjects.predicate(user, u -> !u.getPassword().equals(pwd), "密码输入有误");
 
         return new UserModel(user, Integer.MAX_VALUE);
     }
