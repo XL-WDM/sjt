@@ -9,7 +9,7 @@
         openid, scope, create_date, refresh_date
     </sql>
 
-    <select id="selectByAccessToken" parameterType="java.lang.String" resultMap="wxOauthAccessTokenResult">
+    <select id="selectByRefreshToken" parameterType="java.lang.String" resultMap="wxOauthAccessTokenResult">
         select
         <include refid="base_all" />
         from t_wx_oauth_access_token

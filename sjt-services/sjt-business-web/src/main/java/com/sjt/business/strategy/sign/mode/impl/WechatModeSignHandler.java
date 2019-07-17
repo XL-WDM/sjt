@@ -55,7 +55,7 @@ public class WechatModeSignHandler implements SignModeHandler {
         CheckObjects.isEmpty(token, "授权凭证不能为空");
 
         // 2.查询凭证信息
-        WxOauthAccessToken wxOauthAccessToken = wxOauthAccessTokenMapper.selectByAccessToken(token);
+        WxOauthAccessToken wxOauthAccessToken = wxOauthAccessTokenMapper.selectByRefreshToken(token);
         CheckObjects.isNull(wxOauthAccessToken, "授权凭证不存在");
         // 2-1.处理凭证刷新
         LocalDateTime now = LocalDateTime.now();
@@ -63,10 +63,13 @@ public class WechatModeSignHandler implements SignModeHandler {
         if (expiresTime.compareTo(now) < 0) {
             WxAccessTokenDTO wxAccessTokenDTO = iWxOauthService.refreshoauthAccessToken(wxOauthAccessToken.getRefreshToken());
             CheckObjects.isNull(wxAccessTokenDTO, "授权凭证更新失败");
-            // 2-2更新凭证有效期
-            wxOauthAccessToken.setExpiresTime(now.plusSeconds(wxAccessTokenDTO.getExpiresIn() - BaseConstant.Second.MINUTE));
-            wxOauthAccessToken.setRefreshDate(now);
-            wxOauthAccessToken.updateById();
+            // 2-2.DTO -> DAO
+            WxOauthAccessToken woat = BeanCopierUtils.copyBean(wxAccessTokenDTO, WxOauthAccessToken.class);
+            // 2-3更新凭证有效期
+            woat.setId(wxOauthAccessToken.getId());
+            woat.setExpiresTime(now.plusSeconds(wxAccessTokenDTO.getExpiresIn() - BaseConstant.Second.MINUTE));
+            woat.setRefreshDate(now);
+            woat.updateById();
         }
 
         // 3.查询授权信息

@@ -14,5 +14,5 @@ public interface WxOauthAccessTokenMapper extends BaseMapper<WxOauthAccessToken>
      * @param token
      * @return
      */
-    WxOauthAccessToken selectByAccessToken(String token);
+    WxOauthAccessToken selectByRefreshToken(String token);
 }
