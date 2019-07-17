@@ -5,6 +5,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * @author: yilan.hu
@@ -73,5 +74,9 @@ public class ResultDTO<R> implements Serializable {
         ResultDTO result = ResultDTO.success();
         result.setData(data);
         return result;
+    }
+
+    public static ResultDTO page(int total, List rows) {
+        return ResultDTO.data(new PageDTO(total, rows));
     }
 }

@@ -1,7 +1,9 @@
 package com.sjt.business.service;
 
+import com.sjt.business.api.dto.req.ProdctsParamDTO;
 import com.sjt.business.api.dto.res.ProductCategoryDTO;
 import com.sjt.business.api.dto.res.ProductDetailDTO;
+import com.sjt.business.api.dto.res.ProductsDTO;
 
 import java.util.List;
 
@@ -28,8 +30,14 @@ public interface IProductService {
 
     /**
      * 获取新品推荐
-     *
      * @return
      */
     List<ProductDetailDTO> getNewArrivals();
+
+    /**
+     * 获取商品分类列表
+     * @param prodctsParamDTO
+     * @return
+     */
+    List<ProductsDTO> getProductCategoryList();
 }

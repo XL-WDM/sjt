@@ -1,10 +1,8 @@
 package com.sjt.business.service.impl;
 
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
-import com.sjt.business.api.dto.res.ProductCategoryDTO;
-import com.sjt.business.api.dto.res.ProductDetailDTO;
-import com.sjt.business.api.dto.res.ProductPicDTO;
-import com.sjt.business.api.dto.res.ProductPropertiesDTO;
+import com.baomidou.mybatisplus.plugins.Page;
+import com.sjt.business.api.dto.res.*;
 import com.sjt.business.constant.DataBaseConstant;
 import com.sjt.business.entity.Product;
 import com.sjt.business.entity.ProductCategory;
@@ -138,5 +136,41 @@ public class ProductServiceImpl implements IProductService {
         }).collect(Collectors.toList());
 
         return newArrivals;
+    }
+
+    @Override
+    public List<ProductsDTO> getProductCategoryList() {
+        // 1.获取商品分类信息
+        List<ProductCategory> productCategories = productCategoryMapper.selectList(
+                new EntityWrapper<ProductCategory>()
+                        .isNull("pid")
+                        .orderBy("create_date", false));
+
+        if (productCategories == null || productCategories.isEmpty()) {
+            return new ArrayList<>();
+        }
+
+        List<ProductsDTO> productsDTOS = new ArrayList<>();
+
+        // 2.获取分类下的商品(4个)
+        for (ProductCategory productCategory : productCategories) {
+            List<Product> products = productMapper.selectPage(new Page<Product>(1, 4),
+                    new EntityWrapper<Product>()
+                            .eq("one_level_category", productCategory.getId())
+                            .orderBy("create_date", false));
+            // Entity -> DTO
+            List<ProductDetailDTO> productDetailDTOS = products.stream().map(p -> {
+                ProductDetailDTO productDetailDTO = BeanCopierUtils.copyBean(p, ProductDetailDTO.class);
+                productDetailDTO.setPrice(PriceUtils.centToYuan(p.getPrice()));
+                productDetailDTO.setDiscountAmount(PriceUtils.centToYuan(p.getDiscountAmount()));
+                return productDetailDTO;
+            }).collect(Collectors.toList());
+
+            ProductsDTO productsDTO = new ProductsDTO();
+            productsDTO.setCategoryImg(productCategory.getImgUrl());
+            productsDTO.setProducts(productDetailDTOS);
+        }
+
+        return productsDTOS;
     }
 }
