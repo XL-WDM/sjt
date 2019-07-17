@@ -12,7 +12,7 @@ import javax.crypto.spec.SecretKeySpec;
  * @data: 2019/5/23
  * 前端(crypto-js)
  */
-public class EncryptUtils {
+public class CryptoEncryptUtils {
 
     private static final String KEY = "O7H8uIM2o5sv65l2";
     private static final String ALGORITHMSTR = "AES/ECB/PKCS5Padding";

@@ -2,6 +2,7 @@ package com.sjt.business.strategy.sign.mode.impl;
 
 import com.sjt.business.api.dto.req.SignParamDTO;
 import com.sjt.business.constant.DataBaseConstant;
+import com.sjt.business.constant.EncryptionSlotConstant;
 import com.sjt.business.entity.User;
 import com.sjt.business.entity.UserOauths;
 import com.sjt.business.entity.WxOauthAccessToken;
@@ -13,6 +14,7 @@ import com.sjt.business.mapper.WxSnsapiUserInfoMapper;
 import com.sjt.business.service.IOauthService;
 import com.sjt.business.strategy.sign.mode.SignModeHandler;
 import com.sjt.common.base.constant.BaseConstant;
+import com.sjt.common.utils.AesEncryptUtils;
 import com.sjt.common.utils.BeanCopierUtils;
 import com.sjt.common.utils.CheckObjects;
 import com.sjt.wechat.api.dto.res.WxAccessTokenDTO;
@@ -57,17 +59,20 @@ public class WechatModeSignHandler implements SignModeHandler {
     public UserModel check(SignParamDTO signParamDTO) {
         // 1.参数校验
         String token = signParamDTO.getToken();
-        CheckObjects.isEmpty(token, "授权凭证不能为空");
+        CheckObjects.isEmpty(token, "授权凭据不能为空");
+
+        token = AesEncryptUtils.decrypt(token, EncryptionSlotConstant.WX_REFRESH_TOKEN_SLOT);
+        CheckObjects.isEmpty(token, "授权凭据有误");
 
         // 2.查询凭证信息
         WxOauthAccessToken wxOauthAccessToken = wxOauthAccessTokenMapper.selectByRefreshToken(token);
-        CheckObjects.isNull(wxOauthAccessToken, "授权凭证不存在");
+        CheckObjects.isNull(wxOauthAccessToken, "授权凭据不存在");
         // 2-1.处理凭证刷新
         LocalDateTime now = LocalDateTime.now();
         LocalDateTime expiresTime = wxOauthAccessToken.getExpiresTime();
         if (expiresTime.compareTo(now) < 0) {
             WxAccessTokenDTO wxAccessTokenDTO = iWxOauthService.refreshoauthAccessToken(wxOauthAccessToken.getRefreshToken());
-            CheckObjects.isNull(wxAccessTokenDTO, "授权凭证更新失败");
+            CheckObjects.isNull(wxAccessTokenDTO, "授权凭据过期");
             // 2-2.DTO -> DAO
             WxOauthAccessToken woat = BeanCopierUtils.copyBean(wxAccessTokenDTO, WxOauthAccessToken.class);
             // 2-3更新凭证有效期

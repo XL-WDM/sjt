@@ -16,10 +16,17 @@ create table t_address
 	is_default varchar(1) not null comment '是否默认地址(0-不是, 1-是)',
 	status varchar(1) not null comment '状态(0-无效, 1-有效)',
 	create_date datetime default CURRENT_TIMESTAMP not null comment '创建时间',
-	update_date datetime default CURRENT_TIMESTAMP not null comment '更新时间'
+	update_date datetime default CURRENT_TIMESTAMP not null comment '更新时间',
+	constraint t_address_t_user_id_fk
+		foreign key (user_id) references t_user (id)
 )
 comment '收货地址表' engine=InnoDB
 ;
+
+create index t_address_t_user_id_fk
+	on t_address (user_id)
+;
+
 
 
 

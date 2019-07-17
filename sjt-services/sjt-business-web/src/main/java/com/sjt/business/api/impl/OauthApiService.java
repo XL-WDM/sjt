@@ -1,13 +1,15 @@
 package com.sjt.business.api.impl;
 
-import com.sjt.business.api.expose.OauthApi;
 import com.sjt.business.api.dto.req.SignParamDTO;
 import com.sjt.business.api.dto.res.SignUserDTO;
+import com.sjt.business.api.expose.OauthApi;
+import com.sjt.business.constant.EncryptionSlotConstant;
+import com.sjt.business.constant.WxCookieConstant;
 import com.sjt.business.service.IOauthService;
 import com.sjt.common.base.result.ResultDTO;
+import com.sjt.common.utils.AesEncryptUtils;
 import com.sjt.common.utils.ResponseUtils;
 import com.sjt.wechat.api.dto.res.WxAccessTokenDTO;
-import com.sjt.business.constant.WxCookieConstant;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -33,8 +35,11 @@ public class OauthApiService implements OauthApi {
     public ResultDTO getOauthAccessToken(String code, HttpServletResponse response) {
         WxAccessTokenDTO oauthAccessToken = iOauthService.getOauthAccessToken(code);
 
+        String token = AesEncryptUtils.encrypt(oauthAccessToken.getRefreshToken(),
+                EncryptionSlotConstant.WX_REFRESH_TOKEN_SLOT);
+
         // 设置 cookie
-        ResponseUtils.setCookie(response, WxCookieConstant.WX_OAUTH_ACCESS_TOKEN, oauthAccessToken.getRefreshToken());
+        ResponseUtils.setCookie(response, WxCookieConstant.WX_OAUTH_ACCESS_TOKEN, token);
         return ResultDTO.success();
     }
 }
