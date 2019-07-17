@@ -1,6 +1,5 @@
 package com.sjt.business.api.impl;
 
-import com.sjt.business.api.dto.req.ProdctsParamDTO;
 import com.sjt.business.api.dto.res.ProductDetailDTO;
 import com.sjt.business.api.dto.res.ProductsDTO;
 import com.sjt.business.api.expose.ProductApi;
@@ -29,7 +28,7 @@ public class ProductApiService implements ProductApi {
     }
 
     @Override
-    public ResultDTO<PageDTO> getCategoryProductList(ProdctsParamDTO prodctsParamDTO) {
+    public ResultDTO<PageDTO> getCategoryProductList() {
         List<ProductsDTO> categoryProductList = iProductService.getCategoryProductList();
         return ResultDTO.page(categoryProductList.size(), categoryProductList);
     }

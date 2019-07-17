@@ -169,6 +169,8 @@ public class ProductServiceImpl implements IProductService {
             ProductsDTO productsDTO = new ProductsDTO();
             productsDTO.setCategoryImg(productCategory.getImgUrl());
             productsDTO.setProducts(productDetailDTOS);
+
+            productsDTOS.add(productsDTO);
         }
 
         return productsDTOS;
