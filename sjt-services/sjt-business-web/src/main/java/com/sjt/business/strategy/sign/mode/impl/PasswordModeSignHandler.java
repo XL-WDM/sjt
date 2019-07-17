@@ -36,7 +36,6 @@ public class PasswordModeSignHandler implements SignModeHandler {
 
         CheckObjects.isEmpty(password, "请输入您密码");
         try {
-            // 123456 IgMjB3u+uyPOSD3q4LxmHQ==
             password = CryptoEncryptUtils.aesDecrypt(password);
             CheckObjects.isEmpty(password, "密码密文格式不正确");
         } catch (Exception e) {
