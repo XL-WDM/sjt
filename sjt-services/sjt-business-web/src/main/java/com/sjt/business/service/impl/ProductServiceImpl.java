@@ -139,7 +139,7 @@ public class ProductServiceImpl implements IProductService {
     }
 
     @Override
-    public List<ProductsDTO> getProductCategoryList() {
+    public List<ProductsDTO> getCategoryProductList() {
         // 1.获取商品分类信息
         List<ProductCategory> productCategories = productCategoryMapper.selectList(
                 new EntityWrapper<ProductCategory>()

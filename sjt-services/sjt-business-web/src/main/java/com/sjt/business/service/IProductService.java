@@ -39,5 +39,5 @@ public interface IProductService {
      * @param prodctsParamDTO
      * @return
      */
-    List<ProductsDTO> getProductCategoryList();
+    List<ProductsDTO> getCategoryProductList();
 }

@@ -3,13 +3,12 @@ package com.sjt.business.api.expose;
 import com.sjt.business.api.dto.req.ProdctsParamDTO;
 import com.sjt.business.api.dto.res.ProductDetailDTO;
 import com.sjt.business.api.dto.res.ProductsDTO;
+import com.sjt.common.base.result.PageDTO;
 import com.sjt.common.base.result.ResultDTO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-
-import java.util.List;
 
 /**
  * @author: yilan.hu
@@ -35,5 +34,5 @@ public interface ProductApi {
      */
     @ApiOperation(value = "获取商品分类列表", response = ProductsDTO.class)
     @GetMapping("/open-api/list")
-    ResultDTO<List<ProductsDTO>> getProductCategoryList(ProdctsParamDTO prodctsParamDTO);
+    ResultDTO<PageDTO> getCategoryProductList(ProdctsParamDTO prodctsParamDTO);
 }
