@@ -108,9 +108,16 @@ public class WechatModeSignHandler implements SignModeHandler {
                     return new UserModel(user, maxAge);
                 }
             }
+        } else {
+            // 4-2.新增用户信息
+            user = new User();
+            user.setFaceUrl(wxSnsapiUserInfo.getHeadimgurl());
+            user.setNickname(wxSnsapiUserInfo.getNickname());
+            user.setSex(wxSnsapiUserInfo.getSex());
+            user.insert();
         }
 
-        // 4-2-3.新增授权信息
+        // 5.新增授权信息
         UserOauths uo = new UserOauths();
         uo.setUserId(user.getId());
         uo.setOauthId(wxSnsapiUserInfo.getOpenid());
