@@ -90,11 +90,28 @@ public class WechatModeSignHandler implements SignModeHandler {
                 wxSnsapiUserInfo.getUnionid());
         Integer maxAge = BaseConstant.Second.DAY * 30;
         if (userOauths != null && !userOauths.isEmpty()) {
-            // 4-1.获取用户信息
+            // 4-1-1.获取用户信息
             Long userId = userOauths.get(0).getUserId();
             User user = userMapper.selectById(userId);
             CheckObjects.predicate(user.getStatus(),
                     s -> BaseConstant.Status.NO.getCode().equals(s), "用户已冻结");
+
+            // 4-1-2.APP微信开放平台和微信公众号号处理
+            for (UserOauths userOauth : userOauths) {
+                if (wxSnsapiUserInfo.getOpenid().equals(userOauth.getOauthId())) {
+                    // 存在 wxSnsapiUserInfo.getOpenid() 的授权信息直接返回
+                    return new UserModel(user, maxAge);
+                }
+            }
+
+            // 4-2-3.不存在 wxSnsapiUserInfo.getOpenid() 的授权信息, 新增授权信息
+            UserOauths uo = new UserOauths();
+            uo.setUserId(user.getId());
+            uo.setOauthId(wxSnsapiUserInfo.getOpenid());
+            uo.setUnionId(wxSnsapiUserInfo.getUnionid());
+            uo.setOauthType(DataBaseConstant.OauthType.WX_PUBLIC_NUMBER.getCode());
+            uo.insert();
+
             return new UserModel(user, maxAge);
         } else {
             // 4-2-3.新增用户信息

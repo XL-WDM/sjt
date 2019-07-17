@@ -111,13 +111,12 @@ public class DataBaseConstant {
     @Getter
     public enum OauthType {
         /**
-         * 授权类型(1-微信小程序, 2-微信公众号, 3-微信开放平台, 4-QQ, 5-微博)
+         * 授权类型(1-微信小程序, 2-微信公众号 or 微信开放平台, 3-QQ, 4-微博)
          */
         WX_APPLET("1", "微信小程序"),
-        WX_PUBLIC_NUMBER("2", "微信公众号"),
-        WX_OPEN_PLATFORM("3", "微信开放平台"),
-        QQ("4", "QQ"),
-        MICRO_BLOG("5", "微博");
+        WX_PUBLIC_NUMBER("2", "微信公众号 or 微信开放平台"),
+        QQ("3", "QQ"),
+        MICRO_BLOG("4", "微博");
 
         private OauthType(String code, String name) {
             this.code = code;
