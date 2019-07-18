@@ -2,6 +2,7 @@ package com.sjt.business.service.impl;
 
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.plugins.Page;
+import com.sjt.business.api.dto.req.ProdctsParamDTO;
 import com.sjt.business.api.dto.res.*;
 import com.sjt.business.constant.DataBaseConstant;
 import com.sjt.business.entity.Product;
@@ -14,6 +15,7 @@ import com.sjt.business.mapper.ProductPicMapper;
 import com.sjt.business.mapper.ProductPropertiesMapper;
 import com.sjt.business.service.IProductService;
 import com.sjt.common.base.constant.BaseConstant;
+import com.sjt.common.base.constant.ResultConstant;
 import com.sjt.common.utils.BeanCopierUtils;
 import com.sjt.common.utils.CheckObjects;
 import com.sjt.common.utils.PriceUtils;
@@ -139,7 +141,7 @@ public class ProductServiceImpl implements IProductService {
     }
 
     @Override
-    public List<ProductsDTO> getCategoryProductList() {
+    public List<CategoryProductsDTO> getCategoryProductList() {
         // 1.获取商品分类信息
         List<ProductCategory> productCategories = productCategoryMapper.selectList(
                 new EntityWrapper<ProductCategory>()
@@ -150,7 +152,7 @@ public class ProductServiceImpl implements IProductService {
             return new ArrayList<>();
         }
 
-        List<ProductsDTO> productsDTOS = new ArrayList<>();
+        List<CategoryProductsDTO> productsDTOS = new ArrayList<>();
 
         // 2.获取分类下的商品(4个)
         for (ProductCategory productCategory : productCategories) {
@@ -166,7 +168,7 @@ public class ProductServiceImpl implements IProductService {
                 return productDetailDTO;
             }).collect(Collectors.toList());
 
-            ProductsDTO productsDTO = new ProductsDTO();
+            CategoryProductsDTO productsDTO = new CategoryProductsDTO();
             productsDTO.setCategoryImg(productCategory.getImgUrl());
             productsDTO.setProducts(productDetailDTOS);
 
@@ -174,5 +176,61 @@ public class ProductServiceImpl implements IProductService {
         }
 
         return productsDTOS;
+    }
+
+    @Override
+    public Integer getPageProductCount(ProdctsParamDTO prodctsParamDTO) {
+        // 1.参数校验
+        CheckObjects.isNull(prodctsParamDTO, ResultConstant.PARAMETERS_CANNOT_BE_NULL);
+        Long categoryId = prodctsParamDTO.getCategoryId();
+        CheckObjects.isNull(categoryId, "请选择商品分类");
+
+        // 2.查询分类
+        ProductCategory productCategory = productCategoryMapper.selectById(categoryId);
+        CheckObjects.isNull(productCategory, "商品分类不存在");
+
+        // 3.查询商品
+        Integer total = productMapper.selectCount(new EntityWrapper<Product>()
+                .eq("one_level_category", categoryId)
+                .or()
+                .eq("two_level_category", categoryId)
+                .or()
+                .eq("three_level_category", categoryId)
+                .andNew()
+                .eq("publish_status", DataBaseConstant.ProductPushStatus.UPPER_SHELF.getCode()));
+
+        return total;
+    }
+
+    @Override
+    public List<ProductDetailDTO> getPageProductList(ProdctsParamDTO prodctsParamDTO) {
+        // 1.参数校验
+        CheckObjects.isNull(prodctsParamDTO, ResultConstant.PARAMETERS_CANNOT_BE_NULL);
+        Long categoryId = prodctsParamDTO.getCategoryId();
+        CheckObjects.isNull(categoryId, "请选择商品分类");
+        Integer pageNo = prodctsParamDTO.getPageNo();
+        Integer pageSize = prodctsParamDTO.getPageSize();
+        CheckObjects.isPage(pageNo, pageSize);
+
+        // 2.查询分类
+        ProductCategory productCategory = productCategoryMapper.selectById(categoryId);
+        CheckObjects.isNull(productCategory, "商品分类不存在");
+
+        // 3.查询商品
+        List<Product> products = productMapper.selectPage(new Page<Product>(pageNo, pageSize),
+                new EntityWrapper<Product>()
+                        .eq("one_level_category", categoryId)
+                        .or()
+                        .eq("two_level_category", categoryId)
+                        .or()
+                        .eq("three_level_category", categoryId)
+                        .andNew()
+                        .eq("publish_status", DataBaseConstant.ProductPushStatus.UPPER_SHELF.getCode())
+                        .orderBy("create_date", false));
+
+        // 4.Entity -> DTO
+        List<ProductDetailDTO> productDetailDTOS = BeanCopierUtils.copyList(products, ProductDetailDTO.class);
+
+        return productDetailDTOS;
     }
 }

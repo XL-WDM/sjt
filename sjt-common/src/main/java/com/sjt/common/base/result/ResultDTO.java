@@ -43,6 +43,9 @@ public class ResultDTO<R> implements Serializable {
     @ApiModelProperty("响应数据")
     private R data;
 
+    @ApiModelProperty("分页数据")
+    private PageDTO page;
+
     public static ResultDTO info(Integer code, String message) {
         ResultDTO result = new ResultDTO();
         result.setCode(code);
@@ -71,12 +74,18 @@ public class ResultDTO<R> implements Serializable {
     }
 
     public static <D> ResultDTO data(D data) {
-        ResultDTO result = ResultDTO.success();
+        ResultDTO<D> result = ResultDTO.success();
         result.setData(data);
         return result;
     }
 
     public static ResultDTO page(int total, List rows) {
-        return ResultDTO.data(new PageDTO(total, rows));
+        return ResultDTO.page(total, rows, null);
+    }
+
+    public static <D> ResultDTO page(int total, List rows, D d) {
+        ResultDTO<D> resultDTO = ResultDTO.data(d);
+        resultDTO.setPage(new PageDTO(total, rows));
+        return resultDTO;
     }
 }

@@ -1,9 +1,9 @@
 package com.sjt.business.service;
 
 import com.sjt.business.api.dto.req.ProdctsParamDTO;
+import com.sjt.business.api.dto.res.CategoryProductsDTO;
 import com.sjt.business.api.dto.res.ProductCategoryDTO;
 import com.sjt.business.api.dto.res.ProductDetailDTO;
-import com.sjt.business.api.dto.res.ProductsDTO;
 
 import java.util.List;
 
@@ -39,5 +39,19 @@ public interface IProductService {
      * @param prodctsParamDTO
      * @return
      */
-    List<ProductsDTO> getCategoryProductList();
+    List<CategoryProductsDTO> getCategoryProductList();
+
+    /**
+     * 分页获取商品总数
+     * @param prodctsParamDTO
+     * @return
+     */
+    Integer getPageProductCount(ProdctsParamDTO prodctsParamDTO);
+
+    /**
+     * 分页获取商品信息
+     * @param prodctsParamDTO
+     * @return
+     */
+    List<ProductDetailDTO> getPageProductList(ProdctsParamDTO prodctsParamDTO);
 }

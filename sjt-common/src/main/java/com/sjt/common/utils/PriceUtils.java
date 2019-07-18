@@ -20,6 +20,6 @@ public class PriceUtils {
             return null;
         }
 
-        return Double.valueOf(cent / BaseConstant.Digit.HUNDRED_DIGIT);
+        return Double.valueOf((double)cent / BaseConstant.Digit.HUNDRED_DIGIT);
     }
 }

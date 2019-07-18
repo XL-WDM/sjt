@@ -1,8 +1,8 @@
 package com.sjt.business.api.expose;
 
+import com.sjt.business.api.dto.req.ProdctsParamDTO;
+import com.sjt.business.api.dto.res.CategoryProductsDTO;
 import com.sjt.business.api.dto.res.ProductDetailDTO;
-import com.sjt.business.api.dto.res.ProductsDTO;
-import com.sjt.common.base.result.PageDTO;
 import com.sjt.common.base.result.ResultDTO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -31,7 +31,16 @@ public interface ProductApi {
      * @param prodctsParamDTO
      * @return
      */
-    @ApiOperation(value = "获取分类商品列表", response = ProductsDTO.class)
+    @ApiOperation(value = "获取分类商品列表", response = CategoryProductsDTO.class)
     @GetMapping("/open-api/list")
-    ResultDTO<PageDTO> getCategoryProductList();
+    ResultDTO getCategoryProductList();
+
+    /**
+     * 获取商品列表
+     * @param prodctsParamDTO
+     * @return
+     */
+    @ApiOperation(value = "获取商品列表", response = ProductDetailDTO.class)
+    @GetMapping("/open-api/list/page")
+    ResultDTO getProductList(ProdctsParamDTO prodctsParamDTO);
 }

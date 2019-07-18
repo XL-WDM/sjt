@@ -12,7 +12,7 @@ import java.util.List;
  */
 @ApiModel("商品分类列表数据")
 @Data
-public class ProductsDTO {
+public class CategoryProductsDTO {
 
     /**
      * 商品分类图片

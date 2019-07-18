@@ -51,6 +51,12 @@ public class CheckObjects {
         }
     }
 
+    public static void isPage(Integer pageNo, Integer pageSize) {
+        if (pageNo == null || pageNo == 0 || pageSize == null || pageSize == 0) {
+            throw new GlobalException(ResultDTO.error("分页参数有误"));
+        }
+    }
+
     public static void isStatus(String status, String emptyMessage, String enumNullMessage) {
         isEmpty(status, emptyMessage);
         BaseConstant.Status statusEnum = BaseConstant.Status.find(status);
