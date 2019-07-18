@@ -11,6 +11,7 @@ import lombok.Data;
 @ApiModel("分页请求数据")
 @Data
 public class PageParamDTO {
+
     /**
      * 页号
      */
