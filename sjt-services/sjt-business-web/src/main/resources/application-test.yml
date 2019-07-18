@@ -4,7 +4,7 @@ spring:
     driver-class-name: com.mysql.jdbc.Driver
     username: root
     password: uAiqwVwjJ8-i
-    url: jdbc:mysql://47.99.201.124:3306/stj
+    url: jdbc:mysql://47.99.201.124:3306/sjt
 # logback
 logging:
   level:
