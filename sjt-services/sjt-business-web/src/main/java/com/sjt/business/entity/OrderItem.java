@@ -13,7 +13,7 @@ import java.math.BigDecimal;
  * @data: 2019/7/18
  */
 @Data
-@TableName
+@TableName("t_order_item")
 public class OrderItem extends Model<OrderItem> implements Serializable {
     private static final long serialVersionUID = -7364774920227960419L;
 

@@ -18,7 +18,7 @@ create table t_order
 	shipping_name varchar(36) null comment '物流名称',
 	shipping_code varchar(36) null comment '物流单号',
 	buyer_message varchar(128) null comment '买家留言',
-	buyer_rate varchar(1) not null comment '买家是否评论(0-否, 1-是)',
+	buyer_rate varchar(1) default '0' not null comment '买家是否评论(0-否, 1-是)',
 	constraint t_order_order_no_uindex
 		unique (order_no),
 	constraint t_order_t_user_id_fk
@@ -30,5 +30,6 @@ comment '订单信息表' engine=InnoDB
 create index t_order_t_user_id_fk
 	on t_order (user_id)
 ;
+
 
 

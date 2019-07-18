@@ -2,6 +2,7 @@ package com.sjt.business.service.impl;
 
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.sjt.business.api.dto.req.OrderParamDTO;
+import com.sjt.business.constant.DataBaseConstant;
 import com.sjt.business.entity.Order;
 import com.sjt.business.entity.OrderItem;
 import com.sjt.business.entity.Product;
@@ -9,6 +10,7 @@ import com.sjt.business.entity.ProductStock;
 import com.sjt.business.mapper.ProductMapper;
 import com.sjt.business.mapper.ProductStockMapper;
 import com.sjt.business.service.IOrderService;
+import com.sjt.business.web.config.WebUserContext;
 import com.sjt.common.exceptions.GlobalException;
 import com.sjt.common.utils.CheckObjects;
 import com.sjt.common.utils.SnowflakeIdUtils;
@@ -40,9 +42,15 @@ public class OrderServiceImpl implements IOrderService {
     @Transactional(rollbackFor = Exception.class)
     public void placeOrder(List<OrderParamDTO> orderItems) {
         // 1.参数校验
+        CheckObjects.isEmpty(orderItems, "请选择需要下单的商品");
+
+        // 订单总金额
+        BigDecimal sumPrice = new BigDecimal("0");
+
+        // 订单详情集合
+        List<OrderItem> orderDetails = new ArrayList<>();
 
         // 2.查询商品
-        List<OrderItem> items = new ArrayList<>();
         for (OrderParamDTO orderItem : orderItems) {
             Long productId = orderItem.getProductId();
             Integer num = orderItem.getNum();
@@ -77,13 +85,32 @@ public class OrderServiceImpl implements IOrderService {
             oItem.setProductId(product.getId());
             oItem.setNum(num);
             oItem.setPrice(product.getPrice());
-            oItem.setTotalFee(product.getPrice().multiply(BigDecimal.valueOf(num)));
-            items.add(oItem);
+            // 订单详情总金额
+            BigDecimal itemSumPrice = product.getPrice().multiply(BigDecimal.valueOf(num));
+            oItem.setTotalFee(itemSumPrice);
+            orderDetails.add(oItem);
+
+            // 累计金额
+            sumPrice = sumPrice.add(itemSumPrice);
         }
 
         // 3.生成订单信息
         Order order = new Order();
         order.setOrderNo(String.valueOf(snowflakeIdUtils.nextId()));
+        order.setUserId(WebUserContext.getContext().getId());
+        order.setOrgPayment(sumPrice);
+        order.setPayment(sumPrice);
+        order.setPostFee(new BigDecimal("15"));
+        order.setStatus(DataBaseConstant.OrderStatus.UNPAID.getCode());
+        boolean insert = order.insert();
+        CheckObjects.predicate(insert, b -> !b, "订单生成失败");
 
+        // 4.生成订单详情
+        Long orderId = order.getId();
+        for (OrderItem orderDetail : orderDetails) {
+            orderDetail.setOrderId(orderId);
+            boolean insertOrderDetail = orderDetail.insert();
+            CheckObjects.predicate(insertOrderDetail, b -> !b, "订单详情生成失败");
+        }
     }
 }

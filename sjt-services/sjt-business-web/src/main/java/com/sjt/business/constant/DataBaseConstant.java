@@ -190,4 +190,34 @@ public class DataBaseConstant {
             return null;
         }
     }
+
+    @Getter
+    public enum OrderStatus {
+        /**
+         * 订单状态(1-未付款, 2-已付款, 3-未发货, 4-已发货, 5-已完成, 6-已取消)
+         */
+        UNPAID("1", "未付款"),
+        PAYMENT_MADE("2", "已付款"),
+        UNSHIPPED("3", "未发货"),
+        SHIPPED("4", "已发货"),
+        COMPLETED("5", "已完成"),
+        CANCELLED("6", "已取消");
+
+        private OrderStatus(String code, String name) {
+            this.code = code;
+            this.name = name;
+        }
+
+        private String code;
+        private String name;
+
+        public static OrderStatus find(String code) {
+            for (OrderStatus status : values()) {
+                if (status.getCode().equals(code)) {
+                    return status;
+                }
+            }
+            return null;
+        }
+    }
 }
