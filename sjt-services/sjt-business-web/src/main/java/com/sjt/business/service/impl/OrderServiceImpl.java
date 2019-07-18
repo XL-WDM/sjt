@@ -50,14 +50,14 @@ public class OrderServiceImpl implements IOrderService {
                     new EntityWrapper<ProductStock>()
                             .eq("product_id", product.getId()));
             // 2-3.库存校验
-            CheckObjects.isNull(productStock, "商品[" + product.getProductName() + "]库存不足");
+            CheckObjects.isNull(productStock, "商品[" + product.getProductName() + "], 库存不足");
             int stockNum = productStock.getProductStockNum() - productStock.getOrderStockNum();
-            CheckObjects.predicate(stockNum, n -> n <= 0, "商品[" +product.getProductName() + "]库存不足");
+            CheckObjects.predicate(stockNum, n -> n <= 0, "商品[" +product.getProductName() + "], 库存不足");
             // 2-4.下单数量
-            CheckObjects.isNull(num, "请填写商品[" + product.getProductName() + "]的购买数量");
-            CheckObjects.predicate(num, n -> n < 1, "商品[" + product.getProductName() + "]至少购买一件");
+            CheckObjects.isNull(num, "请填写商品[" + product.getProductName() + "], 的购买数量");
+            CheckObjects.predicate(num, n -> n < 1, "商品[" + product.getProductName() + "], 至少购买一件");
             CheckObjects.predicate(num, n -> n > stockNum,
-                    "商品[" + product.getProductName() + "]不足件, 库存: " + stockNum + "件");
+                    "商品[" + product.getProductName() + "], 库存不足, 当前库存: " + stockNum + "件");
 
         }
 
