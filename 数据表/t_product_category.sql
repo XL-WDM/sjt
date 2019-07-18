@@ -24,6 +24,6 @@ create index t_product_category_t_product_category_id_fk
 
 
 
-INSERT INTO stj.t_product_category (id, category_name, category_level, status, icon, img_url, url, pid, create_date, update_date) VALUES (3, '随饮小憩系列', 1, 1, null, null, null, null, '2019-07-11 15:27:59', '2019-07-11 15:27:59');
-INSERT INTO stj.t_product_category (id, category_name, category_level, status, icon, img_url, url, pid, create_date, update_date) VALUES (4, '健康蔬果膏系列', 1, 1, null, null, null, null, '2019-07-11 15:27:59', '2019-07-11 15:27:59');
-INSERT INTO stj.t_product_category (id, category_name, category_level, status, icon, img_url, url, pid, create_date, update_date) VALUES (5, '养生果膏系列', 1, 1, null, null, null, null, '2019-07-11 17:23:41', '2019-07-11 17:23:41');
+INSERT INTO sjt.t_product_category (id, category_name, category_level, status, icon, img_url, url, pid, create_date, update_date) VALUES (3, '随饮小憩系列', 1, 1, null, null, null, null, '2019-07-11 15:27:59', '2019-07-11 15:27:59');
+INSERT INTO sjt.t_product_category (id, category_name, category_level, status, icon, img_url, url, pid, create_date, update_date) VALUES (4, '健康蔬果膏系列', 1, 1, null, null, null, null, '2019-07-11 15:27:59', '2019-07-11 15:27:59');
+INSERT INTO sjt.t_product_category (id, category_name, category_level, status, icon, img_url, url, pid, create_date, update_date) VALUES (5, '养生果膏系列', 1, 1, null, null, null, null, '2019-07-11 17:23:41', '2019-07-11 17:23:41');
