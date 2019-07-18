@@ -1,7 +1,6 @@
 package com.sjt.common.utils;
 
-import com.sjt.common.base.constant.BaseConstant;
-import com.sun.prism.impl.BaseContext;
+import java.math.BigDecimal;
 
 /**
  * 金额工具类
@@ -15,11 +14,11 @@ public class PriceUtils {
      * @param cent
      * @return
      */
-    public static Double centToYuan(Long cent) {
+    public static BigDecimal centToYuan(BigDecimal cent) {
         if (cent == null) {
             return null;
         }
 
-        return Double.valueOf((double)cent / BaseConstant.Digit.HUNDRED_DIGIT);
+        return cent.multiply(BigDecimal.valueOf(0.01));
     }
 }

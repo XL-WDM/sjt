@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.annotations.TableName;
 import lombok.Data;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 
 /**
  * @author: yilan.hu
@@ -40,12 +41,12 @@ public class OrderItem extends Model<OrderItem> implements Serializable {
     /**
      * 商品单价(单位：分)
      */
-    private Long price;
+    private BigDecimal price;
 
     /**
      * 商品总金额
      */
-    private Long totalFee;
+    private BigDecimal totalFee;
 
     @Override
     protected Serializable pkVal() {

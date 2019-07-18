@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.annotations.TableName;
 import lombok.Data;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 /**
@@ -51,12 +52,12 @@ public class Product extends Model<Product> implements Serializable {
     /**
      * 商品价格(单位：分)
      */
-    private Long price;
+    private BigDecimal price;
 
     /**
      * 优惠金额(单位：分)
      */
-    private Long discountAmount;
+    private BigDecimal discountAmount;
 
     /**
      * 发布状态(0-删除, 1-上架, 2-下架)

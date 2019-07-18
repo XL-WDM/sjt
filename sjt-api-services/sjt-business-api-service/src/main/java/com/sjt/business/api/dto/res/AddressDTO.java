@@ -42,9 +42,9 @@ public class AddressDTO {
     private String city;
 
     /**
-     * 县
+     * 县/区
      */
-    @ApiModelProperty("县")
+    @ApiModelProperty("县/区")
     private String county;
 
     /**

@@ -14,11 +14,6 @@ sjt:
   # swagger
   swagger:
     enable: true
-  proxy:
-    charset: utf_8
-    host: 10.1.27.102
-    enable-proxy: false
-    ssh-check: false
   # 微信
   wechat:
     app-id: wx73770f8f029e1b50

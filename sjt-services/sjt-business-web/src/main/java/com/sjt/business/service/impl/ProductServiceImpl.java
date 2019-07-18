@@ -24,7 +24,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * @author: yilan.hu
@@ -93,11 +92,13 @@ public class ProductServiceImpl implements IProductService {
                 s -> DataBaseConstant.ProductPushStatus.DELETE.getCode().equals(s), "商品失效");
         CheckObjects.predicate(product.getPublishStatus(),
                 s -> DataBaseConstant.ProductPushStatus.LOWER_SHELF.getCode().equals(s), "商品已下架");
-        // 2-1.Entity -> DTO
+
+        // 2-1.分 -> 元
+        product.setPrice(PriceUtils.centToYuan(product.getPrice()));
+        product.setDiscountAmount(PriceUtils.centToYuan(product.getDiscountAmount()));
+
+        // 2-2.Entity -> DTO
         ProductDetailDTO productDetailDTO = BeanCopierUtils.copyBean(product, ProductDetailDTO.class);
-        // 2-2.分 -> 元
-        productDetailDTO.setPrice(PriceUtils.centToYuan(product.getPrice()));
-        productDetailDTO.setDiscountAmount(PriceUtils.centToYuan(product.getDiscountAmount()));
 
         // 3.查询商品属性
         List<ProductProperties> productProperties = productPropertiesMapper.selectList(
@@ -128,14 +129,14 @@ public class ProductServiceImpl implements IProductService {
                 .eq("new_arrivals", BaseConstant.Status.YES.getCode())
                 .or("create_date", false).orderBy("create_date", false));
 
+        // 2.分 -> 元
+        for (Product product : products) {
+            product.setPrice(PriceUtils.centToYuan(product.getPrice()));
+            product.setDiscountAmount(PriceUtils.centToYuan(product.getDiscountAmount()));
+        }
+
         // 2.Entity -> DTO
-        List<ProductDetailDTO> newArrivals = products.stream().map(p -> {
-            ProductDetailDTO productDetailDTO = BeanCopierUtils.copyBean(p, ProductDetailDTO.class);
-            // 2-1.分转元
-            productDetailDTO.setPrice(PriceUtils.centToYuan(p.getPrice()));
-            productDetailDTO.setDiscountAmount(PriceUtils.centToYuan(p.getDiscountAmount()));
-            return productDetailDTO;
-        }).collect(Collectors.toList());
+        List<ProductDetailDTO> newArrivals = BeanCopierUtils.copyList(products, ProductDetailDTO.class);
 
         return newArrivals;
     }
@@ -160,13 +161,15 @@ public class ProductServiceImpl implements IProductService {
                     new EntityWrapper<Product>()
                             .eq("one_level_category", productCategory.getId())
                             .orderBy("create_date", false));
+
+            // 分 -> 元
+            for (Product product : products) {
+                product.setPrice(PriceUtils.centToYuan(product.getPrice()));
+                product.setDiscountAmount(PriceUtils.centToYuan(product.getDiscountAmount()));
+            }
+
             // Entity -> DTO
-            List<ProductDetailDTO> productDetailDTOS = products.stream().map(p -> {
-                ProductDetailDTO productDetailDTO = BeanCopierUtils.copyBean(p, ProductDetailDTO.class);
-                productDetailDTO.setPrice(PriceUtils.centToYuan(p.getPrice()));
-                productDetailDTO.setDiscountAmount(PriceUtils.centToYuan(p.getDiscountAmount()));
-                return productDetailDTO;
-            }).collect(Collectors.toList());
+            List<ProductDetailDTO> productDetailDTOS = BeanCopierUtils.copyList(products, ProductDetailDTO.class);
 
             CategoryProductsDTO productsDTO = new CategoryProductsDTO();
             productsDTO.setCategoryImg(productCategory.getImgUrl());
@@ -228,7 +231,13 @@ public class ProductServiceImpl implements IProductService {
                         .eq("publish_status", DataBaseConstant.ProductPushStatus.UPPER_SHELF.getCode())
                         .orderBy("create_date", false));
 
-        // 4.Entity -> DTO
+        // 4.分 -> 元
+        for (Product product : products) {
+            product.setPrice(PriceUtils.centToYuan(product.getPrice()));
+            product.setDiscountAmount(PriceUtils.centToYuan(product.getDiscountAmount()));
+        }
+
+        // 5.Entity -> DTO
         List<ProductDetailDTO> productDetailDTOS = BeanCopierUtils.copyList(products, ProductDetailDTO.class);
 
         return productDetailDTOS;

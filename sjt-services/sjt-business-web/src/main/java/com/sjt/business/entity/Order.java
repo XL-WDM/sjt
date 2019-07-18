@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.annotations.TableName;
 import lombok.Data;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 /**
@@ -34,22 +35,22 @@ public class Order extends Model<Order> implements Serializable {
     private Long userId;
 
     /**
-     * 实付金额(单位：分)
+     * 原交易金额(单位：分)
      */
-    private Long payment;
+    private BigDecimal orgPayment;
 
     /**
-     * 支付类型(1-线上支付, 2-线下支付)
+     * 实付金额(单位：分)
      */
-    private String paymentType;
+    private BigDecimal payment;
 
     /**
      * 邮费(单位：分)
      */
-    private Long postFee;
+    private BigDecimal postFee;
 
     /**
-     * 订单状态(1-未付款, 2-已付款, 3-未发货, 4-已发货, 5-交易成功, 6-交易关闭)
+     * 订单状态(1-未付款, 2-已付款, 3-未发货, 4-已发货, 5-已完成, 6-已取消)
      */
     private String status;
 

@@ -4,6 +4,7 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 /**
@@ -29,13 +30,13 @@ public class ProductDetailDTO {
      * 商品价格(单位：元)
      */
     @ApiModelProperty("商品价格(单位：元)")
-    private Double price;
+    private BigDecimal price;
 
     /**
      * 优惠金额(单位：元)
      */
     @ApiModelProperty("优惠金额(单位：元)")
-    private Double discountAmount;
+    private BigDecimal discountAmount;
 
     /**
      * 商品描述
