@@ -1,0 +1,26 @@
+server:
+  port: 27000
+spring:
+  # 数据源
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    username: root
+    password: uAiqwVwjJ8-i
+    url: jdbc:mysql://172.16.131.42:3306/sjt?useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&transformedBitIsBoolean=true
+# logback
+logging:
+  level:
+    org.springframework.web: INFO
+    com.sjt.business.mapper: INFO
+sjt:
+  # swagger
+  swagger:
+    enable: true
+  # 微信
+  wechat:
+    app-id: wx73770f8f029e1b50
+    appsecret: 7afde07a322e7c33bc5e0fbdd340ec28
+    open-app-id: wxc72866875cad5fe1
+    open-appsecret: 8ba97e7f0ed649472718d1f4abaef62d
+    applet-id: wxd46d12c41a64720f
+    applet-appsecret: f73b6b99027c6232307a503336087d2c
