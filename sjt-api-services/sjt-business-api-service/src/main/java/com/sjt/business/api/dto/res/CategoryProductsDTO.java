@@ -15,6 +15,12 @@ import java.util.List;
 public class CategoryProductsDTO {
 
     /**
+     * 商品分类id
+     */
+    @ApiModelProperty("商品分类id")
+    private Long categoryId;
+
+    /**
      * 商品分类图片
      */
     @ApiModelProperty("商品分类图片")

@@ -219,4 +219,31 @@ public class DataBaseConstant {
             return null;
         }
     }
+
+    @Getter
+    public enum ProductCategoryLevel {
+        /**
+         * 商品分类级别(1-一级分类, 2-二级分类, 3-三级分类)
+         */
+        Category_Level_ONE("1", "一级分类"),
+        Category_Level_TWO("2", "二级分类"),
+        Category_Level_THREE("3", "三级分类");
+
+        private ProductCategoryLevel(String code, String name) {
+            this.code = code;
+            this.name = name;
+        }
+
+        private String code;
+        private String name;
+
+        public static ProductCategoryLevel find(String code) {
+            for (ProductCategoryLevel level : values()) {
+                if (level.getCode().equals(code)) {
+                    return level;
+                }
+            }
+            return null;
+        }
+    }
 }

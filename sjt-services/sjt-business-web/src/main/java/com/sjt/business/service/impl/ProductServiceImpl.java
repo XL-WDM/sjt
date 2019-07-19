@@ -125,7 +125,7 @@ public class ProductServiceImpl implements IProductService {
         List<Product> products = productMapper.selectList(new EntityWrapper<Product>()
                 .eq("publish_status", DataBaseConstant.ProductPushStatus.UPPER_SHELF.getCode())
                 .eq("new_arrivals", BaseConstant.Status.YES.getCode())
-                .or("create_date", false).orderBy("create_date", false));
+                .orderBy("create_date", false));
 
         // 2.分 -> 元
         for (Product product : products) {
@@ -144,7 +144,8 @@ public class ProductServiceImpl implements IProductService {
         // 1.获取商品分类信息
         List<ProductCategory> productCategories = productCategoryMapper.selectList(
                 new EntityWrapper<ProductCategory>()
-                        .isNull("pid")
+                        .eq("category_level", DataBaseConstant.ProductCategoryLevel.Category_Level_THREE.getCode())
+                        .orderBy("pid")
                         .orderBy("create_date", false));
 
         if (productCategories == null || productCategories.isEmpty()) {
@@ -157,7 +158,7 @@ public class ProductServiceImpl implements IProductService {
         for (ProductCategory productCategory : productCategories) {
             List<Product> products = productMapper.selectPage(new Page<Product>(1, 4),
                     new EntityWrapper<Product>()
-                            .eq("one_level_category", productCategory.getId())
+                            .eq("three_level_category", productCategory.getId())
                             .orderBy("create_date", false));
 
             // 分 -> 元
@@ -170,6 +171,7 @@ public class ProductServiceImpl implements IProductService {
             List<ProductDetailDTO> productDetailDTOS = BeanCopierUtils.copyList(products, ProductDetailDTO.class);
 
             CategoryProductsDTO productsDTO = new CategoryProductsDTO();
+            productsDTO.setCategoryId(productCategory.getId());
             productsDTO.setCategoryImg(productCategory.getImgUrl());
             productsDTO.setProducts(productDetailDTOS);
 
