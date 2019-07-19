@@ -60,7 +60,7 @@ public class OrderServiceImpl implements IOrderService {
         BigDecimal sumPrice = new BigDecimal("0");
 
         // 订单总优惠金额
-        BigDecimal discountAmount = new BigDecimal("0");
+        BigDecimal discountSumAmount = new BigDecimal("0");
 
         // 订单详情集合
         List<OrderItem> orderDetails = new ArrayList<>();
@@ -101,13 +101,18 @@ public class OrderServiceImpl implements IOrderService {
             oItem.setNum(num);
             oItem.setPrice(product.getPrice());
             // 2-7.订单详情总金额
-            BigDecimal itemSumPrice = product.getPrice().multiply(BigDecimal.valueOf(num));
-            oItem.setTotalFee(itemSumPrice);
+            BigDecimal itemDiscountSumAmount = product.getPrice().multiply(BigDecimal.valueOf(num));
+            oItem.setTotalFee(itemDiscountSumAmount);
+            // 2-8.订单详情优惠总金额
+            BigDecimal discountAmount = product.getDiscountAmount().multiply(BigDecimal.valueOf(num));
+            oItem.setDiscountAmount(discountAmount);
+
+            // 2-9添加到集合
             orderDetails.add(oItem);
 
-            // 2-8.累计金额
-            sumPrice = sumPrice.add(itemSumPrice);
-            discountAmount = discountAmount.add(product.getDiscountAmount());
+            // 2-10.累计订单总金额
+            sumPrice = sumPrice.add(itemDiscountSumAmount);
+            discountSumAmount = discountSumAmount.add(discountAmount);
         }
 
         // 运费
@@ -119,8 +124,8 @@ public class OrderServiceImpl implements IOrderService {
         order.setUserId(userId);
         order.setAddressId(address.getId());
         order.setOrgPayment(sumPrice.add(postFee));
-        order.setDiscountAmount(discountAmount);
-        order.setPayment(sumPrice.add(postFee).subtract(discountAmount));
+        order.setDiscountAmount(discountSumAmount);
+        order.setPayment(sumPrice.add(postFee).subtract(discountSumAmount));
         order.setPostFee(postFee);
         order.setStatus(DataBaseConstant.OrderStatus.TO_BE_PAID.getCode());
         boolean insert = order.insert();

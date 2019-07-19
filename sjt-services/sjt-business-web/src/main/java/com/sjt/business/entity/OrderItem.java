@@ -44,6 +44,11 @@ public class OrderItem extends Model<OrderItem> implements Serializable {
     private BigDecimal price;
 
     /**
+     * 优惠金额(单位：分)
+     */
+    private BigDecimal discountAmount;
+
+    /**
      * 商品总金额
      */
     private BigDecimal totalFee;
