@@ -13,6 +13,8 @@ logging:
     org.springframework.web: INFO
     com.sjt.business.mapper: INFO
 sjt:
+  cross:
+    origin: http://www.smallbug.top
   # swagger
   swagger:
     enable: true
