@@ -33,4 +33,10 @@ public class OrderApiService implements OrderApi {
         Integer total = iOrderService.getOrderCountByPage(orderParamDTO);
         return ResultDTO.page(total, rows);
     }
+
+    @Override
+    public ResultDTO<OrderDTO> getOrderDetail(Long orderId) {
+        OrderDTO orderDetail = iOrderService.getOrderDetail(orderId);
+        return ResultDTO.data(orderDetail);
+    }
 }

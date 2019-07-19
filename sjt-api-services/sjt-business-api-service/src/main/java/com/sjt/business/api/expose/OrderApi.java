@@ -38,4 +38,13 @@ public interface OrderApi {
     @ApiOperation(value = "订单查询")
     @GetMapping("/list/page")
     ResultDTO<List<OrderDTO>> getOrder(OrderParamDTO orderParamDTO);
+
+    /**
+     * 获取订单详情
+     * @param orderId
+     * @return
+     */
+    @ApiOperation(value = "获取订单详情")
+    @GetMapping("/detail")
+    ResultDTO<OrderDTO> getOrderDetail(Long orderId);
 }

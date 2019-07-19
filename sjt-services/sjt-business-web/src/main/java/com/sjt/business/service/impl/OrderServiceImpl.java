@@ -15,6 +15,7 @@ import com.sjt.business.web.config.WebUserContext;
 import com.sjt.common.base.constant.ResultConstant;
 import com.sjt.common.utils.BeanCopierUtils;
 import com.sjt.common.utils.CheckObjects;
+import com.sjt.common.utils.PriceUtils;
 import com.sjt.common.utils.SnowflakeIdUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -127,7 +128,7 @@ public class OrderServiceImpl implements IOrderService {
         }
 
         // 运费
-        BigDecimal postFee = new BigDecimal("15");
+        BigDecimal postFee = new BigDecimal("1500");
 
         // 3.生成订单信息
         Order order = new Order();
@@ -164,6 +165,7 @@ public class OrderServiceImpl implements IOrderService {
 
         // 2.查询总数
         return  orderMapper.selectCount(new EntityWrapper<Order>()
+                .eq("user_id", WebUserContext.getContext().getId())
                 .eq(!StringUtils.isEmpty(status), "status", status));
     }
 
@@ -183,6 +185,7 @@ public class OrderServiceImpl implements IOrderService {
         // 2.查询订单
         List<Order> orders = orderMapper.selectPage(new Page<Order>(pageNo, pageSize),
                 new EntityWrapper<Order>()
+                        .eq("user_id", WebUserContext.getContext().getId())
                         .eq(!StringUtils.isEmpty(status), "status", status)
                         .orderBy("create_date", false));
 
@@ -191,22 +194,69 @@ public class OrderServiceImpl implements IOrderService {
         for (Order order : orders) {
             // 3-1.Entity -> DTO
             OrderDTO orderDTO = BeanCopierUtils.copyBean(order, OrderDTO.class);
+            // 3-2.分 -> 元
+            orderDTO.setTotalAmount(PriceUtils.centToYuan(orderDTO.getTotalAmount()));
+            orderDTO.setOrgAmount(PriceUtils.centToYuan(orderDTO.getOrgAmount()));
+            orderDTO.setPostFee(PriceUtils.centToYuan(orderDTO.getPostFee()));
 
-            // 3-2.获取订单详情
+
+            // 3-3.获取订单详情
             List<OrderItem> orderItems = orderItemMappler.selectList(new EntityWrapper<OrderItem>()
-                    .eq("orderId", order.getId()));
+                    .eq("order_id", order.getId()));
 
-            // 3-3.设置订单详情信息
-            List<OrderItemDTO> orderItemDTOS = new ArrayList<>();
-            for (OrderItem orderItem : orderItems) {
-                OrderItemDTO orderItemDTO = BeanCopierUtils.copyBean(orderItem, OrderItemDTO.class);
-                orderItemDTOS.add(orderItemDTO);
+            // 3-4.设置订单详情信息
+            if (orderItems != null && !orderItems.isEmpty()) {
+                List<OrderItemDTO> orderItemDTOS = new ArrayList<>();
+                for (OrderItem orderItem : orderItems) {
+                    OrderItemDTO orderItemDTO = BeanCopierUtils.copyBean(orderItem, OrderItemDTO.class);
+                    // 分 -> 元
+                    orderItemDTO.setPrice(PriceUtils.centToYuan(orderItemDTO.getPrice()));
+                    orderItemDTOS.add(orderItemDTO);
+                }
+                orderDTO.setOrderItems(orderItemDTOS);
             }
-            orderDTO.setOrderItems(orderItemDTOS);
 
+            // 3-5.添加详情到集合
             orderDTOS.add(orderDTO);
         }
 
         return orderDTOS;
+    }
+
+    @Override
+    public OrderDTO getOrderDetail(Long orderId) {
+        // 1.参数校验
+        CheckObjects.isNull(orderId, "请选择需要查询的订单");
+        Order order = new Order();
+        order.setId(orderId);
+        order.setUserId(WebUserContext.getContext().getId());
+        order = orderMapper.selectOne(order);
+        CheckObjects.isNull(order, "订单不存在");
+
+        // 3-1.Entity -> DTO
+        OrderDTO orderDTO = BeanCopierUtils.copyBean(order, OrderDTO.class);
+        // 3-2.分 -> 元
+        orderDTO.setTotalAmount(PriceUtils.centToYuan(orderDTO.getTotalAmount()));
+        orderDTO.setOrgAmount(PriceUtils.centToYuan(orderDTO.getOrgAmount()));
+        orderDTO.setPostFee(PriceUtils.centToYuan(orderDTO.getPostFee()));
+
+
+        // 3-3.获取订单详情
+        List<OrderItem> orderItems = orderItemMappler.selectList(new EntityWrapper<OrderItem>()
+                .eq("order_id", order.getId()));
+
+        // 3-4.设置订单详情信息
+        if (orderItems != null && !orderItems.isEmpty()) {
+            List<OrderItemDTO> orderItemDTOS = new ArrayList<>();
+            for (OrderItem orderItem : orderItems) {
+                OrderItemDTO orderItemDTO = BeanCopierUtils.copyBean(orderItem, OrderItemDTO.class);
+                // 分 -> 元
+                orderItemDTO.setPrice(PriceUtils.centToYuan(orderItemDTO.getPrice()));
+                orderItemDTOS.add(orderItemDTO);
+            }
+            orderDTO.setOrderItems(orderItemDTOS);
+        }
+
+        return orderDTO;
     }
 }

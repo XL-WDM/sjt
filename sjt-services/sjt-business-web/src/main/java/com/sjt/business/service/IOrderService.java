@@ -31,4 +31,11 @@ public interface IOrderService {
      * @return
      */
     List<OrderDTO> getOrderListByPage(OrderParamDTO orderParamDTO);
+
+    /**
+     * 获取订单详情
+     * @param orderId
+     * @return
+     */
+    OrderDTO getOrderDetail(Long orderId);
 }
