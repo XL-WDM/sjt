@@ -2,9 +2,9 @@ package com.sjt.common.base.result;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.Data;
 
 import java.io.Serializable;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -12,8 +12,7 @@ import java.util.List;
  * @data: 2019/7/8
  */
 @ApiModel("响应对象")
-@Data
-public class ResultDTO<R> implements Serializable {
+public class ResultDTO<R> extends HashMap implements Serializable {
 
     private static final long serialVersionUID = 834150395386082650L;
 
@@ -25,32 +24,40 @@ public class ResultDTO<R> implements Serializable {
     private final static String NOT_SIGN_MESSAGE = "用户信息失效, 请重新登录!";
     private final static String ERROR_MESSAGE = "哎呀, 服务开小差啦!";
 
-    /**
-     * 响应码
-     */
+
+    @Override
+    public ResultDTO put(Object key, Object value) {
+        super.put(key, value);
+        return this;
+    }
+
+    /** 响应码(只用来swagger展示) */
     @ApiModelProperty("响应码")
     private Integer code;
 
-    /**
-     * 响应信息
-     */
+    /** 响应信息(只用来swagger展示) */
     @ApiModelProperty("响应信息")
     private String message;
 
-    /**
-     * 响应数据
-     */
+    /** 响应数据(只用来swagger展示) */
     @ApiModelProperty("响应数据")
     private R data;
 
+    /** 分页数据(只用来swagger展示) */
     @ApiModelProperty("分页数据")
     private PageDTO page;
 
+    public Integer getCode() {
+        return (Integer) this.get("code");
+    }
+
+    public String getMessage() {
+        Object msg = this.get("message");
+        return msg == null ? "" : msg.toString();
+    }
+
     public static ResultDTO info(Integer code, String message) {
-        ResultDTO result = new ResultDTO();
-        result.setCode(code);
-        result.setMessage(message);
-        return result;
+        return new ResultDTO().put("code", code).put("message", message);
     }
 
     public static ResultDTO error(String message) {
@@ -74,9 +81,7 @@ public class ResultDTO<R> implements Serializable {
     }
 
     public static <D> ResultDTO data(D data) {
-        ResultDTO<D> result = ResultDTO.success();
-        result.setData(data);
-        return result;
+        return ResultDTO.success().put("data", data);
     }
 
     public static ResultDTO page(int total, List rows) {
@@ -84,8 +89,11 @@ public class ResultDTO<R> implements Serializable {
     }
 
     public static <D> ResultDTO page(int total, List rows, D d) {
-        ResultDTO<D> resultDTO = ResultDTO.data(d);
-        resultDTO.setPage(new PageDTO(total, rows));
+        ResultDTO resultDTO = ResultDTO.success();
+        resultDTO.put("total", total).put("rows", rows);
+        if (d != null) {
+            resultDTO.put("data", d);
+        }
         return resultDTO;
     }
 }

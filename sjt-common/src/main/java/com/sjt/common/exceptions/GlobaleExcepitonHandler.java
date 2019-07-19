@@ -1,6 +1,6 @@
 package com.sjt.common.exceptions;
 
-import com.sjt.common.base.result.R;
+import com.sjt.common.base.result.ResultDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -18,15 +18,15 @@ public class GlobaleExcepitonHandler {
 
     @ResponseBody
     @ExceptionHandler(Exception.class)
-    public R handler(Exception e) {
+    public ResultDTO handler(Exception e) {
         if (e instanceof GlobalException) {
             GlobalException ge = (GlobalException) e;
-            return R.info(ge.getCode(), ge.getMessage());
+            return ResultDTO.info(ge.getCode(), ge.getMessage());
         } else if (e instanceof HttpRequestMethodNotSupportedException) {
-            return R.error(e.getLocalizedMessage());
+            return ResultDTO.error(e.getLocalizedMessage());
         } else {
-            log.error("# 系统异常", e);
-            return R.error();
+            log.error("## 系统逻辑异常", e);
+            return ResultDTO.error();
         }
     }
 }

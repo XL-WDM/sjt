@@ -22,7 +22,7 @@ public class OrderApiService implements OrderApi {
 
     @Override
     public ResultDTO placeOrder(@RequestBody List<OrderParamDTO> orders, Long receivingId) {
-        iOrderService.placeOrder(orders);
+        iOrderService.placeOrder(orders, receivingId);
         return ResultDTO.success();
     }
 }

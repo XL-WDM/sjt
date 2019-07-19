@@ -1,9 +1,8 @@
 package com.sjt.config.ratelimiter;
 
 import com.alibaba.fastjson.JSONObject;
-import com.sjt.common.base.result.R;
-import com.sjt.config.ratelimiter.annotation.RateLimite;
 import com.google.common.util.concurrent.RateLimiter;
+import com.sjt.config.ratelimiter.annotation.RateLimite;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -16,6 +15,8 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.lang.reflect.Method;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 
@@ -94,6 +95,10 @@ public class RateLimitAspect {
         ServletRequestAttributes attributes = (ServletRequestAttributes)RequestContextHolder.getRequestAttributes();
         HttpServletResponse response = attributes.getResponse();
         response.setHeader("Content-type", "text/html;charset=UTF-8");
-        response.getWriter().write(JSONObject.toJSONString(R.error("操作频繁")));
+
+        Map<String, Object> result = new HashMap<>(8);
+        result.put("code", 500);
+        result.put("message", "操作频繁");
+        response.getWriter().write(JSONObject.toJSONString(result));
     }
 }
