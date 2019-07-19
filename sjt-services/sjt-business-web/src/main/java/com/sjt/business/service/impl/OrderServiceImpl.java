@@ -59,6 +59,9 @@ public class OrderServiceImpl implements IOrderService {
         // 订单总金额
         BigDecimal sumPrice = new BigDecimal("0");
 
+        // 订单总优惠金额
+        BigDecimal discountAmount = new BigDecimal("0");
+
         // 订单详情集合
         List<OrderItem> orderDetails = new ArrayList<>();
 
@@ -104,12 +107,11 @@ public class OrderServiceImpl implements IOrderService {
 
             // 2-8.累计金额
             sumPrice = sumPrice.add(itemSumPrice);
+            discountAmount = discountAmount.add(product.getDiscountAmount());
         }
 
-        // 运费 TODO
+        // 运费
         BigDecimal postFee = new BigDecimal("15");
-        // 优惠金额 TODO
-        BigDecimal districtPayment = new BigDecimal("0");
 
         // 3.生成订单信息
         Order order = new Order();
@@ -117,8 +119,8 @@ public class OrderServiceImpl implements IOrderService {
         order.setUserId(userId);
         order.setAddressId(address.getId());
         order.setOrgPayment(sumPrice.add(postFee));
-        order.setDistrictPayment(districtPayment);
-        order.setPayment(sumPrice.add(postFee).subtract(districtPayment));
+        order.setDiscountAmount(discountAmount);
+        order.setPayment(sumPrice.add(postFee).subtract(discountAmount));
         order.setPostFee(postFee);
         order.setStatus(DataBaseConstant.OrderStatus.TO_BE_PAID.getCode());
         boolean insert = order.insert();

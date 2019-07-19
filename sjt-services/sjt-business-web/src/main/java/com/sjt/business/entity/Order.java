@@ -47,7 +47,7 @@ public class Order extends Model<Order> implements Serializable {
     /**
      * 优惠金额(单位：分)
      */
-    private BigDecimal districtPayment;
+    private BigDecimal discountAmount;
 
     /**
      * 支付金额(单位：分)
