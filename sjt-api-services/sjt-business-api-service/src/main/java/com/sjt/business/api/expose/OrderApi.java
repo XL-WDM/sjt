@@ -35,7 +35,7 @@ public interface OrderApi {
      * @param orderParamDTO
      * @return
      */
-    @ApiOperation(value = "下单")
+    @ApiOperation(value = "订单查询")
     @GetMapping("/list/page")
     ResultDTO<List<OrderDTO>> getOrder(OrderParamDTO orderParamDTO);
 }
