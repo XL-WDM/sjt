@@ -89,9 +89,7 @@ public class ProductServiceImpl implements IProductService {
         Product product = productMapper.selectById(id);
         CheckObjects.isNull(product, "商品不存在");
         CheckObjects.predicate(product.getPublishStatus(),
-                s -> DataBaseConstant.ProductPushStatus.DELETE.getCode().equals(s), "商品失效");
-        CheckObjects.predicate(product.getPublishStatus(),
-                s -> DataBaseConstant.ProductPushStatus.LOWER_SHELF.getCode().equals(s), "商品已下架");
+                s -> DataBaseConstant.ProductPushStatus.INVALID.getCode().equals(s), "商品不存在");
 
         // 2-1.分 -> 元
         product.setPrice(PriceUtils.centToYuan(product.getPrice()));

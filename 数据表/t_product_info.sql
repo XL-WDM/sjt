@@ -8,9 +8,9 @@ create table t_product_info
 	one_level_category int null comment '一级分类',
 	two_level_category int null comment '二级分类',
 	three_level_category int null comment '三级分类',
-	price decimal default '0' not null comment '商品价格(单位：分)',
+	price decimal not null comment '商品价格(单位：分)',
 	discount_amount decimal default '0' not null comment '优惠金额(单位：分)',
-	publish_status varchar(1) not null comment '发布状态(0-删除, 1-上架, 2-下架)',
+	publish_status varchar(1) not null comment '商品发布状态(0-无效, 1-上架, 2-下架)',
 	new_arrivals varchar(1) default '0' not null comment '是否为新品推荐(0-否, 1-是)',
 	descript varchar(512) null comment '商品描述',
 	product_details text null comment '商品详情',
@@ -43,6 +43,7 @@ create index t_product_info_t_product_category_id_fk_3
 create index t_product_info_t_supplier_info_id_fk
 	on t_product_info (supplier_id)
 ;
+
 
 
 

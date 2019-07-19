@@ -60,7 +60,7 @@ public class Product extends Model<Product> implements Serializable {
     private BigDecimal discountAmount;
 
     /**
-     * 发布状态(0-删除, 1-上架, 2-下架)
+     * 商品发布状态(0-无效, 1-上架, 2-下架)
      */
     private String publishStatus;
 

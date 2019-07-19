@@ -39,6 +39,12 @@ public class ProductDetailDTO {
     private BigDecimal discountAmount;
 
     /**
+     * 商品发布状态(1-上架, 2-下架)
+     */
+    @ApiModelProperty("商品发布状态(1-上架, 2-下架)")
+    private String publishStatus;
+
+    /**
      * 商品描述
      */
     @ApiModelProperty("商品描述")

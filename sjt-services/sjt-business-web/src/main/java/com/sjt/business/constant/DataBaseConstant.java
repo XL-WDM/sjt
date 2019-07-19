@@ -169,7 +169,7 @@ public class DataBaseConstant {
         /**
          * 商品发布状态(0-删除, 1-上架, 2-下架)
          */
-        DELETE("0", "删除"),
+        INVALID("0", "删除"),
         UPPER_SHELF("1", "上架"),
         LOWER_SHELF("2", "下架");
 
