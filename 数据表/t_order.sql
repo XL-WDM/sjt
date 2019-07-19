@@ -6,7 +6,8 @@ create table t_order
 	order_no varchar(36) not null comment '订单号',
 	user_id int not null comment '用户id',
 	address_id int not null comment '收货地址id',
-	org_payment decimal default '0' not null comment '原交易金额(单位：分)',
+	total_amount decimal default '0' not null comment '商品总金额(单位：分)',
+	org_amount decimal default '0' not null comment '订单总金额(单位：分)',
 	discount_amount decimal default '0' not null comment '优惠金额(单位：分)',
 	payment decimal default '0' not null comment '支付金额(单位：分)',
 	post_fee decimal default '0' not null comment '邮费(单位：分)',
@@ -38,6 +39,8 @@ create index t_order_t_address_id_fk
 create index t_order_t_user_id_fk
 	on t_order (user_id)
 ;
+
+
 
 
 

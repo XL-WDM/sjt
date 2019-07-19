@@ -40,9 +40,14 @@ public class Order extends Model<Order> implements Serializable {
     private Long addressId;
 
     /**
-     * 原交易金额(单位：分)
+     * 商品总金额(单位：分)
      */
-    private BigDecimal orgPayment;
+    private BigDecimal totalAmount;
+
+    /**
+     * 订单总金额(单位：分)
+     */
+    private BigDecimal orgAmount;
 
     /**
      * 优惠金额(单位：分)
@@ -60,7 +65,7 @@ public class Order extends Model<Order> implements Serializable {
     private BigDecimal postFee;
 
     /**
-     * 订单状态(1-未付款, 2-已付款, 3-未发货, 4-已发货, 5-已完成, 6-已取消)
+     * 订单状态(1-待支付, 2-待发货, 3-待收货, 4-已完成, 5-已取消)
      */
     private String status;
 

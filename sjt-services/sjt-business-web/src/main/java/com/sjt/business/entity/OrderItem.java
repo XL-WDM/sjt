@@ -53,6 +53,21 @@ public class OrderItem extends Model<OrderItem> implements Serializable {
      */
     private BigDecimal totalFee;
 
+    /**
+     * 商品名称
+     */
+    private String productName;
+
+    /**
+     * 商品描述
+     */
+    private String productDescript;
+
+    /**
+     * 商品图片
+     */
+    private String productImg;
+
     @Override
     protected Serializable pkVal() {
         return id;

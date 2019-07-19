@@ -1,21 +1,25 @@
 package com.sjt.business.service.impl;
 
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
+import com.baomidou.mybatisplus.plugins.Page;
 import com.sjt.business.api.dto.req.OrderItemParamDTO;
 import com.sjt.business.api.dto.req.OrderParamDTO;
+import com.sjt.business.api.dto.req.PlaceOrderParamDTO;
+import com.sjt.business.api.dto.res.OrderDTO;
+import com.sjt.business.api.dto.res.OrderItemDTO;
 import com.sjt.business.constant.DataBaseConstant;
 import com.sjt.business.entity.*;
-import com.sjt.business.mapper.AddressMapper;
-import com.sjt.business.mapper.ProductMapper;
-import com.sjt.business.mapper.ProductStockMapper;
+import com.sjt.business.mapper.*;
 import com.sjt.business.service.IOrderService;
 import com.sjt.business.web.config.WebUserContext;
 import com.sjt.common.base.constant.ResultConstant;
+import com.sjt.common.utils.BeanCopierUtils;
 import com.sjt.common.utils.CheckObjects;
 import com.sjt.common.utils.SnowflakeIdUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -40,13 +44,19 @@ public class OrderServiceImpl implements IOrderService {
     @Autowired
     private ProductStockMapper productStockMapper;
 
+    @Autowired
+    private OrderMapper orderMapper;
+
+    @Autowired
+    private OrderItemMappler orderItemMappler;
+
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void placeOrder(OrderParamDTO orderParamDTO) {
+    public void placeOrder(PlaceOrderParamDTO placeOrderParamDTO) {
         // 1.参数校验
-        CheckObjects.isNull(orderParamDTO, ResultConstant.PARAMETERS_CANNOT_BE_NULL);
-        List<OrderItemParamDTO> orderItems = orderParamDTO.getOrderItems();
-        Long receivingId = orderParamDTO.getReceivingId();
+        CheckObjects.isNull(placeOrderParamDTO, ResultConstant.PARAMETERS_CANNOT_BE_NULL);
+        List<OrderItemParamDTO> orderItems = placeOrderParamDTO.getOrderItems();
+        Long receivingId = placeOrderParamDTO.getReceivingId();
         CheckObjects.isEmpty(orderItems, "请选择需要下单的商品");
         CheckObjects.isNull(receivingId, "请选择收货地址");
         Long userId = WebUserContext.getContext().getId();
@@ -56,12 +66,10 @@ public class OrderServiceImpl implements IOrderService {
         address = addressMapper.selectAddressByIdAndUserId(address);
         CheckObjects.isNull(address, "收货地址不存在");
 
-        // 订单总金额
-        BigDecimal sumPrice = new BigDecimal("0");
-
+        // 商品总金额
+        BigDecimal sumTotalAmount = new BigDecimal("0");
         // 订单总优惠金额
         BigDecimal discountSumAmount = new BigDecimal("0");
-
         // 订单详情集合
         List<OrderItem> orderDetails = new ArrayList<>();
 
@@ -100,18 +108,21 @@ public class OrderServiceImpl implements IOrderService {
             oItem.setProductId(product.getId());
             oItem.setNum(num);
             oItem.setPrice(product.getPrice());
-            // 2-7.订单详情总金额
-            BigDecimal itemDiscountSumAmount = product.getPrice().multiply(BigDecimal.valueOf(num));
-            oItem.setTotalFee(itemDiscountSumAmount);
+            // 2-7.订单详情商品总金额
+            BigDecimal itemSumTotalAmount = product.getPrice().multiply(BigDecimal.valueOf(num));
+            oItem.setTotalFee(itemSumTotalAmount);
             // 2-8.订单详情优惠总金额
             BigDecimal discountAmount = product.getDiscountAmount().multiply(BigDecimal.valueOf(num));
             oItem.setDiscountAmount(discountAmount);
+            oItem.setProductName(product.getProductName());
+            oItem.setProductDescript(product.getDescript());
+            oItem.setProductImg("");
 
-            // 2-9添加到集合
+            // 2-9.添加到集合
             orderDetails.add(oItem);
 
             // 2-10.累计订单总金额
-            sumPrice = sumPrice.add(itemDiscountSumAmount);
+            sumTotalAmount = sumTotalAmount.add(itemSumTotalAmount);
             discountSumAmount = discountSumAmount.add(discountAmount);
         }
 
@@ -123,9 +134,10 @@ public class OrderServiceImpl implements IOrderService {
         order.setOrderNo(String.valueOf(snowflakeIdUtils.nextId()));
         order.setUserId(userId);
         order.setAddressId(address.getId());
-        order.setOrgPayment(sumPrice.add(postFee));
+        order.setTotalAmount(sumTotalAmount);
+        // 订单总金额(商品总金额 + 运费 - (优惠金额、红包抵扣、积分抵扣))
+        order.setOrgAmount(sumTotalAmount.add(postFee).subtract(discountSumAmount));
         order.setDiscountAmount(discountSumAmount);
-        order.setPayment(sumPrice.add(postFee).subtract(discountSumAmount));
         order.setPostFee(postFee);
         order.setStatus(DataBaseConstant.OrderStatus.TO_BE_PAID.getCode());
         boolean insert = order.insert();
@@ -138,5 +150,63 @@ public class OrderServiceImpl implements IOrderService {
             boolean insertOrderDetail = orderDetail.insert();
             CheckObjects.predicate(insertOrderDetail, b -> !b, "订单详情生成失败");
         }
+    }
+
+    @Override
+    public Integer getOrderCountByPage(OrderParamDTO orderParamDTO) {
+        // 1.参数校验
+        CheckObjects.isNull(orderParamDTO, ResultConstant.PARAMETERS_CANNOT_BE_NULL);
+        String status = orderParamDTO.getStatus();
+        if (!StringUtils.isEmpty(status)) {
+            DataBaseConstant.OrderStatus orderStatusEnum = DataBaseConstant.OrderStatus.find(status);
+            status = orderStatusEnum == null ? null : orderStatusEnum.getCode();
+        }
+
+        // 2.查询总数
+        return  orderMapper.selectCount(new EntityWrapper<Order>()
+                .eq(!StringUtils.isEmpty(status), "status", status));
+    }
+
+    @Override
+    public List<OrderDTO> getOrderListByPage(OrderParamDTO orderParamDTO) {
+        // 1.参数校验
+        CheckObjects.isNull(orderParamDTO, ResultConstant.PARAMETERS_CANNOT_BE_NULL);
+        Integer pageNo = orderParamDTO.getPageNo();
+        Integer pageSize = orderParamDTO.getPageSize();
+        CheckObjects.isPage(pageNo, pageSize);
+        String status = orderParamDTO.getStatus();
+        if (!StringUtils.isEmpty(status)) {
+            DataBaseConstant.OrderStatus orderStatusEnum = DataBaseConstant.OrderStatus.find(status);
+            status = orderStatusEnum == null ? null : orderStatusEnum.getCode();
+        }
+
+        // 2.查询订单
+        List<Order> orders = orderMapper.selectPage(new Page<Order>(pageNo, pageSize),
+                new EntityWrapper<Order>()
+                        .eq(!StringUtils.isEmpty(status), "status", status)
+                        .orderBy("create_date", false));
+
+        // 3.查询订单详情
+        List<OrderDTO> orderDTOS = new ArrayList<>();
+        for (Order order : orders) {
+            // 3-1.Entity -> DTO
+            OrderDTO orderDTO = BeanCopierUtils.copyBean(order, OrderDTO.class);
+
+            // 3-2.获取订单详情
+            List<OrderItem> orderItems = orderItemMappler.selectList(new EntityWrapper<OrderItem>()
+                    .eq("orderId", order.getId()));
+
+            // 3-3.设置订单详情信息
+            List<OrderItemDTO> orderItemDTOS = new ArrayList<>();
+            for (OrderItem orderItem : orderItems) {
+                OrderItemDTO orderItemDTO = BeanCopierUtils.copyBean(orderItem, OrderItemDTO.class);
+                orderItemDTOS.add(orderItemDTO);
+            }
+            orderDTO.setOrderItems(orderItemDTOS);
+
+            orderDTOS.add(orderDTO);
+        }
+
+        return orderDTOS;
     }
 }

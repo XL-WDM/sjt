@@ -35,8 +35,8 @@ public class ProductApiService implements ProductApi {
 
     @Override
     public ResultDTO getProductList(ProdctsParamDTO prodctsParamDTO) {
-        Integer total = iProductService.getPageProductCount(prodctsParamDTO);
         List<ProductDetailDTO> rows = iProductService.getPageProductList(prodctsParamDTO);
+        Integer total = iProductService.getPageProductCount(prodctsParamDTO);
         return ResultDTO.page(total, rows);
     }
 }

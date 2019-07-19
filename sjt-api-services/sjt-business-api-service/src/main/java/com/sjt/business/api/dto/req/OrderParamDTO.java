@@ -4,25 +4,17 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
-import java.util.List;
-
 /**
  * @author: yilan.hu
  * @data: 2019/7/19
  */
-@ApiModel("下单 Request params")
+@ApiModel("订单查询参数")
 @Data
-public class OrderParamDTO {
+public class OrderParamDTO extends PageParamDTO {
 
     /**
-     * 收货地址id
+     * 订单状态(1-待支付, 2-待发货, 3-待收货, 4-已完成, 5-已取消)
      */
-    @ApiModelProperty("收货地址id")
-    private Long receivingId;
-
-    /**
-     * 订单详情
-     */
-    @ApiModelProperty("订单详情")
-    private List<OrderItemParamDTO> orderItems;
+    @ApiModelProperty("订单状态(1-待支付, 2-待发货, 3-待收货, 4-已完成, 5-已取消)")
+    private String status;
 }

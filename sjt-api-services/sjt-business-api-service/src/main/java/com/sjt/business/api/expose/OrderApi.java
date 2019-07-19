@@ -1,10 +1,12 @@
 package com.sjt.business.api.expose;
 
-import com.sjt.business.api.dto.req.OrderItemParamDTO;
 import com.sjt.business.api.dto.req.OrderParamDTO;
+import com.sjt.business.api.dto.req.PlaceOrderParamDTO;
+import com.sjt.business.api.dto.res.OrderDTO;
 import com.sjt.common.base.result.ResultDTO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -20,10 +22,20 @@ public interface OrderApi {
 
     /**
      * 下单
-     * @param orderParamDTO
+     * @param placeOrderParamDTO
      * @return
      */
     @ApiOperation(value = "下单")
     @PostMapping("/place-order")
-    ResultDTO placeOrder(OrderParamDTO orderParamDTO);
+    ResultDTO placeOrder(PlaceOrderParamDTO placeOrderParamDTO);
+
+
+    /**
+     * 订单查询
+     * @param orderParamDTO
+     * @return
+     */
+    @ApiOperation(value = "下单")
+    @GetMapping("/list/page")
+    ResultDTO<List<OrderDTO>> getOrder(OrderParamDTO orderParamDTO);
 }
