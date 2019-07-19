@@ -6,4 +6,4 @@ RUN bash -c "touch /sjt.jar"
 # 定义端口
 EXPOSE 27000
 # 配置启动后执行的命令
-ENTRYPOINT ["java","-jar", "--spring.profiles.active=prod" ,"/sjt.war"]
+ENTRYPOINT ["java","-jar", "--spring.profiles.active=prod" ,"/sjt.jar"]
