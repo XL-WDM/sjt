@@ -17,6 +17,7 @@ sjt:
     origin: http://www.smallbug.top
   # swagger
   swagger:
+    title: 'Swagger api 管理平台'
     enable: true
   # 微信
   wechat:
