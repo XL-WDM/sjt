@@ -3,10 +3,8 @@ package com.sjt.business.service.impl;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.sjt.business.api.dto.req.OrderParamDTO;
 import com.sjt.business.constant.DataBaseConstant;
-import com.sjt.business.entity.Order;
-import com.sjt.business.entity.OrderItem;
-import com.sjt.business.entity.Product;
-import com.sjt.business.entity.ProductStock;
+import com.sjt.business.entity.*;
+import com.sjt.business.mapper.AddressMapper;
 import com.sjt.business.mapper.ProductMapper;
 import com.sjt.business.mapper.ProductStockMapper;
 import com.sjt.business.service.IOrderService;
@@ -33,6 +31,9 @@ public class OrderServiceImpl implements IOrderService {
     private SnowflakeIdUtils snowflakeIdUtils;
 
     @Autowired
+    private AddressMapper addressMapper;
+
+    @Autowired
     private ProductMapper productMapper;
 
     @Autowired
@@ -40,9 +41,16 @@ public class OrderServiceImpl implements IOrderService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void placeOrder(List<OrderParamDTO> orderItems) {
+    public void placeOrder(List<OrderParamDTO> orderItems, Long receivingId) {
         // 1.参数校验
         CheckObjects.isEmpty(orderItems, "请选择需要下单的商品");
+        CheckObjects.isNull(receivingId, "请选择收货地址");
+        Long userId = WebUserContext.getContext().getId();
+        Address address = new Address();
+        address.setId(receivingId);
+        address.setUserId(userId);
+        address = addressMapper.selectAddressByIdAndUserId(address);
+        CheckObjects.isNull(address, "收货地址不存在");
 
         // 订单总金额
         BigDecimal sumPrice = new BigDecimal("0");
@@ -80,28 +88,35 @@ public class OrderServiceImpl implements IOrderService {
                     .eq("version", version));
             CheckObjects.predicate(rows, r -> !r, "下单失败, 库存系统繁忙");
 
-            // 3-6.创建订单详情对象
+            // 2-6.创建订单详情对象
             OrderItem oItem = new OrderItem();
             oItem.setProductId(product.getId());
             oItem.setNum(num);
             oItem.setPrice(product.getPrice());
-            // 订单详情总金额
+            // 2-7.订单详情总金额
             BigDecimal itemSumPrice = product.getPrice().multiply(BigDecimal.valueOf(num));
             oItem.setTotalFee(itemSumPrice);
             orderDetails.add(oItem);
 
-            // 累计金额
+            // 2-8.累计金额
             sumPrice = sumPrice.add(itemSumPrice);
         }
+
+        // 运费 TODO
+        BigDecimal postFee = new BigDecimal("15");
+        // 优惠金额 TODO
+        BigDecimal districtPayment = new BigDecimal("0");
 
         // 3.生成订单信息
         Order order = new Order();
         order.setOrderNo(String.valueOf(snowflakeIdUtils.nextId()));
-        order.setUserId(WebUserContext.getContext().getId());
-        order.setOrgPayment(sumPrice);
-        order.setPayment(sumPrice);
-        order.setPostFee(new BigDecimal("15"));
-        order.setStatus(DataBaseConstant.OrderStatus.UNPAID.getCode());
+        order.setUserId(userId);
+        order.setAddressId(address.getId());
+        order.setOrgPayment(sumPrice.add(postFee));
+        order.setDistrictPayment(districtPayment);
+        order.setPayment(sumPrice.add(postFee).subtract(districtPayment));
+        order.setPostFee(postFee);
+        order.setStatus(DataBaseConstant.OrderStatus.TO_BE_PAID.getCode());
         boolean insert = order.insert();
         CheckObjects.predicate(insert, b -> !b, "订单生成失败");
 

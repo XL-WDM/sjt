@@ -13,6 +13,7 @@ public interface IOrderService {
     /**
      * 下单
      * @param orderItems
+     * @param receivingId
      */
-    void placeOrder(List<OrderParamDTO> orderItems);
+    void placeOrder(List<OrderParamDTO> orderItems, Long receivingId);
 }

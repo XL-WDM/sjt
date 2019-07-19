@@ -35,12 +35,22 @@ public class Order extends Model<Order> implements Serializable {
     private Long userId;
 
     /**
+     * 收货地址id
+     */
+    private Long addressId;
+
+    /**
      * 原交易金额(单位：分)
      */
     private BigDecimal orgPayment;
 
     /**
-     * 实付金额(单位：分)
+     * 优惠金额(单位：分)
+     */
+    private BigDecimal districtPayment;
+
+    /**
+     * 支付金额(单位：分)
      */
     private BigDecimal payment;
 

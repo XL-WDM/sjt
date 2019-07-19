@@ -194,14 +194,13 @@ public class DataBaseConstant {
     @Getter
     public enum OrderStatus {
         /**
-         * 订单状态(1-未付款, 2-已付款, 3-未发货, 4-已发货, 5-已完成, 6-已取消)
+         * 订单状态(1-待支付, 2-待发货, 3-待收货, 4-已完成, 5-已取消)
          */
-        UNPAID("1", "未付款"),
-        PAYMENT_MADE("2", "已付款"),
-        UNSHIPPED("3", "未发货"),
-        SHIPPED("4", "已发货"),
-        COMPLETED("5", "已完成"),
-        CANCELLED("6", "已取消");
+        TO_BE_PAID("1", "待支付"),
+        TO_BE_SHIPPED("2", "待发货"),
+        TO_BE_RECEIVED("3", "待收货"),
+        COMPLETED("4", "已完成"),
+        CANCELLED("5", "已取消");
 
         private OrderStatus(String code, String name) {
             this.code = code;

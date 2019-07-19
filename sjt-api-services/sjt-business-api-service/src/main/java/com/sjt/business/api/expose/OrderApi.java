@@ -20,9 +20,10 @@ public interface OrderApi {
     /**
      * 下单
      * @param orders
+     * @param receivingId
      * @return
      */
     @ApiOperation(value = "下单")
     @PostMapping("/place-order")
-    ResultDTO placeOrder(List<OrderParamDTO> orders);
+    ResultDTO placeOrder(List<OrderParamDTO> orders, Long receivingId);
 }

@@ -21,7 +21,7 @@ public class OrderApiService implements OrderApi {
     private IOrderService iOrderService;
 
     @Override
-    public ResultDTO placeOrder(@RequestBody List<OrderParamDTO> orders) {
+    public ResultDTO placeOrder(@RequestBody List<OrderParamDTO> orders, Long receivingId) {
         iOrderService.placeOrder(orders);
         return ResultDTO.success();
     }
