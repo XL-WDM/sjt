@@ -8,8 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
-
 /**
  * @author: yilan.hu
  * @data: 2019/7/18
@@ -21,8 +19,9 @@ public class OrderApiService implements OrderApi {
     private IOrderService iOrderService;
 
     @Override
-    public ResultDTO placeOrder(@RequestBody List<OrderParamDTO> orders, Long receivingId) {
-        iOrderService.placeOrder(orders, receivingId);
+    public ResultDTO placeOrder(@RequestBody OrderParamDTO orderParamDTO) {
+
+        iOrderService.placeOrder(orderParamDTO);
         return ResultDTO.success();
     }
 }

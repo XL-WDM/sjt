@@ -4,23 +4,25 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
+import java.util.List;
+
 /**
  * @author: yilan.hu
- * @data: 2019/7/18
+ * @data: 2019/7/19
  */
 @ApiModel("下单 Request params")
 @Data
 public class OrderParamDTO {
 
     /**
-     * 商品id
+     * 收货地址id
      */
-    @ApiModelProperty("商品id")
-    private Long productId;
+    @ApiModelProperty("收货地址id")
+    private Long receivingId;
 
     /**
-     * 商品购买数量
+     * 订单详情
      */
-    @ApiModelProperty("商品购买数量")
-    private Integer num;
+    @ApiModelProperty("订单详情")
+    private List<OrderItemParamDTO> orderItems;
 }

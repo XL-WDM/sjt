@@ -1,6 +1,7 @@
 package com.sjt.business.service.impl;
 
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
+import com.sjt.business.api.dto.req.OrderItemParamDTO;
 import com.sjt.business.api.dto.req.OrderParamDTO;
 import com.sjt.business.constant.DataBaseConstant;
 import com.sjt.business.entity.*;
@@ -9,7 +10,7 @@ import com.sjt.business.mapper.ProductMapper;
 import com.sjt.business.mapper.ProductStockMapper;
 import com.sjt.business.service.IOrderService;
 import com.sjt.business.web.config.WebUserContext;
-import com.sjt.common.exceptions.GlobalException;
+import com.sjt.common.base.constant.ResultConstant;
 import com.sjt.common.utils.CheckObjects;
 import com.sjt.common.utils.SnowflakeIdUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,8 +42,11 @@ public class OrderServiceImpl implements IOrderService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void placeOrder(List<OrderParamDTO> orderItems, Long receivingId) {
+    public void placeOrder(OrderParamDTO orderParamDTO) {
         // 1.参数校验
+        CheckObjects.isNull(orderParamDTO, ResultConstant.PARAMETERS_CANNOT_BE_NULL);
+        List<OrderItemParamDTO> orderItems = orderParamDTO.getOrderItems();
+        Long receivingId = orderParamDTO.getReceivingId();
         CheckObjects.isEmpty(orderItems, "请选择需要下单的商品");
         CheckObjects.isNull(receivingId, "请选择收货地址");
         Long userId = WebUserContext.getContext().getId();
@@ -59,7 +63,7 @@ public class OrderServiceImpl implements IOrderService {
         List<OrderItem> orderDetails = new ArrayList<>();
 
         // 2.查询商品
-        for (OrderParamDTO orderItem : orderItems) {
+        for (OrderItemParamDTO orderItem : orderItems) {
             Long productId = orderItem.getProductId();
             Integer num = orderItem.getNum();
             CheckObjects.isNull(productId, "商品选择有误");

@@ -1,5 +1,6 @@
 package com.sjt.business.api.expose;
 
+import com.sjt.business.api.dto.req.OrderItemParamDTO;
 import com.sjt.business.api.dto.req.OrderParamDTO;
 import com.sjt.common.base.result.ResultDTO;
 import io.swagger.annotations.Api;
@@ -19,11 +20,10 @@ public interface OrderApi {
 
     /**
      * 下单
-     * @param orders
-     * @param receivingId
+     * @param orderParamDTO
      * @return
      */
     @ApiOperation(value = "下单")
     @PostMapping("/place-order")
-    ResultDTO placeOrder(List<OrderParamDTO> orders, Long receivingId);
+    ResultDTO placeOrder(OrderParamDTO orderParamDTO);
 }
