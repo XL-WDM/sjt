@@ -8,7 +8,7 @@ import lombok.Data;
  * @author: yilan.hu
  * @data: 2019/7/15
  */
-@ApiModel
+@ApiModel("banner")
 @Data
 public class BannerDTO {
 

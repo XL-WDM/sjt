@@ -1,11 +1,10 @@
 package com.sjt.business.api.impl;
 
 import com.sjt.business.api.dto.req.ProdctsParamDTO;
-import com.sjt.business.api.dto.res.ProductDetailDTO;
 import com.sjt.business.api.dto.res.CategoryProductsDTO;
+import com.sjt.business.api.dto.res.ProductDetailDTO;
 import com.sjt.business.api.expose.ProductApi;
 import com.sjt.business.service.IProductService;
-import com.sjt.common.base.result.PageDTO;
 import com.sjt.common.base.result.ResultDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RestController;
@@ -29,9 +28,9 @@ public class ProductApiService implements ProductApi {
     }
 
     @Override
-    public ResultDTO<PageDTO> getCategoryProductList() {
+    public ResultDTO<CategoryProductsDTO> getCategoryProductList() {
         List<CategoryProductsDTO> categoryProductList = iProductService.getCategoryProductList();
-        return ResultDTO.page(categoryProductList.size(), categoryProductList);
+        return ResultDTO.data(categoryProductList);
     }
 
     @Override

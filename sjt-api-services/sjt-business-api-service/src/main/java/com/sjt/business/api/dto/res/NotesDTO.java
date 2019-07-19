@@ -8,7 +8,7 @@ import lombok.Data;
  * @author: yilan.hu
  * @data: 2019/7/15
  */
-@ApiModel("山田日记列表信息")
+@ApiModel("山田日记列表")
 @Data
 public class NotesDTO {
 

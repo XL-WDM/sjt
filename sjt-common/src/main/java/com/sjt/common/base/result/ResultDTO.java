@@ -1,5 +1,6 @@
 package com.sjt.common.base.result;
 
+import com.alibaba.fastjson.JSONObject;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
@@ -31,22 +32,6 @@ public class ResultDTO<R> extends HashMap implements Serializable {
         return this;
     }
 
-    /** 响应码(只用来swagger展示) */
-    @ApiModelProperty("响应码")
-    private Integer code;
-
-    /** 响应信息(只用来swagger展示) */
-    @ApiModelProperty("响应信息")
-    private String message;
-
-    /** 响应数据(只用来swagger展示) */
-    @ApiModelProperty("响应数据")
-    private R data;
-
-    /** 分页数据(只用来swagger展示) */
-    @ApiModelProperty("分页数据")
-    private PageDTO page;
-
     public Integer getCode() {
         return (Integer) this.get("code");
     }
@@ -54,6 +39,11 @@ public class ResultDTO<R> extends HashMap implements Serializable {
     public String getMessage() {
         Object msg = this.get("message");
         return msg == null ? "" : msg.toString();
+    }
+
+    @Override
+    public String toString() {
+        return JSONObject.toJSONString(this);
     }
 
     public static ResultDTO info(Integer code, String message) {
@@ -90,7 +80,7 @@ public class ResultDTO<R> extends HashMap implements Serializable {
 
     public static <D> ResultDTO page(int total, List rows, D d) {
         ResultDTO resultDTO = ResultDTO.success();
-        resultDTO.put("total", total).put("rows", rows);
+        resultDTO.put("page", new PageDTO(total, rows));
         if (d != null) {
             resultDTO.put("data", d);
         }

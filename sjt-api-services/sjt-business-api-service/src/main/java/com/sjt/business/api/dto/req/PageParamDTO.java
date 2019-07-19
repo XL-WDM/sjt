@@ -8,7 +8,7 @@ import lombok.Data;
  * @author: yilan.hu
  * @data: 2019/7/17
  */
-@ApiModel("分页请求数据")
+@ApiModel("分页 Request params")
 @Data
 public class PageParamDTO {
 

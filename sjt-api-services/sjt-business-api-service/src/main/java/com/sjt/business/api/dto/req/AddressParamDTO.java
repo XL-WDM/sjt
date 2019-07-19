@@ -8,7 +8,7 @@ import lombok.Data;
  * @author: yilan.hu
  * @data: 2019/7/9
  */
-@ApiModel("收货地址信息请求参数")
+@ApiModel("收货地址信息 Request params")
 @Data
 public class AddressParamDTO {
 

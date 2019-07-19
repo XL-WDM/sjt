@@ -10,7 +10,7 @@ import java.util.List;
  * @author: yilan.hu
  * @data: 2019/7/17
  */
-@ApiModel("商品分类列表数据")
+@ApiModel("商品分类列表")
 @Data
 public class CategoryProductsDTO {
 

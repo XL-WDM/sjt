@@ -33,7 +33,7 @@ public interface ProductApi {
      */
     @ApiOperation(value = "获取分类商品列表", response = CategoryProductsDTO.class)
     @GetMapping("/open-api/list")
-    ResultDTO getCategoryProductList();
+    ResultDTO<CategoryProductsDTO> getCategoryProductList();
 
     /**
      * 获取商品列表

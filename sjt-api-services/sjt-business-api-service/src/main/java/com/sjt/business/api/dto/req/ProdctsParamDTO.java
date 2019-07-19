@@ -8,7 +8,7 @@ import lombok.Data;
  * @author: yilan.hu
  * @data: 2019/7/17
  */
-@ApiModel("商品列表")
+@ApiModel("商品列表 Request params")
 @Data
 public class ProdctsParamDTO extends PageParamDTO {
 
