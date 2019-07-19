@@ -25,7 +25,7 @@
         <!--  滚动策略 -->
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <!-- 路径 -->
-            <fileNamePattern>/ccicall/Applog/H5/sjt/info/info.%d.log</fileNamePattern>
+            <fileNamePattern>/logs/sjt/info/info.%d.log</fileNamePattern>
         </rollingPolicy>
     </appender>
 
@@ -43,7 +43,7 @@
         <!--  滚动策略 -->
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <!-- 路径 -->
-            <fileNamePattern>/ccicall/Applog/H5/sjt/error/error.%d.log</fileNamePattern>
+            <fileNamePattern>/logs/sjt/error/error.%d.log</fileNamePattern>
         </rollingPolicy>
     </appender>
 
