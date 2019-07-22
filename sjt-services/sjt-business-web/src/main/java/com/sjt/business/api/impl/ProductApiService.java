@@ -28,6 +28,11 @@ public class ProductApiService implements ProductApi {
     }
 
     @Override
+    public ResultDTO<ProductDetailDTO> getProductDetails(List<Long> ids) {
+        return null;
+    }
+
+    @Override
     public ResultDTO<CategoryProductsDTO> getCategoryProductList() {
         List<CategoryProductsDTO> categoryProductList = iProductService.getCategoryProductList();
         return ResultDTO.data(categoryProductList);

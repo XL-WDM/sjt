@@ -1,6 +1,4 @@
 # 山田尖
-基于 Spring Boot 搭建的开发框架沿用 Spring Cloud架构 原型
-
 ###### 模块说明：
     - stj-api-services API接口jar项目
         - stj-business-api-service 山田尖电商API

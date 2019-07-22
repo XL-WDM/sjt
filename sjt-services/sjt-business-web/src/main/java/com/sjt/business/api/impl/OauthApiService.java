@@ -9,8 +9,10 @@ import com.sjt.business.service.IOauthService;
 import com.sjt.common.base.result.ResultDTO;
 import com.sjt.common.utils.AesEncryptUtils;
 import com.sjt.common.utils.ResponseUtils;
+import com.sjt.common.utils.SpringUtils;
 import com.sjt.wechat.api.dto.res.WxAccessTokenDTO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletResponse;
@@ -26,8 +28,8 @@ public class OauthApiService implements OauthApi {
     private IOauthService iOauthService;
 
     @Override
-    public ResultDTO<SignUserDTO> sign(SignParamDTO signParamDTO, HttpServletResponse response) {
-        SignUserDTO sign = iOauthService.sign(signParamDTO, response);
+    public ResultDTO<SignUserDTO> sign(@RequestBody SignParamDTO signParamDTO) {
+        SignUserDTO sign = iOauthService.sign(signParamDTO, SpringUtils.getResponse());
         return ResultDTO.data(sign);
     }
 

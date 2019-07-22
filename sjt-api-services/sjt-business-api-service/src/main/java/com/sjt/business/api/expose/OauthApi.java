@@ -27,7 +27,7 @@ public interface OauthApi {
      */
     @ApiOperation(value = "登录", response = SignUserDTO.class)
     @PostMapping("/sign")
-    ResultDTO<SignUserDTO> sign(SignParamDTO signParamDTO, HttpServletResponse response);
+    ResultDTO<SignUserDTO> sign(SignParamDTO signParamDTO);
 
     /**
      * 通过code换取网页授权access_token
