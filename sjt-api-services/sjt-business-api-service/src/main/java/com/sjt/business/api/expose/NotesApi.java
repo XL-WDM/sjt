@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
  * @author: yilan.hu
  * @data: 2019/7/22
  */
-@Api(description = "山田日记")
+@Api(description = "山田日记", tags = "山田日记")
 @RequestMapping("/notes")
 public interface NotesApi {
 

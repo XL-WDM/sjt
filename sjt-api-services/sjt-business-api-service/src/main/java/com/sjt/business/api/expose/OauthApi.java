@@ -16,7 +16,7 @@ import javax.servlet.http.HttpServletResponse;
  * @author: yilan.hu
  * @data: 2019/7/1
  */
-@Api(description = "授权")
+@Api(description = "授权", tags = "授权")
 @RequestMapping("/auth")
 public interface OauthApi {
 

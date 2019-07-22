@@ -16,7 +16,7 @@ import java.util.List;
  * @author: yilan.hu
  * @data: 2019/7/15
  */
-@Api(description = "首页")
+@Api(description = "首页", tags = "首页")
 @RequestMapping("/home-page")
 public interface HomePageApi {
 

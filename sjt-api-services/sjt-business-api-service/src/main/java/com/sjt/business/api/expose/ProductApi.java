@@ -15,7 +15,7 @@ import java.util.List;
  * @author: yilan.hu
  * @data: 2019/7/11
  */
-@Api(description = "商品信息")
+@Api(description = "商品信息", tags = "商品信息")
 @RequestMapping("/product")
 public interface ProductApi {
 
