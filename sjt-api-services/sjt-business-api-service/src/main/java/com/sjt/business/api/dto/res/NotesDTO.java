@@ -25,6 +25,12 @@ public class NotesDTO {
     private String title;
 
     /**
+     * 日记描述
+     */
+    @ApiModelProperty("日记描述")
+    private String descript;
+
+    /**
      * 日记大图
      */
     @ApiModelProperty("日记大图")

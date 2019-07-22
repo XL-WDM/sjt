@@ -10,6 +10,7 @@ import com.sjt.business.mapper.NotesMapper;
 import com.sjt.business.service.INotesService;
 import com.sjt.common.base.constant.BaseConstant;
 import com.sjt.common.utils.BeanCopierUtils;
+import com.sjt.common.utils.CheckObjects;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -52,5 +53,20 @@ public class NotesServiceImpl implements INotesService {
         homePageNotesDTO.setCraftsmanNotes(craftsmanNotesDTOS);
 
         return homePageNotesDTO;
+    }
+
+    @Override
+    public NotesDTO getNote(Long id) {
+        // 1.参数校验
+        CheckObjects.isNull(id, "请选择山田日记");
+
+        // 2.查询
+        Notes notes = notesMapper.selectById(id);
+        CheckObjects.isNull(notes, "日记不存在");
+
+        // 3.Entity -> DTO
+        NotesDTO notesDTO = BeanCopierUtils.copyBean(notes, NotesDTO.class);
+
+        return notesDTO;
     }
 }

@@ -29,6 +29,11 @@ public class Notes extends Model<Notes> implements Serializable {
     private String title;
 
     /**
+     * 日记描述
+     */
+    private String descript;
+
+    /**
      * 大图
      */
     private String bigImg;

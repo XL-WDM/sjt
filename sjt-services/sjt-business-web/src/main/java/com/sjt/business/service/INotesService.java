@@ -1,6 +1,7 @@
 package com.sjt.business.service;
 
 import com.sjt.business.api.dto.res.HomePageNotesDTO;
+import com.sjt.business.api.dto.res.NotesDTO;
 
 /**
  * @author: yilan.hu
@@ -13,4 +14,11 @@ public interface INotesService {
      * @return
      */
     HomePageNotesDTO getNotes();
+
+    /**
+     * 查询山田日记
+     * @param id
+     * @return
+     */
+    NotesDTO getNote(Long id);
 }
