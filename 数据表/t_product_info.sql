@@ -13,6 +13,7 @@ create table t_product_info
 	publish_status varchar(1) not null comment '商品发布状态(0-无效, 1-上架, 2-下架)',
 	new_arrivals varchar(1) default '0' not null comment '是否为新品推荐(0-否, 1-是)',
 	descript varchar(512) null comment '商品描述',
+	main_image varchar(512) not null comment '主图',
 	product_details text null comment '商品详情',
 	create_date datetime default CURRENT_TIMESTAMP not null comment '商品录入时间',
 	update_date datetime default CURRENT_TIMESTAMP not null comment '商品更新时间',
@@ -43,6 +44,10 @@ create index t_product_info_t_product_category_id_fk_3
 create index t_product_info_t_supplier_info_id_fk
 	on t_product_info (supplier_id)
 ;
+
+
+
+
 
 
 INSERT INTO sjt.t_product_info (id, product_name, supplier_id, one_level_category, two_level_category, three_level_category, price, discount_amount, publish_status, new_arrivals, descript, product_details, create_date, update_date) VALUES (1, '抗霾舒畅柠果膏', 1, 1, 2, 5, 7890, 0, '1', '1', '抗霾舒畅柠果膏280ml', null, '2019-08-11 17:24:26', '2019-07-11 17:24:26');
