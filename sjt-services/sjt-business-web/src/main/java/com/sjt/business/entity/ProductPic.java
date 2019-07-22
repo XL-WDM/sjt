@@ -45,11 +45,6 @@ public class ProductPic extends Model<ProductPic> implements Serializable {
     private Integer sortNum;
 
     /**
-     * 是否主图(0-否, 1-是)
-     */
-    private String isMaster;
-
-    /**
      * 状态(0-无效, 1-有效)
      */
     private String status;
