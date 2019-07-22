@@ -6,6 +6,7 @@ import com.sjt.business.api.expose.AddressApi;
 import com.sjt.business.service.IAddressService;
 import com.sjt.common.base.result.ResultDTO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -27,7 +28,7 @@ public class AddressApiService implements AddressApi {
     }
 
     @Override
-    public ResultDTO createAddress(AddressParamDTO addressDTO) {
+    public ResultDTO createAddress(@RequestBody AddressParamDTO addressDTO) {
         iAddressService.createAddress(addressDTO);
         return ResultDTO.success();
     }
@@ -39,13 +40,13 @@ public class AddressApiService implements AddressApi {
     }
 
     @Override
-    public ResultDTO editAddress(AddressParamDTO addressDTO) {
+    public ResultDTO editAddress(@RequestBody AddressParamDTO addressDTO) {
         iAddressService.editAddress(addressDTO);
         return ResultDTO.success();
     }
 
     @Override
-    public ResultDTO removeAddress(Long id) {
+    public ResultDTO removeAddress(@RequestBody Long id) {
         iAddressService.removeAddress(id);
         return ResultDTO.success();
     }

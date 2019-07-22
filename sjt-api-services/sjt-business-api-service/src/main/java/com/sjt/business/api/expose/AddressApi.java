@@ -7,6 +7,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.List;
@@ -34,7 +35,7 @@ public interface AddressApi {
      */
     @ApiOperation(value = "新增收货地址")
     @PostMapping("/add")
-    ResultDTO createAddress(AddressParamDTO addressDTO);
+    ResultDTO createAddress(@RequestBody AddressParamDTO addressDTO);
 
     /**
      * 获取地址详情
@@ -53,7 +54,7 @@ public interface AddressApi {
      */
     @ApiOperation(value = "编辑收货地址")
     @PostMapping("/edit")
-    ResultDTO editAddress(AddressParamDTO addressDTO);
+    ResultDTO editAddress(@RequestBody AddressParamDTO addressDTO);
 
     /**
      * 删除收货地址
@@ -63,6 +64,6 @@ public interface AddressApi {
      */
     @ApiOperation(value = "删除收货地址")
     @PostMapping("/remove")
-    ResultDTO removeAddress(Long id);
+    ResultDTO removeAddress(@RequestBody Long id);
 
 }
