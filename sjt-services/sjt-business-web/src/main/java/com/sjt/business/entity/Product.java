@@ -75,6 +75,11 @@ public class Product extends Model<Product> implements Serializable {
     private String productDetails;
 
     /**
+     * 商品主图
+     */
+    private String mainImage;
+
+    /**
      * 商品描述
      */
     private String descript;

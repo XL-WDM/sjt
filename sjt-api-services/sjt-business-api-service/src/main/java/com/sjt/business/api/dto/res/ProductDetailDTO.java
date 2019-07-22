@@ -51,6 +51,12 @@ public class ProductDetailDTO {
     private String descript;
 
     /**
+     * 商品主图
+     */
+    @ApiModelProperty("商品主图")
+    private String mainImage;
+
+    /**
      * 商品详情
      */
     @ApiModelProperty("商品详情")
