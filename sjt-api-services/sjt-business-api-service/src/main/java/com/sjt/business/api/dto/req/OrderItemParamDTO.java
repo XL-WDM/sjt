@@ -8,7 +8,7 @@ import lombok.Data;
  * @author: yilan.hu
  * @data: 2019/7/18
  */
-@ApiModel("下单 Request params")
+@ApiModel("下单详情 Request params")
 @Data
 public class OrderItemParamDTO {
 
