@@ -59,12 +59,12 @@ public class ProductDetailDTO {
     /**
      * 商品属性
      */
-    @ApiModelProperty("商品属性")
+    @ApiModelProperty(value = "商品属性", dataType = "List")
     private List<ProductPropertiesDTO> properties;
 
     /**
      * 商品图片
      */
-    @ApiModelProperty("商品图片")
+    @ApiModelProperty(value = "商品图片", dataType = "List")
     private List<ProductPicDTO> productPics;
 }

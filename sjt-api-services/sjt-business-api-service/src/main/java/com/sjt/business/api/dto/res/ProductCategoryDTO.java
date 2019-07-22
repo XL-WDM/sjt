@@ -52,6 +52,6 @@ public class ProductCategoryDTO {
     /**
      * 子分类
      */
-    @ApiModelProperty("子分类")
+    @ApiModelProperty(value = "子分类", dataType = "List")
     private List<ProductCategoryDTO> children;
 }

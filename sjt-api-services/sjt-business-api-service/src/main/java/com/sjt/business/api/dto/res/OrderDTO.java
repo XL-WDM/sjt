@@ -54,6 +54,6 @@ public class OrderDTO {
     /**
      * 订单详情
      */
-    @ApiModelProperty("订单id")
+    @ApiModelProperty(value = "订单id", dataType = "List")
     private List<OrderItemDTO> orderItems;
 }

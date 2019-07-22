@@ -23,6 +23,6 @@ public class PlaceOrderParamDTO {
     /**
      * 订单详情
      */
-    @ApiModelProperty("订单详情")
+    @ApiModelProperty(value = "订单详情", dataType = "List")
     private List<OrderItemParamDTO> orderItems;
 }

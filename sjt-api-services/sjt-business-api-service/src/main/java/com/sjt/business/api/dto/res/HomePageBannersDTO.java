@@ -35,6 +35,6 @@ public class HomePageBannersDTO {
     /**
      * 首页中部轮播图
      */
-    @ApiModelProperty("首页中部轮播图")
+    @ApiModelProperty(value = "首页中部轮播图", dataType = "List")
     private List<BannerDTO> centerBanner;
 }

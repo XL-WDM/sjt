@@ -29,6 +29,6 @@ public class CategoryProductsDTO {
     /**
      * 分类下所有商品
      */
-    @ApiModelProperty("商品分类图片")
+    @ApiModelProperty(value = "商品分类图片", dataType = "List")
     private List<ProductDetailDTO> products;
 }
