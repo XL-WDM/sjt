@@ -11,6 +11,7 @@ import com.sjt.common.base.result.ResultDTO;
 import com.sjt.common.utils.CheckObjects;
 import org.apache.ibatis.session.ResultContext;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -32,8 +33,9 @@ public class ProductApiService implements ProductApi {
     }
 
     @Override
-    public ResultDTO<ProductDetailDTO> getProductDetails(List<Long> ids) {
-        return null;
+    public ResultDTO<List<ProductDetailDTO>> getProductDetails(@RequestParam("ids") List<Long> ids) {
+        List<ProductDetailDTO> productDetailDTOS = iProductService.getProductByIds(ids);
+        return ResultDTO.data(productDetailDTOS);
     }
 
     @Override

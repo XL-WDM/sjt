@@ -35,7 +35,7 @@ public interface ProductApi {
      */
     @ApiOperation(value = "获取多个商品详情信息", response = ProductDetailDTO.class)
     @GetMapping("/open-api/details")
-    ResultDTO<ProductDetailDTO> getProductDetails(List<Long> ids);
+    ResultDTO<List<ProductDetailDTO>> getProductDetails(List<Long> ids);
 
     /**
      * 获取商品分类列表

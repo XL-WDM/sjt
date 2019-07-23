@@ -24,6 +24,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author: yilan.hu
@@ -141,8 +142,15 @@ public class ProductServiceImpl implements IProductService {
         // 2.查询
         List<Product> products = productMapper.selectList(new EntityWrapper<Product>().in("id", ids));
 
+        // 3.Entity -> DTO
+        List<ProductDetailDTO> productDetailDTOS = products.stream().map(product -> {
+            ProductDetailDTO productDetailDTO = BeanCopierUtils.copyBean(product, ProductDetailDTO.class);
+            productDetailDTO.setPrice(PriceUtils.centToYuan(product.getPrice()));
+            productDetailDTO.setDiscountAmount(PriceUtils.centToYuan(product.getDiscountAmount()));
+            return productDetailDTO;
+        }).collect(Collectors.toList());
 
-        return null;
+        return productDetailDTOS;
     }
 
     @Override
