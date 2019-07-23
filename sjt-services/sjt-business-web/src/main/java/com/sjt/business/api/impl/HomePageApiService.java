@@ -51,7 +51,7 @@ public class HomePageApiService implements HomePageApi {
 
     @Override
     public ResultDTO<List<ProductCategoryDTO>> getProductcategorys() {
-        List<ProductCategoryDTO> productCategory = iProductService.getProductCategory();
+        List<ProductCategoryDTO> productCategory = iProductService.getProductCategoryTree();
         return ResultDTO.data(productCategory);
     }
 }

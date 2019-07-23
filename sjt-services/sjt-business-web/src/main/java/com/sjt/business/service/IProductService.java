@@ -15,10 +15,16 @@ public interface IProductService {
 
     /**
      * 获取商品分类
-     *
+     * @param id
      * @return
      */
-    List<ProductCategoryDTO> getProductCategory();
+    ProductCategoryDTO getProductCategory(Long id);
+
+    /**
+     * 获取所有商品分类(树形结构)
+     * @return
+     */
+    List<ProductCategoryDTO> getProductCategoryTree();
 
     /**
      * 获取商品详情

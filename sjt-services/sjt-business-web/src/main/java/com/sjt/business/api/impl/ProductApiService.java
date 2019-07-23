@@ -2,10 +2,14 @@ package com.sjt.business.api.impl;
 
 import com.sjt.business.api.dto.req.ProdctsParamDTO;
 import com.sjt.business.api.dto.res.CategoryProductsDTO;
+import com.sjt.business.api.dto.res.ProductCategoryDTO;
 import com.sjt.business.api.dto.res.ProductDetailDTO;
 import com.sjt.business.api.expose.ProductApi;
 import com.sjt.business.service.IProductService;
+import com.sjt.common.base.constant.ResultConstant;
 import com.sjt.common.base.result.ResultDTO;
+import com.sjt.common.utils.CheckObjects;
+import org.apache.ibatis.session.ResultContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -40,8 +44,16 @@ public class ProductApiService implements ProductApi {
 
     @Override
     public ResultDTO getProductList(ProdctsParamDTO prodctsParamDTO) {
+        // 获取商品分类信息
+        CheckObjects.isNull(prodctsParamDTO, ResultConstant.PARAMETERS_CANNOT_BE_NULL);
+        ProductCategoryDTO productCategory = iProductService.getProductCategory(prodctsParamDTO.getCategoryId());
+        CheckObjects.isNull(productCategory, "商品分类不存在");
+
+        // 获取商品信息
         List<ProductDetailDTO> rows = iProductService.getPageProductList(prodctsParamDTO);
+
+        // 获取商品总数
         Integer total = iProductService.getPageProductCount(prodctsParamDTO);
-        return ResultDTO.page(total, rows);
+        return ResultDTO.page(total, rows, productCategory.getImgUrl());
     }
 }

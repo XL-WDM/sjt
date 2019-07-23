@@ -45,7 +45,19 @@ public class ProductServiceImpl implements IProductService {
     private ProductPicMapper productPicMapper;
 
     @Override
-    public List<ProductCategoryDTO> getProductCategory() {
+    public ProductCategoryDTO getProductCategory(Long id) {
+        // 1.参数校验
+        CheckObjects.isNull(id, "请选择商品分类");
+
+        // 2.查询
+        ProductCategory productCategory = productCategoryMapper.selectById(id);
+
+        // Entity -> DTO
+        return BeanCopierUtils.copyBean(productCategory, ProductCategoryDTO.class);
+    }
+
+    @Override
+    public List<ProductCategoryDTO> getProductCategoryTree() {
         // 查询所有商品分类信息
         List<ProductCategory> productCategories = productCategoryMapper.selectList(new EntityWrapper<ProductCategory>()
                 .eq("status", BaseConstant.Status.YES.getCode()));
