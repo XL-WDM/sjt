@@ -82,6 +82,12 @@ public class OrderServiceImpl implements IOrderService {
             // 2-1.查询商品
             Product product = productMapper.selectById(productId);
             CheckObjects.isNull(product, "商品不存在");
+            CheckObjects.predicate(product.getPublishStatus(),
+                    s -> DataBaseConstant.ProductPushStatus.LOWER_SHELF.getCode().equals(s),
+                    "商品已下架");
+            CheckObjects.predicate(product.getPublishStatus(),
+                    s -> DataBaseConstant.ProductPushStatus.INVALID.getCode().equals(s),
+                    "商品已被删除");
             // 2-2.商品库存查询
             ProductStock productStock = new ProductStock().selectOne(
                     new EntityWrapper<ProductStock>()

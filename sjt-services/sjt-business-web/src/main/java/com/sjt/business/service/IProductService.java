@@ -35,6 +35,13 @@ public interface IProductService {
     ProductDetailDTO getProductDetail(Long id);
 
     /**
+     * 通过多个ID获取商品信息
+     * @param ids
+     * @return
+     */
+    List<ProductDetailDTO> getProductByIds(List<Long> ids);
+
+    /**
      * 获取新品推荐
      * @return
      */

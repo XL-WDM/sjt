@@ -132,6 +132,20 @@ public class ProductServiceImpl implements IProductService {
     }
 
     @Override
+    public List<ProductDetailDTO> getProductByIds(List<Long> ids) {
+        // 1.参数验证处理
+        if (ids == null || ids.isEmpty()) {
+            return new ArrayList<>();
+        }
+
+        // 2.查询
+        List<Product> products = productMapper.selectList(new EntityWrapper<Product>().in("id", ids));
+
+
+        return null;
+    }
+
+    @Override
     public List<ProductDetailDTO> getNewArrivals() {
         // 1.查询新品推荐产品
         List<Product> products = productMapper.selectList(new EntityWrapper<Product>()
@@ -171,6 +185,7 @@ public class ProductServiceImpl implements IProductService {
             List<Product> products = productMapper.selectPage(new Page<Product>(1, 4),
                     new EntityWrapper<Product>()
                             .eq("three_level_category", productCategory.getId())
+                            .eq("publish_status", DataBaseConstant.ProductPushStatus.UPPER_SHELF.getCode())
                             .orderBy("create_date", false));
 
             // 分 -> 元
