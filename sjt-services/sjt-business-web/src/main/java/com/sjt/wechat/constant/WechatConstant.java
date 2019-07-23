@@ -53,4 +53,9 @@ public class WechatConstant {
      * 登录凭证校验 auth.code2Session
      */
     public final static String APPLET_CODE_2_SESSION_GET_URL = "https://api.weixin.qq.com/sns/jscode2session?appid=APPID&secret=SECRET&js_code=JSCODE&grant_type=authorization_code";
+
+    /**
+     * 统一下单
+     */
+    public final static String UNIFIED_ORDER = "https://api.mch.weixin.qq.com/pay/unifiedorder";
 }
