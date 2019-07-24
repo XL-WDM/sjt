@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.sjt.business.mapper.OrderItemMappler">
+    <parameterMap id="orderItemParame" type="com.sjt.business.entity.OrderItem" />
+    <resultMap id="orderItemResult" type="com.sjt.business.entity.OrderItem" />
+
+    <sql id="base_all">
+        id, order_id, product_id, num, total_fee, discount_amount,
+        price, product_img, product_name, product_descript
+    </sql>
+</mapper>

@@ -8,5 +8,4 @@ import com.sjt.business.entity.OrderItem;
  * @data: 2019/7/18
  */
 public interface OrderItemMappler extends BaseMapper<OrderItem> {
-
 }
