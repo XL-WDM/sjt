@@ -8,4 +8,11 @@ import com.sjt.business.entity.ProductStock;
  * @data: 2019/7/18
  */
 public interface ProductStockMapper extends BaseMapper<ProductStock> {
+
+    /**
+     * 根据商品id查询库存
+     * @param productId
+     * @return
+     */
+    ProductStock selectByProductId(Long productId);
 }

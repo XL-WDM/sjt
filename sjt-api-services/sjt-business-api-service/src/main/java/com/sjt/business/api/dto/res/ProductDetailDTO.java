@@ -73,4 +73,16 @@ public class ProductDetailDTO {
      */
     @ApiModelProperty(value = "商品图片", dataType = "List")
     private List<ProductPicDTO> productPics;
+
+    /**
+     * 库存
+     */
+    @ApiModelProperty("库存")
+    private Integer stock;
+
+    /**
+     * 销量
+     */
+    @ApiModelProperty("销量")
+    private Integer soldOut;
 }

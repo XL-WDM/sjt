@@ -9,4 +9,10 @@
         three_level_category, price, discount_amount, publish_status, new_arrivals,
         descript, product_details, create_date, update_date
     </sql>
+
+    <select id="selectSoldOut" parameterType="java.lang.Long" resultType="java.lang.Integer">
+        select count(1) from
+        t_order t1 inner join t_order_item t2 on t1.id = t2.order_id
+        where t1.status = '4' and t2.product_id = #{prodictId}
+    </select>
 </mapper>

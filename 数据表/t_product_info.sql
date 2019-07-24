@@ -3,7 +3,7 @@ create table t_product_info
 (
 	id int auto_increment comment '自增id'
 		primary key,
-	product_name varchar(32) not null comment '商品名称',
+	product_name varchar(128) not null comment '商品名称',
 	supplier_id int not null comment '供应商id',
 	one_level_category int null comment '一级分类',
 	two_level_category int null comment '二级分类',
@@ -44,6 +44,8 @@ create index t_product_info_t_product_category_id_fk_3
 create index t_product_info_t_supplier_info_id_fk
 	on t_product_info (supplier_id)
 ;
+
+
 
 
 

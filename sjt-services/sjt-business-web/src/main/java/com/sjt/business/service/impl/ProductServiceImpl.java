@@ -5,14 +5,8 @@ import com.baomidou.mybatisplus.plugins.Page;
 import com.sjt.business.api.dto.req.ProdctsParamDTO;
 import com.sjt.business.api.dto.res.*;
 import com.sjt.business.constant.DataBaseConstant;
-import com.sjt.business.entity.Product;
-import com.sjt.business.entity.ProductCategory;
-import com.sjt.business.entity.ProductPic;
-import com.sjt.business.entity.ProductProperties;
-import com.sjt.business.mapper.ProductCategoryMapper;
-import com.sjt.business.mapper.ProductMapper;
-import com.sjt.business.mapper.ProductPicMapper;
-import com.sjt.business.mapper.ProductPropertiesMapper;
+import com.sjt.business.entity.*;
+import com.sjt.business.mapper.*;
 import com.sjt.business.service.IProductService;
 import com.sjt.common.base.constant.BaseConstant;
 import com.sjt.common.base.constant.ResultConstant;
@@ -44,6 +38,9 @@ public class ProductServiceImpl implements IProductService {
 
     @Autowired
     private ProductPicMapper productPicMapper;
+
+    @Autowired
+    private ProductStockMapper productStockMapper;
 
     @Override
     public ProductCategoryDTO getProductCategory(Long id) {
@@ -129,6 +126,15 @@ public class ProductServiceImpl implements IProductService {
         List<ProductPicDTO> productPicDTOS = BeanCopierUtils.copyList(productPics, ProductPicDTO.class);
         productDetailDTO.setProductPics(productPicDTOS);
 
+        // 5.查询库存
+        ProductStock productStock = productStockMapper.selectByProductId(product.getId());
+        Integer stock = productStock == null ? 0 : productStock.getProductStockNum();
+        productDetailDTO.setStock(stock);
+
+        // 6.查询销量
+        Integer soldOut = productMapper.selectSoldOut(product.getId());
+        productDetailDTO.setSoldOut(soldOut);
+
         return productDetailDTO;
     }
 
@@ -161,14 +167,22 @@ public class ProductServiceImpl implements IProductService {
                 .eq("new_arrivals", BaseConstant.Status.YES.getCode())
                 .orderBy("create_date", false));
 
-        // 2.分 -> 元
-        for (Product product : products) {
-            product.setPrice(PriceUtils.centToYuan(product.getPrice()));
-            product.setDiscountAmount(PriceUtils.centToYuan(product.getDiscountAmount()));
-        }
+        List<ProductDetailDTO> newArrivals = products.stream().map(p -> {
+            // 2.Entity -> DTO
+            ProductDetailDTO productDetailDTO = BeanCopierUtils.copyBean(p, ProductDetailDTO.class);
+            // 3.分 -> 元
+            productDetailDTO.setPrice(PriceUtils.centToYuan(p.getPrice()));
+            productDetailDTO.setDiscountAmount(PriceUtils.centToYuan(p.getDiscountAmount()));
+            // 4.查询库存
+            ProductStock productStock = productStockMapper.selectByProductId(p.getId());
+            Integer stock = productStock == null ? 0 : productStock.getProductStockNum();
+            productDetailDTO.setStock(stock);
+            // 5.查询销量
+            Integer soldOut = productMapper.selectSoldOut(p.getId());
+            productDetailDTO.setSoldOut(soldOut);
 
-        // 2.Entity -> DTO
-        List<ProductDetailDTO> newArrivals = BeanCopierUtils.copyList(products, ProductDetailDTO.class);
+            return productDetailDTO;
+        }).collect(Collectors.toList());
 
         return newArrivals;
     }
@@ -196,14 +210,22 @@ public class ProductServiceImpl implements IProductService {
                             .eq("publish_status", DataBaseConstant.ProductPushStatus.UPPER_SHELF.getCode())
                             .orderBy("create_date", false));
 
-            // 分 -> 元
-            for (Product product : products) {
-                product.setPrice(PriceUtils.centToYuan(product.getPrice()));
-                product.setDiscountAmount(PriceUtils.centToYuan(product.getDiscountAmount()));
-            }
+            List<ProductDetailDTO> productDetailDTOS = products.stream().map(p -> {
+                // 3.Entity -> DTO
+                ProductDetailDTO productDetailDTO = BeanCopierUtils.copyBean(p, ProductDetailDTO.class);
+                // 4.分 -> 元
+                productDetailDTO.setPrice(PriceUtils.centToYuan(p.getPrice()));
+                productDetailDTO.setDiscountAmount(PriceUtils.centToYuan(p.getDiscountAmount()));
+                // 5.查询库存
+                ProductStock productStock = productStockMapper.selectByProductId(p.getId());
+                Integer stock = productStock == null ? 0 : productStock.getProductStockNum();
+                productDetailDTO.setStock(stock);
+                // 6.查询销量
+                Integer soldOut = productMapper.selectSoldOut(p.getId());
+                productDetailDTO.setSoldOut(soldOut);
 
-            // Entity -> DTO
-            List<ProductDetailDTO> productDetailDTOS = BeanCopierUtils.copyList(products, ProductDetailDTO.class);
+                return productDetailDTO;
+            }).collect(Collectors.toList());
 
             CategoryProductsDTO productsDTO = new CategoryProductsDTO();
             productsDTO.setCategoryId(productCategory.getId());
@@ -266,14 +288,22 @@ public class ProductServiceImpl implements IProductService {
                         .eq("publish_status", DataBaseConstant.ProductPushStatus.UPPER_SHELF.getCode())
                         .orderBy("create_date", false));
 
-        // 4.分 -> 元
-        for (Product product : products) {
-            product.setPrice(PriceUtils.centToYuan(product.getPrice()));
-            product.setDiscountAmount(PriceUtils.centToYuan(product.getDiscountAmount()));
-        }
+        List<ProductDetailDTO> productDetailDTOS = products.stream().map(p -> {
+            // 4.Entity -> DTO
+            ProductDetailDTO productDetailDTO = BeanCopierUtils.copyBean(p, ProductDetailDTO.class);
+            // 5.分 -> 元
+            productDetailDTO.setPrice(PriceUtils.centToYuan(p.getPrice()));
+            productDetailDTO.setDiscountAmount(PriceUtils.centToYuan(p.getDiscountAmount()));
+            // 6.查询库存
+            ProductStock productStock = productStockMapper.selectByProductId(p.getId());
+            Integer stock = productStock == null ? 0 : productStock.getProductStockNum();
+            productDetailDTO.setStock(stock);
+            // 7.查询销量
+            Integer soldOut = productMapper.selectSoldOut(p.getId());
+            productDetailDTO.setSoldOut(soldOut);
 
-        // 5.Entity -> DTO
-        List<ProductDetailDTO> productDetailDTOS = BeanCopierUtils.copyList(products, ProductDetailDTO.class);
+            return productDetailDTO;
+        }).collect(Collectors.toList());
 
         return productDetailDTOS;
     }
