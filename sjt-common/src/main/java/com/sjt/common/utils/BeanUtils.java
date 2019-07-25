@@ -51,7 +51,7 @@ public class BeanUtils {
      * @return
      */
     public static <From, To> List<To> copyList(List<From> fromList, Class<To> toClazz) {
-        return copyList(fromList, toClazz);
+        return copyList(fromList, toClazz, null);
     }
 
     /**
