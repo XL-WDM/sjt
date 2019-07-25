@@ -5,6 +5,7 @@ import com.sjt.business.api.dto.res.CategoryProductsDTO;
 import com.sjt.business.api.dto.res.ProductDetailDTO;
 import com.sjt.common.base.result.ResultDTO;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,6 +25,7 @@ public interface ProductApi {
      * @param id 商品id
      * @return
      */
+    @ApiImplicitParam(name = "id", value = "商品编号", required = true)
     @ApiOperation(value = "获取商品详情信息", response = ProductDetailDTO.class)
     @GetMapping("/open-api/detail")
     ResultDTO<ProductDetailDTO> getProductDetail(Long id);

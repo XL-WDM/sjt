@@ -4,6 +4,7 @@ import com.sjt.business.api.dto.req.AddressParamDTO;
 import com.sjt.business.api.dto.res.AddressDTO;
 import com.sjt.common.base.result.ResultDTO;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -42,6 +43,7 @@ public interface AddressApi {
      * @param id
      * @return
      */
+    @ApiImplicitParam(name = "id", value = "物流地址编号", required = true)
     @ApiOperation(value = "获取收货地址详情", response = AddressDTO.class)
     @GetMapping("/detail")
     ResultDTO<AddressDTO> getAddress(Long id);
@@ -64,6 +66,7 @@ public interface AddressApi {
      */
     @ApiOperation(value = "删除收货地址")
     @PostMapping("/remove")
+    @ApiImplicitParam(name = "id", value = "物流地址编号", required = true)
     ResultDTO removeAddress(@RequestBody Long id);
 
 }

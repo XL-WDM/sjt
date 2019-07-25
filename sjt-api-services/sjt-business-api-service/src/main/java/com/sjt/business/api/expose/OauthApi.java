@@ -4,6 +4,7 @@ import com.sjt.business.api.dto.req.SignParamDTO;
 import com.sjt.business.api.dto.res.SignUserDTO;
 import com.sjt.common.base.result.ResultDTO;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -36,6 +37,7 @@ public interface OauthApi {
      * @param response
      * @return
      */
+    @ApiImplicitParam(name = "code", value = "网页授权", required = true)
     @ApiOperation(value = "通过code换取网页授权access_token")
     @GetMapping("/open-api/wx/access-token")
     ResultDTO getOauthAccessToken(String code, HttpServletResponse response);

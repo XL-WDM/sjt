@@ -5,6 +5,7 @@ import com.sjt.business.api.dto.req.PlaceOrderParamDTO;
 import com.sjt.business.api.dto.res.OrderDTO;
 import com.sjt.common.base.result.ResultDTO;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -45,6 +46,7 @@ public interface OrderApi {
      * @param orderId
      * @return
      */
+    @ApiImplicitParam(name = "orderId", value = "订单编号", required = true)
     @ApiOperation(value = "获取订单详情")
     @GetMapping("/detail")
     ResultDTO<OrderDTO> getOrderDetail(Long orderId);

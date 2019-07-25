@@ -3,6 +3,7 @@ package com.sjt.business.api.expose;
 import com.sjt.business.api.dto.res.NotesDTO;
 import com.sjt.common.base.result.ResultDTO;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,6 +21,7 @@ public interface NotesApi {
      * @param id
      * @return
      */
+    @ApiImplicitParam(name = "id", value = "日记编号", required = true)
     @ApiOperation(value = "查询山田日记", response = NotesDTO.class)
     @GetMapping("/open-api/view")
     ResultDTO<NotesDTO> getNote(Long id);
