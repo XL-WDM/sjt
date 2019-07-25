@@ -9,15 +9,15 @@ public class ColorConstant {
     /**
      * 黑色
      */
-    public final static String COLOR_BLACK = "#000000";
+    public static final String COLOR_BLACK = "#000000";
 
     /**
      * 红色
      */
-    public final static String COLOR_RED = "#FF0000";
+    public static final String COLOR_RED = "#FF0000";
 
     /**
      * 绿色
      */
-    public final static String COLOR_GREEN = "#228B22";
+    public static final String COLOR_GREEN = "#228B22";
 }

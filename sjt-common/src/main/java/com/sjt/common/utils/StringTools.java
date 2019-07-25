@@ -6,10 +6,10 @@ package com.sjt.common.utils;
  */
 public class StringTools {
 
-    private final static int CHAR_65 = 65;
-    private final static int CHAR_90 = 90;
-    private final static int CHAR_97 = 97;
-    private final static int CHAR_122 = 122;
+    private static final int CHAR_65 = 65;
+    private static final int CHAR_90 = 90;
+    private static final int CHAR_97 = 97;
+    private static final int CHAR_122 = 122;
 
     /**
      * 首字母转大写

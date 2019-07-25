@@ -25,6 +25,7 @@ import java.util.stream.Collectors;
  */
 @Configuration
 public class SwaggerConfiguration {
+
     @Bean
     public Docket api(@Autowired(required = false) SwaggerApiInfo swaggerApiInfo) {
         // 默认不开启swagger

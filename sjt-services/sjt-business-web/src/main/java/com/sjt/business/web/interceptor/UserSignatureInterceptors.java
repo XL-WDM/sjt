@@ -33,7 +33,7 @@ public class UserSignatureInterceptors implements HandlerInterceptor {
     /**
      * 预检请求
      */
-    private final static String METHOD_TYPE_OPTIONS = "OPTIONS";
+    private static final String METHOD_TYPE_OPTIONS = "OPTIONS";
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {

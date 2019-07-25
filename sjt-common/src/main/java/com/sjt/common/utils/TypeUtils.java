@@ -9,19 +9,19 @@ import java.util.HashSet;
  */
 public class TypeUtils {
 
-    public final static String TYPE_STRING = "String";
-    public final static String TYPE_INTEGER = "Integer";
-    public final static String TYPE_LONG = "Long";
-    public final static String TYPE_ENUM = "Enum";
+    public static final String TYPE_STRING = "String";
+    public static final String TYPE_INTEGER = "Integer";
+    public static final String TYPE_LONG = "Long";
+    public static final String TYPE_ENUM = "Enum";
 
     /**
      * 枚举
      * 2|1,2,3
      */
     public static class Enum{
-        private final static String S0 = "|";
-        private final static String S1 = "\\|";
-        private final static String S2 = ",";
+        private static final String S0 = "|";
+        private static final String S1 = "\\|";
+        private static final String S2 = ",";
 
         public static boolean isEnum(String value, String... enums) {
             if(value == null || enums == null || enums.length <= 0) {

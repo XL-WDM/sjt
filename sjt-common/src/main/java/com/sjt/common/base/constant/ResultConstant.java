@@ -6,5 +6,5 @@ package com.sjt.common.base.constant;
  */
 public class ResultConstant {
 
-    public final static String PARAMETERS_CANNOT_BE_NULL = "参数不能为空";
+    public static final String PARAMETERS_CANNOT_BE_NULL = "参数不能为空";
 }

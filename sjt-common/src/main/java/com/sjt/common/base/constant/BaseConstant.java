@@ -12,58 +12,58 @@ public class BaseConstant {
      * 文件
      */
     public static class File {
-        public final static String JAVA_FILE_SUFFIX = ".java";
-        public final static String CLASS_FILE_SUFFIX = ".class";
-        public final static String XML_FILE_SUFFIX = ".xml";
-        public final static String PNG_FILE_SUFFIX = ".png";
-        public final static String JPG_FILE_SUFFIX = ".jpg";
-        public final static String JPEG_FILE_SUFFIX = ".jpeg";
-        public final static String SVG_FILE_SUFFIX = ".svg";
-        public final static String GIF_FILE_SUFFIX = ".gif";
-        public final static String XLS_FILE_SUFFIX = ".xls";
-        public final static String XLSX_FILE_SUFFIX = ".xlsx";
+        public static final String JAVA_FILE_SUFFIX = ".java";
+        public static final String CLASS_FILE_SUFFIX = ".class";
+        public static final String XML_FILE_SUFFIX = ".xml";
+        public static final String PNG_FILE_SUFFIX = ".png";
+        public static final String JPG_FILE_SUFFIX = ".jpg";
+        public static final String JPEG_FILE_SUFFIX = ".jpeg";
+        public static final String SVG_FILE_SUFFIX = ".svg";
+        public static final String GIF_FILE_SUFFIX = ".gif";
+        public static final String XLS_FILE_SUFFIX = ".xls";
+        public static final String XLSX_FILE_SUFFIX = ".xlsx";
     }
 
     /**
      * 基本字符
      */
     public static class Character {
-        public final static String SLASH = "/";
-        public final static String UNDERLINE = "_";
-        public final static String BAR = "-";
-        public final static String COMMA = ",";
-        public final static String GET = "get";
-        public final static String SET = "set";
+        public static final String SLASH = "/";
+        public static final String UNDERLINE = "_";
+        public static final String BAR = "-";
+        public static final String COMMA = ",";
+        public static final String GET = "get";
+        public static final String SET = "set";
     }
 
     /**
      * 时间(毫秒)
      */
     public static class Time {
-        public final static long SECOND = 1000;
-        public final static long MINUTE = 60 * SECOND;
-        public final static long HOUR = 60 * MINUTE;
-        public final static long DAY = 24 * MINUTE;
+        public static final long SECOND = 1000;
+        public static final long MINUTE = 60 * SECOND;
+        public static final long HOUR = 60 * MINUTE;
+        public static final long DAY = 24 * MINUTE;
     }
 
     /**
      * 时间(秒)
      */
     public static class Second {
-        public final static int SECOND = 1;
-        public final static int MINUTE = 60 * SECOND;
-        public final static int HOUR = 60 * MINUTE;
-        public final static int DAY = 24 * HOUR;
+        public static final int SECOND = 1;
+        public static final int MINUTE = 60 * SECOND;
+        public static final int HOUR = 60 * MINUTE;
+        public static final int DAY = 24 * HOUR;
     }
 
     /**
      * 时间格式常量
      */
     public static class FormatDate {
-        public final static String SIMPLE_DATE = "yyyyMMdd";
-        public final static String SIMPLE_DATE_TIME = "yyyyMMddHHmmss";
-        public final static String DATE = "yyyy-MM-dd";
-        public final static String DATE_TIME = "yyyy-MM-dd HH:mm:ss";
+        public static final String SIMPLE_DATE = "yyyyMMdd";
+        public static final String SIMPLE_DATE_TIME = "yyyyMMddHHmmss";
+        public static final String DATE = "yyyy-MM-dd";
+        public static final String DATE_TIME = "yyyy-MM-dd HH:mm:ss";
     }
 
     /**
@@ -73,17 +73,17 @@ public class BaseConstant {
         /**
          * 十分位
          */
-        public final static Integer TEN_DIGITS = 10;
+        public static final Integer TEN_DIGITS = 10;
 
         /**
          * 百分位
          */
-        public final static Integer HUNDRED_DIGIT = 100;
+        public static final Integer HUNDRED_DIGIT = 100;
 
         /**
          * 千分位
          */
-        public final static Integer THOUSAND_DIGIT = 1000;
+        public static final Integer THOUSAND_DIGIT = 1000;
     }
 
     @Getter

@@ -11,8 +11,8 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class WebUserContext {
 
-    public final static String USER_COOKIE = "SESSION";
-    private final static String USER_CACHE_KEY = "USER_CACHE_KEY_";
+    public static final String USER_COOKIE = "SESSION";
+    private static final String USER_CACHE_KEY = "USER_CACHE_KEY_";
 
     /**
      * 暂时用来替代redis
@@ -21,7 +21,7 @@ public class WebUserContext {
 
     private static ThreadLocal<User> userContext = new ThreadLocal();
 
-    public final static User instance(User user) {
+    public static final User instance(User user) {
         if (user == null || user.getId() == null) {
             return null;
         }

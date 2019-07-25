@@ -16,9 +16,9 @@ import java.util.jar.JarFile;
  */
 public class PackageScannerUtils {
 
-    private final static String PACKAGE_JAR = "jar";
-    private final static String PACKAGE_FILE = "file";
-    private final static String FILE_CLASS = ".class";
+    private static final String PACKAGE_JAR = "jar";
+    private static final String PACKAGE_FILE = "file";
+    private static final String FILE_CLASS = ".class";
 
     /**
      * 包扫描

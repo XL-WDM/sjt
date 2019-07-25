@@ -15,11 +15,11 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class BeanCopierUtils {
 
-    private final static String SET = "set";
-    private final static String BAR = "_";
-    private final static String NONE_TYPE = "None";
-    private final static String CONVERTER_TYPE = "Converter";
-    private final static String IGNORE_TYPE = "Ignore";
+    private static final String SET = "set";
+    private static final String BAR = "_";
+    private static final String NONE_TYPE = "None";
+    private static final String CONVERTER_TYPE = "Converter";
+    private static final String IGNORE_TYPE = "Ignore";
 
     /**
      * cache
@@ -98,8 +98,8 @@ public class BeanCopierUtils {
     }
 
     private static class IgnoreConverter implements Converter {
-        private final static int CHAR_97 = 97;
-        private final static int CHAR_122 = 122;
+        private static final int CHAR_97 = 97;
+        private static final int CHAR_122 = 122;
         private final String[] ignores;
 
         public IgnoreConverter(String[] ignores) {

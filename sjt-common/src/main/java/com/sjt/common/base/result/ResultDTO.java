@@ -17,13 +17,13 @@ public class ResultDTO<R> extends HashMap implements Serializable {
 
     private static final long serialVersionUID = 834150395386082650L;
 
-    private final static Integer SUCCESS_CODE_200 = 200;
-    private final static Integer NOT_SIGN_CODE_401 = 401;
-    private final static Integer ERROR_CODE_500 = 500;
+    private static final Integer SUCCESS_CODE_200 = 200;
+    private static final Integer NOT_SIGN_CODE_401 = 401;
+    private static final Integer ERROR_CODE_500 = 500;
 
-    private final static String SUCCESS_MESSAGE = "成功";
-    private final static String NOT_SIGN_MESSAGE = "用户信息失效, 请重新登录!";
-    private final static String ERROR_MESSAGE = "哎呀, 服务开小差啦!";
+    private static final String SUCCESS_MESSAGE = "成功";
+    private static final String NOT_SIGN_MESSAGE = "用户信息失效, 请重新登录!";
+    private static final String ERROR_MESSAGE = "哎呀, 服务开小差啦!";
 
 
     @Override
