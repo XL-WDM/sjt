@@ -46,7 +46,7 @@ public class AddressApiService implements AddressApi {
     }
 
     @Override
-    public ResultDTO removeAddress(@RequestBody Long id) {
+    public ResultDTO removeAddress(Long id) {
         iAddressService.removeAddress(id);
         return ResultDTO.success();
     }
