@@ -8,6 +8,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.List;
@@ -36,7 +37,7 @@ public interface ProductApi {
      * @return
      */
     @ApiOperation(value = "获取多个商品详情信息", response = ProductDetailDTO.class)
-    @GetMapping("/open-api/details")
+    @PostMapping("/open-api/details")
     ResultDTO<List<ProductDetailDTO>> getProductDetails(List<Long> ids);
 
     /**

@@ -9,9 +9,8 @@ import com.sjt.business.service.IProductService;
 import com.sjt.common.base.constant.ResultConstant;
 import com.sjt.common.base.result.ResultDTO;
 import com.sjt.common.utils.CheckObjects;
-import org.apache.ibatis.session.ResultContext;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -33,7 +32,7 @@ public class ProductApiService implements ProductApi {
     }
 
     @Override
-    public ResultDTO<List<ProductDetailDTO>> getProductDetails(@RequestParam("ids") List<Long> ids) {
+    public ResultDTO<List<ProductDetailDTO>> getProductDetails(@RequestBody List<Long> ids) {
         List<ProductDetailDTO> productDetailDTOS = iProductService.getProductByIds(ids);
         return ResultDTO.data(productDetailDTOS);
     }
