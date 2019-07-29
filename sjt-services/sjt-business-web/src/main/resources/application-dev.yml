@@ -24,7 +24,7 @@ sjt:
     appsecret: 7afde07a322e7c33bc5e0fbdd340ec28
     open-app-id: wxc72866875cad5fe1
     open-appsecret: 8ba97e7f0ed649472718d1f4abaef62d
-#    applet-id: wx221fcafef33f2b87
-#    applet-appsecret: e13e84260a7915c690525f671c00ab72
-    applet-id: wxd46d12c41a64720f
-    applet-appsecret: f73b6b99027c6232307a503336087d2c
+    applet-id: wx221fcafef33f2b87
+    applet-appsecret: e13e84260a7915c690525f671c00ab72
+#    applet-id: wxd46d12c41a64720f
+#    applet-appsecret: f73b6b99027c6232307a503336087d2c
