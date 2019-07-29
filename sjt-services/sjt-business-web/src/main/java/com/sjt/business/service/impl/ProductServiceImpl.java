@@ -3,6 +3,7 @@ package com.sjt.business.service.impl;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.sjt.business.api.dto.req.ProdctsParamDTO;
+import com.sjt.business.api.dto.req.QueryProductParamDTO;
 import com.sjt.business.api.dto.res.*;
 import com.sjt.business.constant.DataBaseConstant;
 import com.sjt.business.entity.*;
@@ -304,6 +305,56 @@ public class ProductServiceImpl implements IProductService {
 
             return productDetailDTO;
         }).collect(Collectors.toList());
+
+        return productDetailDTOS;
+    }
+
+    @Override
+    public Integer queryProductCountByPage(QueryProductParamDTO queryProductParamDTO) {
+        // 1.参数校验
+        CheckObjects.isNull(queryProductParamDTO, ResultConstant.PARAMETERS_CANNOT_BE_NULL);
+
+        // 3.查询商品数量
+        EntityWrapper<Product> entityWrapper = new EntityWrapper<>();
+        entityWrapper.eq("publish_status", DataBaseConstant.ProductPushStatus.UPPER_SHELF.getCode());
+
+        String productKeyWord = queryProductParamDTO.getProductKeyWord();
+        if (productKeyWord != null && !"".equals(productKeyWord.trim())) {
+            entityWrapper.andNew()
+                    .like("product_name", productKeyWord)
+                    .or()
+                    .like("descript", productKeyWord);
+        }
+
+        Integer total = productMapper.selectCount(entityWrapper);
+
+        return total;
+    }
+
+    @Override
+    public List<ProductDetailDTO> queryProductListByPage(QueryProductParamDTO queryProductParamDTO) {
+        // 1.参数校验
+        CheckObjects.isNull(queryProductParamDTO, ResultConstant.PARAMETERS_CANNOT_BE_NULL);
+        Integer pageNo = queryProductParamDTO.getPageNo();
+        Integer pageSize = queryProductParamDTO.getPageSize();
+        CheckObjects.isPage(pageNo, pageSize);
+
+        // 3.查询商品数量
+        EntityWrapper<Product> entityWrapper = new EntityWrapper<>();
+        entityWrapper.eq("publish_status", DataBaseConstant.ProductPushStatus.UPPER_SHELF.getCode());
+
+        String productKeyWord = queryProductParamDTO.getProductKeyWord();
+        if (productKeyWord != null && !"".equals(productKeyWord.trim())) {
+            entityWrapper.andNew()
+                    .like("product_name", productKeyWord)
+                    .or()
+                    .like("descript", productKeyWord);
+        }
+
+        List<Product> products = productMapper.selectPage(new Page<Product>(pageNo, pageSize), entityWrapper.orderBy("create_date", false));
+
+        // Entity -> DTO
+        List<ProductDetailDTO> productDetailDTOS = BeanCopierUtils.copyList(products, ProductDetailDTO.class);
 
         return productDetailDTOS;
     }

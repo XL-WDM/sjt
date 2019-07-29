@@ -1,6 +1,7 @@
 package com.sjt.business.api.impl;
 
 import com.sjt.business.api.dto.req.ProdctsParamDTO;
+import com.sjt.business.api.dto.req.QueryProductParamDTO;
 import com.sjt.business.api.dto.res.CategoryProductsDTO;
 import com.sjt.business.api.dto.res.ProductCategoryDTO;
 import com.sjt.business.api.dto.res.ProductDetailDTO;
@@ -56,5 +57,13 @@ public class ProductApiService implements ProductApi {
         // 获取商品总数
         Integer total = iProductService.getPageProductCount(prodctsParamDTO);
         return ResultDTO.page(total, rows, productCategory.getImgUrl());
+    }
+
+    @Override
+    public ResultDTO queryProductList(QueryProductParamDTO queryProductParamDTO) {
+        Integer total = iProductService.queryProductCountByPage(queryProductParamDTO);
+        List<ProductDetailDTO> productDetailDTOS = iProductService.queryProductListByPage(queryProductParamDTO);
+
+        return ResultDTO.page(total, productDetailDTOS);
     }
 }

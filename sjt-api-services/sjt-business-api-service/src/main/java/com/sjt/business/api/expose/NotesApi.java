@@ -1,5 +1,7 @@
 package com.sjt.business.api.expose;
 
+import com.sjt.business.api.dto.req.NotesParamDTO;
+import com.sjt.business.api.dto.res.NoteDTO;
 import com.sjt.business.api.dto.res.NotesDTO;
 import com.sjt.common.base.result.ResultDTO;
 import io.swagger.annotations.Api;
@@ -22,7 +24,16 @@ public interface NotesApi {
      * @return
      */
     @ApiImplicitParam(name = "id", value = "日记编号", required = true)
-    @ApiOperation(value = "查询山田日记", response = NotesDTO.class)
+    @ApiOperation(value = "查询山田日记", response = NoteDTO.class)
     @GetMapping("/open-api/view")
-    ResultDTO<NotesDTO> getNote(Long id);
+    ResultDTO<NoteDTO> getNote(Long id);
+
+    /**
+     * 日记列表
+     * @param notesParamDTO
+     * @return
+     */
+    @ApiOperation(value = "日记列表", response = NoteDTO.class)
+    @GetMapping("/open-api/list/page")
+    ResultDTO getNotes(NotesParamDTO notesParamDTO);
 }

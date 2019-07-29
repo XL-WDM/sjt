@@ -1,6 +1,7 @@
 package com.sjt.business.service;
 
 import com.sjt.business.api.dto.req.ProdctsParamDTO;
+import com.sjt.business.api.dto.req.QueryProductParamDTO;
 import com.sjt.business.api.dto.res.CategoryProductsDTO;
 import com.sjt.business.api.dto.res.ProductCategoryDTO;
 import com.sjt.business.api.dto.res.ProductDetailDTO;
@@ -67,4 +68,18 @@ public interface IProductService {
      * @return
      */
     List<ProductDetailDTO> getPageProductList(ProdctsParamDTO prodctsParamDTO);
+
+    /**
+     * 商品搜索数量
+     * @param queryProductParamDTO
+     * @return
+     */
+    Integer queryProductCountByPage(QueryProductParamDTO queryProductParamDTO);
+
+    /**
+     * 商品搜索集合
+     * @param queryProductParamDTO
+     * @return
+     */
+    List<ProductDetailDTO> queryProductListByPage(QueryProductParamDTO queryProductParamDTO);
 }

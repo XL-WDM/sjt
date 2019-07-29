@@ -1,5 +1,7 @@
 package com.sjt.business.api.impl;
 
+import com.sjt.business.api.dto.req.NotesParamDTO;
+import com.sjt.business.api.dto.res.NoteDTO;
 import com.sjt.business.api.dto.res.NotesDTO;
 import com.sjt.business.api.expose.NotesApi;
 import com.sjt.business.service.INotesService;
@@ -18,8 +20,15 @@ public class NotesApiService implements NotesApi {
     private INotesService iNotesService;
 
     @Override
-    public ResultDTO<NotesDTO> getNote(Long id) {
-        NotesDTO note = iNotesService.getNote(id);
+    public ResultDTO<NoteDTO> getNote(Long id) {
+        NoteDTO note = iNotesService.getNote(id);
         return ResultDTO.data(note);
+    }
+
+    @Override
+    public ResultDTO getNotes(NotesParamDTO notesParamDTO) {
+        Integer total = iNotesService.getNoteCountByPage(notesParamDTO);
+        NotesDTO notesDTO = iNotesService.getNotesByPage(notesParamDTO);
+        return ResultDTO.page(total, notesDTO.getNotes(), notesDTO.getBanner());
     }
 }

@@ -15,12 +15,12 @@ public class PageParamDTO {
     /**
      * 页号
      */
-    @ApiModelProperty(value = "页号", example = "0")
+    @ApiModelProperty(value = "页号", example = "1")
     private Integer pageNo;
 
     /**
      * 页大小
      */
-    @ApiModelProperty(value = "页大小", example = "0")
+    @ApiModelProperty(value = "页大小", example = "10")
     private Integer pageSize;
 }

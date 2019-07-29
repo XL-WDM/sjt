@@ -18,11 +18,11 @@ public class HomePageNotesDTO {
      * 首页山田日记
      */
     @ApiModelProperty(value = "首页山田日记", dataType = "List")
-    private List<NotesDTO> notes;
+    private List<NoteDTO> notes;
 
     /**
      * 首页匠人精神
      */
     @ApiModelProperty(value = "首页匠人精神", dataType = "List")
-    private List<NotesDTO> craftsmanNotes;
+    private List<NoteDTO> craftsmanNotes;
 }
