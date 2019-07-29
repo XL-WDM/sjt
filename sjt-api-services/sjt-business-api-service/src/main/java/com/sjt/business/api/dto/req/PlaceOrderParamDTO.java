@@ -15,12 +15,6 @@ import java.util.List;
 public class PlaceOrderParamDTO {
 
     /**
-     * 收货地址id
-     */
-    @ApiModelProperty("收货地址id")
-    private Long receivingId;
-
-    /**
      * 订单详情
      */
     @ApiModelProperty(value = "订单详情", dataType = "List")

@@ -3,6 +3,7 @@ package com.sjt.business.service;
 import com.sjt.business.api.dto.req.OrderParamDTO;
 import com.sjt.business.api.dto.req.PlaceOrderParamDTO;
 import com.sjt.business.api.dto.res.OrderDTO;
+import com.sjt.business.api.dto.res.PlaceOrderDTO;
 
 import java.util.List;
 
@@ -15,8 +16,9 @@ public interface IOrderService {
     /**
      * 下单
      * @param placeOrderParamDTO
+     * @return
      */
-    void placeOrder(PlaceOrderParamDTO placeOrderParamDTO);
+    PlaceOrderDTO placeOrder(PlaceOrderParamDTO placeOrderParamDTO);
 
     /**
      * 获取订单总数

@@ -27,8 +27,8 @@ public class NotesApiService implements NotesApi {
 
     @Override
     public ResultDTO getNotes(NotesParamDTO notesParamDTO) {
-        Integer total = iNotesService.getNoteCountByPage(notesParamDTO);
         NotesDTO notesDTO = iNotesService.getNotesByPage(notesParamDTO);
+        Integer total = iNotesService.getNoteCountByPage(notesParamDTO);
         return ResultDTO.page(total, notesDTO.getNotes(), notesDTO.getBanner());
     }
 }

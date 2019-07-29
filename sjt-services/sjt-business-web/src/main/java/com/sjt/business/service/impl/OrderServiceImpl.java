@@ -7,8 +7,12 @@ import com.sjt.business.api.dto.req.OrderParamDTO;
 import com.sjt.business.api.dto.req.PlaceOrderParamDTO;
 import com.sjt.business.api.dto.res.OrderDTO;
 import com.sjt.business.api.dto.res.OrderItemDTO;
+import com.sjt.business.api.dto.res.PlaceOrderDTO;
 import com.sjt.business.constant.DataBaseConstant;
-import com.sjt.business.entity.*;
+import com.sjt.business.entity.Order;
+import com.sjt.business.entity.OrderItem;
+import com.sjt.business.entity.Product;
+import com.sjt.business.entity.ProductStock;
 import com.sjt.business.mapper.*;
 import com.sjt.business.service.IOrderService;
 import com.sjt.business.web.config.WebUserContext;
@@ -53,19 +57,11 @@ public class OrderServiceImpl implements IOrderService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void placeOrder(PlaceOrderParamDTO placeOrderParamDTO) {
+    public PlaceOrderDTO placeOrder(PlaceOrderParamDTO placeOrderParamDTO) {
         // 1.参数校验
         CheckObjects.isNull(placeOrderParamDTO, ResultConstant.PARAMETERS_CANNOT_BE_NULL);
         List<OrderItemParamDTO> orderItems = placeOrderParamDTO.getOrderItems();
-        Long receivingId = placeOrderParamDTO.getReceivingId();
         CheckObjects.isEmpty(orderItems, "请选择需要下单的商品");
-        CheckObjects.isNull(receivingId, "请选择收货地址");
-        Long userId = WebUserContext.getContext().getId();
-        Address address = new Address();
-        address.setId(receivingId);
-        address.setUserId(userId);
-        address = addressMapper.selectAddressByIdAndUserId(address);
-        CheckObjects.isNull(address, "收货地址不存在");
 
         // 商品总金额
         BigDecimal sumTotalAmount = new BigDecimal("0");
@@ -123,7 +119,7 @@ public class OrderServiceImpl implements IOrderService {
             oItem.setDiscountAmount(discountAmount);
             oItem.setProductName(product.getProductName());
             oItem.setProductDescript(product.getDescript());
-            oItem.setProductImg("");
+            oItem.setProductImg(product.getMainImage());
 
             // 2-9.添加到集合
             orderDetails.add(oItem);
@@ -139,8 +135,8 @@ public class OrderServiceImpl implements IOrderService {
         // 3.生成订单信息
         Order order = new Order();
         order.setOrderNo(String.valueOf(snowflakeIdUtils.nextId()));
+        Long userId = WebUserContext.getContext().getId();
         order.setUserId(userId);
-        order.setAddressId(address.getId());
         order.setTotalAmount(sumTotalAmount);
         // 订单总金额(商品总金额 + 运费 - (优惠金额、红包抵扣、积分抵扣))
         order.setOrgAmount(sumTotalAmount.add(postFee).subtract(discountSumAmount));
@@ -157,6 +153,12 @@ public class OrderServiceImpl implements IOrderService {
             boolean insertOrderDetail = orderDetail.insert();
             CheckObjects.predicate(insertOrderDetail, b -> !b, "订单详情生成失败");
         }
+
+        PlaceOrderDTO placeOrderDTO = new PlaceOrderDTO();
+        placeOrderDTO.setId(order.getId());
+        placeOrderDTO.setOrderNo(order.getOrderNo());
+
+        return placeOrderDTO;
     }
 
     @Override

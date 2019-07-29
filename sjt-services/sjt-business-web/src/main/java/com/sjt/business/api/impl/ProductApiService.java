@@ -61,9 +61,9 @@ public class ProductApiService implements ProductApi {
 
     @Override
     public ResultDTO queryProductList(QueryProductParamDTO queryProductParamDTO) {
+        List<ProductDetailDTO> rows = iProductService.queryProductListByPage(queryProductParamDTO);
         Integer total = iProductService.queryProductCountByPage(queryProductParamDTO);
-        List<ProductDetailDTO> productDetailDTOS = iProductService.queryProductListByPage(queryProductParamDTO);
 
-        return ResultDTO.page(total, productDetailDTOS);
+        return ResultDTO.page(total, rows);
     }
 }

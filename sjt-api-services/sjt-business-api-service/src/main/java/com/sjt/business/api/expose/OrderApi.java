@@ -3,6 +3,7 @@ package com.sjt.business.api.expose;
 import com.sjt.business.api.dto.req.OrderParamDTO;
 import com.sjt.business.api.dto.req.PlaceOrderParamDTO;
 import com.sjt.business.api.dto.res.OrderDTO;
+import com.sjt.business.api.dto.res.PlaceOrderDTO;
 import com.sjt.common.base.result.ResultDTO;
 import io.swagger.annotations.*;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,7 +28,7 @@ public interface OrderApi {
      */
     @ApiOperation(value = "下单")
     @PostMapping("/place-order")
-    ResultDTO placeOrder(@RequestBody PlaceOrderParamDTO placeOrderParamDTO);
+    ResultDTO<PlaceOrderDTO> placeOrder(@RequestBody PlaceOrderParamDTO placeOrderParamDTO);
 
 
     /**

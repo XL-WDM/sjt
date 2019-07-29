@@ -3,6 +3,7 @@ package com.sjt.business.api.impl;
 import com.sjt.business.api.dto.req.OrderParamDTO;
 import com.sjt.business.api.dto.req.PlaceOrderParamDTO;
 import com.sjt.business.api.dto.res.OrderDTO;
+import com.sjt.business.api.dto.res.PlaceOrderDTO;
 import com.sjt.business.api.expose.OrderApi;
 import com.sjt.business.service.IOrderService;
 import com.sjt.common.base.result.ResultDTO;
@@ -23,9 +24,9 @@ public class OrderApiService implements OrderApi {
     private IOrderService iOrderService;
 
     @Override
-    public ResultDTO placeOrder(@RequestBody PlaceOrderParamDTO placeOrderParamDTO) {
-        iOrderService.placeOrder(placeOrderParamDTO);
-        return ResultDTO.success();
+    public ResultDTO<PlaceOrderDTO> placeOrder(@RequestBody PlaceOrderParamDTO placeOrderParamDTO) {
+        PlaceOrderDTO placeOrderDTO = iOrderService.placeOrder(placeOrderParamDTO);
+        return ResultDTO.data(placeOrderDTO);
     }
 
     @Override
