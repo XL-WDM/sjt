@@ -9,6 +9,7 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 
 /**
+ * 用户登陆日志
  * @author: yilan.hu
  * @data: 2019/7/9
  */

@@ -5,6 +5,7 @@ import com.sjt.business.api.dto.req.QueryProductParamDTO;
 import com.sjt.business.api.dto.res.CategoryProductsDTO;
 import com.sjt.business.api.dto.res.ProductCategoryDTO;
 import com.sjt.business.api.dto.res.ProductDetailDTO;
+import com.sjt.business.api.dto.res.ShoppingCartDTO;
 
 import java.util.List;
 
@@ -40,7 +41,7 @@ public interface IProductService {
      * @param ids
      * @return
      */
-    List<ProductDetailDTO> getProductByIds(List<Long> ids);
+    List<ShoppingCartDTO> getProductByIds(List<Long> ids);
 
     /**
      * 获取新品推荐

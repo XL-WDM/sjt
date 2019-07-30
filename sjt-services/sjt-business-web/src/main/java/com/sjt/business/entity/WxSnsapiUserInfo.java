@@ -8,6 +8,7 @@ import lombok.Data;
 import java.io.Serializable;
 
 /**
+ * 微信用户信息
  * @author: yilan.hu
  * @data: 2019/7/16
  */

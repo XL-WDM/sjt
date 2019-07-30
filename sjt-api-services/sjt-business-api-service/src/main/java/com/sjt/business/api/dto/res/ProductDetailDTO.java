@@ -15,9 +15,9 @@ import java.util.List;
 @Data
 public class ProductDetailDTO {
     /**
-     * 自增id
+     * 商品id
      */
-    @ApiModelProperty("商品描述")
+    @ApiModelProperty("商品id")
     private Long id;
 
     /**
@@ -27,22 +27,28 @@ public class ProductDetailDTO {
     private String productName;
 
     /**
-     * 商品价格(单位：元)
+     * 商品最小价格(单位：元)
      */
-    @ApiModelProperty("商品价格(单位：元)")
-    private BigDecimal price;
+    @ApiModelProperty("商品最小价格(单位：元)")
+    private BigDecimal minPrice;
 
     /**
-     * 优惠金额(单位：元)
+     * 商品最大价格(单位：元)
      */
-    @ApiModelProperty("优惠金额(单位：元)")
-    private BigDecimal discountAmount;
+    @ApiModelProperty("商品最大价格(单位：元)")
+    private BigDecimal maxPrice;
 
     /**
      * 商品发布状态(1-上架, 2-下架)
      */
     @ApiModelProperty("商品发布状态(1-上架, 2-下架)")
     private String publishStatus;
+
+    /**
+     * 规格类型(1-单规格, 2-多规格)
+     */
+    @ApiModelProperty("规格类型(1-单规格, 2-多规格)")
+    private String specType;
 
     /**
      * 商品描述
@@ -63,6 +69,12 @@ public class ProductDetailDTO {
     private String productDetails;
 
     /**
+     * 商品规格
+     */
+    @ApiModelProperty("商品规格")
+    private ProductSpecsDTO productSpec;
+
+    /**
      * 商品属性
      */
     @ApiModelProperty(value = "商品属性", dataType = "List")
@@ -73,12 +85,6 @@ public class ProductDetailDTO {
      */
     @ApiModelProperty(value = "商品图片", dataType = "List")
     private List<ProductPicDTO> productPics;
-
-    /**
-     * 库存
-     */
-    @ApiModelProperty("库存")
-    private Integer stock;
 
     /**
      * 销量

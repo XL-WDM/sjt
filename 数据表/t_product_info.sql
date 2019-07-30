@@ -8,13 +8,13 @@ create table t_product_info
 	one_level_category int null comment '一级分类',
 	two_level_category int null comment '二级分类',
 	three_level_category int null comment '三级分类',
-	price decimal not null comment '商品价格(单位：分)',
-	discount_amount decimal default '0' not null comment '优惠金额(单位：分)',
 	publish_status varchar(1) not null comment '商品发布状态(0-无效, 1-上架, 2-下架)',
 	new_arrivals varchar(1) default '0' not null comment '是否为新品推荐(0-否, 1-是)',
-	descript varchar(512) null comment '商品描述',
 	main_image varchar(512) not null comment '主图',
 	product_details text null comment '商品详情',
+	descript varchar(512) null comment '商品描述',
+	spec_grop_name varchar(128) null comment '规格组名称',
+	spec_type varchar(1) default '1' not null comment '规格类型(1-单规格, 2-多规格)',
 	create_date datetime default CURRENT_TIMESTAMP not null comment '商品录入时间',
 	update_date datetime default CURRENT_TIMESTAMP not null comment '商品更新时间',
 	constraint t_product_info_t_supplier_info_id_fk
@@ -52,9 +52,13 @@ create index t_product_info_t_supplier_info_id_fk
 
 
 
-INSERT INTO sjt.t_product_info (id, product_name, supplier_id, one_level_category, two_level_category, three_level_category, price, discount_amount, publish_status, new_arrivals, descript, product_details, create_date, update_date) VALUES (1, '抗霾舒畅柠果膏', 1, 1, 2, 5, 7890, 0, '1', '1', '抗霾舒畅柠果膏280ml', null, '2019-08-11 17:24:26', '2019-07-11 17:24:26');
-INSERT INTO sjt.t_product_info (id, product_name, supplier_id, one_level_category, two_level_category, three_level_category, price, discount_amount, publish_status, new_arrivals, descript, product_details, create_date, update_date) VALUES (2, '抗霾膏', 1, 1, 2, 5, 7890, 0, '1', '1', '抗霾舒畅柠果膏280ml', null, '2019-11-11 17:24:26', '2019-07-11 17:24:26');
-INSERT INTO sjt.t_product_info (id, product_name, supplier_id, one_level_category, two_level_category, three_level_category, price, discount_amount, publish_status, new_arrivals, descript, product_details, create_date, update_date) VALUES (3, '舒畅膏', 1, 1, 2, 5, 7890, 0, '1', '0', '抗霾舒畅柠果膏280ml', null, '2019-07-18 17:24:26', '2019-07-11 17:24:26');
-INSERT INTO sjt.t_product_info (id, product_name, supplier_id, one_level_category, two_level_category, three_level_category, price, discount_amount, publish_status, new_arrivals, descript, product_details, create_date, update_date) VALUES (4, '柠果膏', 1, 1, 2, 5, 7890, 0, '1', '1', '抗霾舒畅柠果膏280ml', null, '2019-11-11 17:24:26', '2019-07-11 17:24:26');
-INSERT INTO sjt.t_product_info (id, product_name, supplier_id, one_level_category, two_level_category, three_level_category, price, discount_amount, publish_status, new_arrivals, descript, product_details, create_date, update_date) VALUES (5, '果膏', 1, 1, 2, 4, 7890, 0, '1', '0', '抗霾舒畅柠果膏280ml', null, '2019-01-11 17:24:26', '2019-07-11 17:24:26');
-INSERT INTO sjt.t_product_info (id, product_name, supplier_id, one_level_category, two_level_category, three_level_category, price, discount_amount, publish_status, new_arrivals, descript, product_details, create_date, update_date) VALUES (6, '舒畅柠果膏', 1, 1, 2, 3, 7890, 0, '1', '1', '抗霾舒畅柠果膏280ml', null, '2019-06-11 17:24:26', '2019-07-11 17:24:26');
+
+
+
+
+INSERT INTO sjt.t_product_info (id, product_name, supplier_id, one_level_category, two_level_category, three_level_category, publish_status, new_arrivals, descript, product_details, create_date, update_date) VALUES (1, '抗霾舒畅柠果膏', 1, 1, 2, 5, '1', '1', '抗霾舒畅柠果膏280ml', null, '2019-08-11 17:24:26', '2019-07-11 17:24:26');
+INSERT INTO sjt.t_product_info (id, product_name, supplier_id, one_level_category, two_level_category, three_level_category, publish_status, new_arrivals, descript, product_details, create_date, update_date) VALUES (2, '抗霾膏', 1, 1, 2, 5, '1', '1', '抗霾舒畅柠果膏280ml', null, '2019-11-11 17:24:26', '2019-07-11 17:24:26');
+INSERT INTO sjt.t_product_info (id, product_name, supplier_id, one_level_category, two_level_category, three_level_category, publish_status, new_arrivals, descript, product_details, create_date, update_date) VALUES (3, '舒畅膏', 1, 1, 2, 5, '1', '0', '抗霾舒畅柠果膏280ml', null, '2019-07-18 17:24:26', '2019-07-11 17:24:26');
+INSERT INTO sjt.t_product_info (id, product_name, supplier_id, one_level_category, two_level_category, three_level_category, publish_status, new_arrivals, descript, product_details, create_date, update_date) VALUES (4, '柠果膏', 1, 1, 2, 5, '1', '1', '抗霾舒畅柠果膏280ml', null, '2019-11-11 17:24:26', '2019-07-11 17:24:26');
+INSERT INTO sjt.t_product_info (id, product_name, supplier_id, one_level_category, two_level_category, three_level_category, publish_status, new_arrivals, descript, product_details, create_date, update_date) VALUES (5, '果膏', 1, 1, 2, 4, '1', '0', '抗霾舒畅柠果膏280ml', null, '2019-01-11 17:24:26', '2019-07-11 17:24:26');
+INSERT INTO sjt.t_product_info (id, product_name, supplier_id, one_level_category, two_level_category, three_level_category, publish_status, new_arrivals, descript, product_details, create_date, update_date) VALUES (6, '舒畅柠果膏', 1, 1, 2, 3, '1', '1', '抗霾舒畅柠果膏280ml', null, '2019-06-11 17:24:26', '2019-07-11 17:24:26');

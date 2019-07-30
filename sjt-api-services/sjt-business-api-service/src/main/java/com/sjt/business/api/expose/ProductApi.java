@@ -2,8 +2,10 @@ package com.sjt.business.api.expose;
 
 import com.sjt.business.api.dto.req.ProdctsParamDTO;
 import com.sjt.business.api.dto.req.QueryProductParamDTO;
+import com.sjt.business.api.dto.req.ShoppingCartParamDTO;
 import com.sjt.business.api.dto.res.CategoryProductsDTO;
 import com.sjt.business.api.dto.res.ProductDetailDTO;
+import com.sjt.business.api.dto.res.ShoppingCartDTO;
 import com.sjt.common.base.result.ResultDTO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -38,8 +40,8 @@ public interface ProductApi {
      * @return
      */
     @ApiOperation(value = "获取多个商品详情信息", response = ProductDetailDTO.class)
-    @PostMapping("/open-api/details")
-    ResultDTO<List<ProductDetailDTO>> getProductDetails(List<Long> ids);
+    @GetMapping("/open-api/details")
+    ResultDTO<List<ShoppingCartDTO>> getProductDetails(ShoppingCartParamDTO shoppingCartParamDTO);
 
     /**
      * 获取商品分类列表

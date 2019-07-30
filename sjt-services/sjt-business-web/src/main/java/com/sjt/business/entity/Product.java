@@ -6,10 +6,10 @@ import com.baomidou.mybatisplus.annotations.TableName;
 import lombok.Data;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 /**
+ * 商品信息
  * @author: yilan.hu
  * @data: 2019/7/11
  */
@@ -50,16 +50,6 @@ public class Product extends Model<Product> implements Serializable {
     private Long threeLevelCategory;
 
     /**
-     * 商品价格(单位：分)
-     */
-    private BigDecimal price;
-
-    /**
-     * 优惠金额(单位：分)
-     */
-    private BigDecimal discountAmount;
-
-    /**
      * 商品发布状态(0-无效, 1-上架, 2-下架)
      */
     private String publishStatus;
@@ -83,6 +73,16 @@ public class Product extends Model<Product> implements Serializable {
      * 商品描述
      */
     private String descript;
+
+    /**
+     * 规格组名称
+     */
+    private String specGropName;
+
+    /**
+     * 规格类型(1-单规格, 2-多规格)
+     */
+    private String specType;
 
     /**
      * 商品录入时间

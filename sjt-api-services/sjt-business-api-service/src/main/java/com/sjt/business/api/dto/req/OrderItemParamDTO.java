@@ -13,10 +13,10 @@ import lombok.Data;
 public class OrderItemParamDTO {
 
     /**
-     * 商品id
+     * 商品规格id
      */
-    @ApiModelProperty("商品id")
-    private Long productId;
+    @ApiModelProperty("商品规格id")
+    private Long specId;
 
     /**
      * 商品购买数量

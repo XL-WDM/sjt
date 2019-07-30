@@ -12,7 +12,7 @@ import com.sjt.business.constant.DataBaseConstant;
 import com.sjt.business.entity.Order;
 import com.sjt.business.entity.OrderItem;
 import com.sjt.business.entity.Product;
-import com.sjt.business.entity.ProductStock;
+import com.sjt.business.entity.ProductSpec;
 import com.sjt.business.mapper.*;
 import com.sjt.business.service.IOrderService;
 import com.sjt.business.web.config.WebUserContext;
@@ -47,7 +47,7 @@ public class OrderServiceImpl implements IOrderService {
     private ProductMapper productMapper;
 
     @Autowired
-    private ProductStockMapper productStockMapper;
+    private ProductSpecMapper productSpecMapper;
 
     @Autowired
     private OrderMapper orderMapper;
@@ -72,11 +72,15 @@ public class OrderServiceImpl implements IOrderService {
 
         // 2.查询商品
         for (OrderItemParamDTO orderItem : orderItems) {
-            Long productId = orderItem.getProductId();
+            Long specId = orderItem.getSpecId();
             Integer num = orderItem.getNum();
-            CheckObjects.isNull(productId, "商品选择有误");
-            // 2-1.查询商品
-            Product product = productMapper.selectById(productId);
+            CheckObjects.isNull(specId, "商品规格选择有误");
+            // 2-1.查询商品规格
+            ProductSpec productSpec = productSpecMapper.selectById(specId);
+            CheckObjects.isNull(productSpec, "商品规格不存在");
+
+            // 2-2.查询商品
+            Product product = productMapper.selectById(productSpec.getProductId());
             CheckObjects.isNull(product, "商品不存在");
             CheckObjects.predicate(product.getPublishStatus(),
                     s -> DataBaseConstant.ProductPushStatus.LOWER_SHELF.getCode().equals(s),
@@ -84,47 +88,48 @@ public class OrderServiceImpl implements IOrderService {
             CheckObjects.predicate(product.getPublishStatus(),
                     s -> DataBaseConstant.ProductPushStatus.INVALID.getCode().equals(s),
                     "商品已被删除");
-            // 2-2.商品库存查询
-            ProductStock productStock = new ProductStock().selectOne(
-                    new EntityWrapper<ProductStock>()
-                            .eq("product_id", product.getId()));
-            // 2-3.库存校验
-            CheckObjects.isNull(productStock, "下单失败, 商品[" + product.getProductName() + "], 库存不足");
-            int stockNum = productStock.getProductStockNum() - productStock.getOrderStockNum();
-            CheckObjects.predicate(stockNum, n -> n <= 0, "下单失败, 商品[" +product.getProductName() + "], 库存不足");
-            // 2-4.下单数量
+            // 2-3.商品库存
+            Integer stockNum = productSpec.getStockNum();
+            Integer orderStockNum = productSpec.getOrderStockNum();
+
+            // 2-4.库存校验
+            int stock = stockNum - orderStockNum;
+            CheckObjects.predicate(stock, n -> n <= 0, "下单失败, 商品[" +product.getProductName() + "], 库存不足");
+            // 2-5.下单数量
             CheckObjects.isNull(num, "请填写商品[" + product.getProductName() + "], 的购买数量");
             CheckObjects.predicate(num, n -> n < 1, "下单失败, 商品[" + product.getProductName() + "], 至少购买一件");
-            CheckObjects.predicate(num, n -> n > stockNum,
-                    "下单失败, 商品[" + product.getProductName() + "], 库存不足, 当前库存: " + stockNum + "件");
-            // 2-5.跟新库存
-            int version = productStock.getVersion();
-            productStock.setOrderStockNum(productStock.getOrderStockNum() + num);
-            productStock.setVersion(version + 1);
-            boolean rows = productStock.update(new EntityWrapper<ProductStock>()
-                    .eq("id", productStock.getId())
+            CheckObjects.predicate(num, n -> n > stock,
+                    "下单失败, 商品[" + product.getProductName() + "], 库存不足, 当前库存: " + stock + "件");
+            // 2-6.跟新库存
+            int version = productSpec.getVersion();
+            productSpec.setOrderStockNum(orderStockNum + num);
+            productSpec.setVersion(version + 1);
+            boolean rows = productSpec.update(new EntityWrapper<ProductSpec>()
+                    .eq("id", productSpec.getId())
                     .eq("version", version));
             CheckObjects.predicate(rows, r -> !r, "下单失败, 库存系统繁忙");
 
-            // 2-6.创建订单详情对象
+            // 2-7.创建订单详情对象
             OrderItem oItem = new OrderItem();
             oItem.setProductId(product.getId());
             oItem.setNum(num);
-            oItem.setPrice(product.getPrice());
-            // 2-7.订单详情商品总金额
-            BigDecimal itemSumTotalAmount = product.getPrice().multiply(BigDecimal.valueOf(num));
+            oItem.setPrice(productSpec.getPrice());
+            // 2-8.订单详情商品总金额
+            BigDecimal itemSumTotalAmount = productSpec.getPrice().multiply(BigDecimal.valueOf(num));
             oItem.setTotalFee(itemSumTotalAmount);
-            // 2-8.订单详情优惠总金额
-            BigDecimal discountAmount = product.getDiscountAmount().multiply(BigDecimal.valueOf(num));
-            oItem.setDiscountAmount(discountAmount);
+            // 2-9.订单详情优惠总金额
+            BigDecimal discountAmount = new BigDecimal("0");
+
+            oItem.setDiscountAmount(new BigDecimal("0"));
+
             oItem.setProductName(product.getProductName());
             oItem.setProductDescript(product.getDescript());
             oItem.setProductImg(product.getMainImage());
 
-            // 2-9.添加到集合
+            // 2-10.添加到集合
             orderDetails.add(oItem);
 
-            // 2-10.累计订单总金额
+            // 2-11.累计订单总金额
             sumTotalAmount = sumTotalAmount.add(itemSumTotalAmount);
             discountSumAmount = discountSumAmount.add(discountAmount);
         }

@@ -80,7 +80,9 @@ public class AddressServiceImpl implements IAddressService {
         address.setContactsCall(DataBaseConstant.Call.SIR.getCode());
 
         // 3.如果新增地址为默认地址, 则更新其他地址为非默认地址
-        addressMapper.cleanDefaultAddress(user.getId());
+        if (BaseConstant.Status.YES.getCode().equals(addressParamDTO.getIsDefault())) {
+            addressMapper.cleanDefaultAddress(user.getId());
+        }
 
         // 4.新增地址
         CheckObjects.predicate(address.insert(), b -> !b, "地址新增失败");

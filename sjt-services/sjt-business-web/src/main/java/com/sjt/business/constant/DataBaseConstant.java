@@ -192,6 +192,32 @@ public class DataBaseConstant {
     }
 
     @Getter
+    public enum ProductSpecType {
+        /**
+         * 规格类型(1-单规格, 2-多规格)
+         */
+        SINGLE_SPEC("1", "单规格"),
+        MULTI_SPEC("2", "多规格");
+
+        private ProductSpecType(String code, String name) {
+            this.code = code;
+            this.name = name;
+        }
+
+        private String code;
+        private String name;
+
+        public static ProductSpecType find(String code) {
+            for (ProductSpecType type : values()) {
+                if (type.getCode().equals(code)) {
+                    return type;
+                }
+            }
+            return null;
+        }
+    }
+
+    @Getter
     public enum OrderStatus {
         /**
          * 订单状态(1-待支付, 2-待发货, 3-待收货, 4-已完成, 5-已取消)

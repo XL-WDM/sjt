@@ -9,6 +9,7 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 
 /**
+ * 订单详情
  * @author: yilan.hu
  * @data: 2019/7/18
  */

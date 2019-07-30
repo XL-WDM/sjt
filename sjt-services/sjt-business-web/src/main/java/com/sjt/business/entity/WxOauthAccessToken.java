@@ -9,6 +9,7 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 
 /**
+ * 微信网页授权
  * @author: yilan.hu
  * @data: 2019/7/10
  */

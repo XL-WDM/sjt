@@ -17,4 +17,10 @@ public class ProdctsParamDTO extends PageParamDTO {
      */
     @ApiModelProperty(value = "商品分类Id", example = "0")
     private Long categoryId;
+
+    /**
+     * 新品推荐标示(1为查询新品推荐)
+     */
+    @ApiModelProperty(value = "新品推荐标示(1为查询新品推荐)")
+    private String isNewArrivals;
 }
