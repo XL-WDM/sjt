@@ -300,8 +300,6 @@ public class ProductServiceImpl implements IProductService {
         Long categoryId = prodctsParamDTO.getCategoryId();
         String isNewArrivals = prodctsParamDTO.getIsNewArrivals();
 
-
-
         // 2.查询商品
         Wrapper<Product> entityWrapper = new EntityWrapper<Product>().eq("publish_status",
                 DataBaseConstant.ProductPushStatus.UPPER_SHELF.getCode());

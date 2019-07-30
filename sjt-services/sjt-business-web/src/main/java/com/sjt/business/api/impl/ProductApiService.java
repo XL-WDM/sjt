@@ -52,14 +52,17 @@ public class ProductApiService implements ProductApi {
         // 获取商品分类信息
         CheckObjects.isNull(prodctsParamDTO, ResultConstant.PARAMETERS_CANNOT_BE_NULL);
         ProductCategoryDTO productCategory = iProductService.getProductCategory(prodctsParamDTO.getCategoryId());
-        CheckObjects.isNull(productCategory, "商品分类不存在");
+        String categoryImgUrl = null;
+        if (productCategory != null) {
+            categoryImgUrl = productCategory.getImgUrl();
+        }
 
         // 获取商品信息
         List<ProductDetailDTO> rows = iProductService.getPageProductList(prodctsParamDTO);
 
         // 获取商品总数
         Integer total = iProductService.getPageProductCount(prodctsParamDTO);
-        return ResultDTO.page(total, rows, productCategory.getImgUrl());
+        return ResultDTO.page(total, rows, categoryImgUrl);
     }
 
     @Override
