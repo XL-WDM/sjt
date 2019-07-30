@@ -51,10 +51,12 @@ public class ProductApiService implements ProductApi {
     public ResultDTO getProductList(ProdctsParamDTO prodctsParamDTO) {
         // 获取商品分类信息
         CheckObjects.isNull(prodctsParamDTO, ResultConstant.PARAMETERS_CANNOT_BE_NULL);
-        ProductCategoryDTO productCategory = iProductService.getProductCategory(prodctsParamDTO.getCategoryId());
         String categoryImgUrl = null;
-        if (productCategory != null) {
-            categoryImgUrl = productCategory.getImgUrl();
+        if (prodctsParamDTO.getCategoryId() != null) {
+            ProductCategoryDTO productCategory = iProductService.getProductCategory(prodctsParamDTO.getCategoryId());
+            if (productCategory != null) {
+                categoryImgUrl = productCategory.getImgUrl();
+            }
         }
 
         // 获取商品信息
