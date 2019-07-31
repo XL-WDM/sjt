@@ -6,8 +6,8 @@
 
     <sql id="base_all">
         id, product_name, supplier_id, one_level_category, two_level_category,
-        three_level_category, price, discount_amount, publish_status, new_arrivals,
-        descript, product_details, create_date, update_date
+        three_level_category, publish_status, new_arrivals, main_image, product_details,
+        descript, spec_grop_name, spec_type, create_date, update_date
     </sql>
 
     <select id="selectSoldOut" parameterType="java.lang.Long" resultType="java.lang.Integer">
