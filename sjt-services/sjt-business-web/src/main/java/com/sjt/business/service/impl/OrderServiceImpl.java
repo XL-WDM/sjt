@@ -94,12 +94,14 @@ public class OrderServiceImpl implements IOrderService {
 
             // 2-4.库存校验
             int stock = stockNum - orderStockNum;
-            CheckObjects.predicate(stock, n -> n <= 0, "下单失败, 商品[" +product.getProductName() + "], 库存不足");
+            CheckObjects.predicate(stock, n -> n <= 0,
+                    "下单失败, 商品[" + product.getProductName() + " - " + productSpec.getSpecName() + "], 库存不足");
             // 2-5.下单数量
-            CheckObjects.isNull(num, "请填写商品[" + product.getProductName() + "], 的购买数量");
-            CheckObjects.predicate(num, n -> n < 1, "下单失败, 商品[" + product.getProductName() + "], 至少购买一件");
+            CheckObjects.isNull(num, "请填写商品[" + product.getProductName() + " - " + productSpec.getSpecName() + "], 的购买数量");
+            CheckObjects.predicate(num, n -> n < 1,
+                    "下单失败, 商品[" + product.getProductName() + " - " + productSpec.getSpecName() + "], 至少购买一件");
             CheckObjects.predicate(num, n -> n > stock,
-                    "下单失败, 商品[" + product.getProductName() + "], 库存不足, 当前库存: " + stock + "件");
+                    "下单失败, 商品[" + product.getProductName() + " - " + productSpec.getSpecName() + "], 库存不足, 当前库存: " + stock + "件");
             // 2-6.跟新库存
             int version = productSpec.getVersion();
             productSpec.setOrderStockNum(orderStockNum + num);
