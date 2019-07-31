@@ -14,7 +14,7 @@ logging:
     com.sjt.business.mapper: INFO
 sjt:
   cross:
-    origin: http://www.smallbug.top
+    origin: '*'
   # swagger
   swagger:
     title: 'Swagger api 管理平台'

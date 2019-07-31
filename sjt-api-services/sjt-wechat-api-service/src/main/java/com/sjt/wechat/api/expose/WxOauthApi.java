@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
  * @author: yilan.hu
  * @data: 2019/7/9
  */
-@Api(description = "微信网页授权")
+@Api(value = "微信网页授权", tags = "微信网页授权")
 @RequestMapping("/wx/oauth")
 public interface WxOauthApi {
 

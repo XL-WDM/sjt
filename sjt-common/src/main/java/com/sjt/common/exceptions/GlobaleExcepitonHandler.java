@@ -2,6 +2,7 @@ package com.sjt.common.exceptions;
 
 import com.sjt.common.base.result.ResultDTO;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -24,6 +25,9 @@ public class GlobaleExcepitonHandler {
             return ResultDTO.info(ge.getCode(), ge.getMessage());
         } else if (e instanceof HttpRequestMethodNotSupportedException) {
             return ResultDTO.error(e.getLocalizedMessage());
+        } else if (e instanceof HttpMessageNotReadableException) {
+            log.error("## HTTP消息不可读异常", e);
+            return ResultDTO.error("参数读取失败, 格式有误");
         } else {
             log.error("## 系统逻辑异常", e);
             return ResultDTO.error();

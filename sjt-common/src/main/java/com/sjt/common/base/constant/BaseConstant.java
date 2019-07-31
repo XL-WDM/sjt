@@ -32,8 +32,18 @@ public class BaseConstant {
         public static final String UNDERLINE = "_";
         public static final String BAR = "-";
         public static final String COMMA = ",";
+        public static final String AND = "&";
         public static final String GET = "get";
         public static final String SET = "set";
+        public static final String MD5 = "MD5";
+    }
+
+    /**
+     * 币种
+     */
+    public static class FeeType {
+        /** 人民币 */
+        public static final String CNY = "CNY";
     }
 
     /**
