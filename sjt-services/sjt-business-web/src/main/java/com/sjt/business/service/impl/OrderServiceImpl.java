@@ -135,7 +135,7 @@ public class OrderServiceImpl implements IOrderService {
         }
 
         // 运费
-        BigDecimal postFee = new BigDecimal("1500");
+        BigDecimal postFee = new BigDecimal("0");
 
         // 3.生成订单信息
         Order order = new Order();
