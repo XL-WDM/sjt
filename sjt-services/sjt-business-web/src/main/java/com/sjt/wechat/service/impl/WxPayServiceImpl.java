@@ -94,12 +94,13 @@ public class WxPayServiceImpl implements IWxPayService {
 
         PayRequest payRequest = new PayRequest();
         payRequest.setOpenid(userOauths.getOauthId());
-        payRequest.setOrderAmount(order.getPayment().doubleValue());
+        payRequest.setOrderAmount(1D);
         payRequest.setOrderId(order.getOrderNo());
         payRequest.setPayTypeEnum(BestPayTypeEnum.WXPAY_H5);
         payRequest.setSpbillCreateIp(LocalUtils.getIp());
         payRequest.setOrderName("sjt-pay");
 
+        log.info("【微信支付】 request -> {}", JsonUtils.toJson(payRequest));
         PayResponse pay = bestPayService.pay(payRequest);
         System.out.println(JsonUtils.toJson(pay));
 
