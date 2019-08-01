@@ -2,7 +2,6 @@ package com.sjt.business.api.impl;
 
 import com.sjt.business.api.dto.req.ProdctsParamDTO;
 import com.sjt.business.api.dto.req.QueryProductParamDTO;
-import com.sjt.business.api.dto.req.ShoppingCartParamDTO;
 import com.sjt.business.api.dto.res.CategoryProductsDTO;
 import com.sjt.business.api.dto.res.ProductCategoryDTO;
 import com.sjt.business.api.dto.res.ProductDetailDTO;
@@ -35,10 +34,10 @@ public class ProductApiService implements ProductApi {
     }
 
     @Override
-    public ResultDTO<List<ShoppingCartDTO>> getProductDetails(ShoppingCartParamDTO shoppingCartParamDTO) {
-        
+    public ResultDTO<List<ShoppingCartDTO>> getProductDetails(@RequestBody List<Long> ids) {
+        List<ShoppingCartDTO> productByIds = iProductService.getProductByIds(ids);
 
-        return ResultDTO.success();
+        return ResultDTO.data(productByIds);
     }
 
     @Override

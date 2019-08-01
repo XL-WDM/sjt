@@ -13,10 +13,16 @@ import java.math.BigDecimal;
 public class ShoppingCartDTO {
 
     /**
+     * 商品id
+     */
+    @ApiModelProperty("商品id")
+    private Long productId;
+
+    /**
      * 商品规格id
      */
     @ApiModelProperty("商品规格id")
-    private Long id;
+    private Long productSpecId;
 
     /**
      * 商品图片

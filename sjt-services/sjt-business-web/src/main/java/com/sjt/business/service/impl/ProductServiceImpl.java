@@ -44,7 +44,7 @@ public class ProductServiceImpl implements IProductService {
     private ProductPicMapper productPicMapper;
 
     @Autowired
-    private ProductSpecMapper productMultiSpecMapper;
+    private ProductSpecMapper productSpecMapper;
 
     @Override
     public ProductCategoryDTO getProductCategory(Long id) {
@@ -109,7 +109,7 @@ public class ProductServiceImpl implements IProductService {
         ProductDetailDTO productDetailDTO = BeanCopierUtils.copyBean(product, ProductDetailDTO.class);
 
         // 2-2.商品规格处理
-        List<ProductSpec> productSpecs = productMultiSpecMapper.selectList(new EntityWrapper<ProductSpec>()
+        List<ProductSpec> productSpecs = productSpecMapper.selectList(new EntityWrapper<ProductSpec>()
                 .eq("product_id", product.getId()).orderBy("price"));
         CheckObjects.isEmpty(productSpecs, "商品规格获取失败");
         List<ProductSpecDTO> productSpecDTOS = productSpecs.stream().map(productSpec -> {
@@ -163,19 +163,30 @@ public class ProductServiceImpl implements IProductService {
         if (ids == null || ids.isEmpty()) {
             return new ArrayList<>();
         }
-/*
+
         // 2.查询
-        list<product> products = productmapper.selectlist(new entitywrapper<product>().in("id", ids));
+        List<ProductSpec> productSpecs = productSpecMapper.selectList(new EntityWrapper<ProductSpec>().in("id", ids));
+        CheckObjects.isEmpty(productSpecs, "商品不存在");
 
-        // 3.entity -> dto
-        list<productdetaildto> productdetaildtos = products.stream().map(product -> {
-            productdetaildto productdetaildto = beancopierutils.copybean(product, productdetaildto.class);
-            productdetaildto.setprice(priceutils.centtoyuan(product.getprice()));
-            productdetaildto.setdiscountamount(priceutils.centtoyuan(product.getdiscountamount()));
-            return productdetaildto;
-        }).collect(collectors.tolist());*/
+        // 3.结果处理
+        List<ShoppingCartDTO> shoppingCartDTOS = productSpecs.stream().map(ps -> {
+            ShoppingCartDTO shoppingCartDTO = new ShoppingCartDTO();
+            // 3-1.查询商品主题信息
+            Product product = productMapper.selectById(ps.getProductId());
 
-        return null;
+            // 3-2.设置结果
+            shoppingCartDTO.setProductId(product.getId());
+            shoppingCartDTO.setProductSpecId(ps.getId());
+            shoppingCartDTO.setProductName(product.getProductName());
+            shoppingCartDTO.setProductSpecName(ps.getSpecName());
+            shoppingCartDTO.setImgUrl(ps.getSpecImage());
+            shoppingCartDTO.setDescript(product.getDescript());
+            shoppingCartDTO.setPrice(PriceUtils.centToYuan(ps.getPrice()));
+
+            return shoppingCartDTO;
+        }).collect(Collectors.toList());
+
+        return shoppingCartDTOS;
     }
 
     @Override
@@ -191,7 +202,7 @@ public class ProductServiceImpl implements IProductService {
             ProductDetailDTO productDetailDTO = BeanCopierUtils.copyBean(p, ProductDetailDTO.class);
 
             // 3.商品规格处理
-            List<ProductSpec> productSpecs = productMultiSpecMapper.selectList(new EntityWrapper<ProductSpec>()
+            List<ProductSpec> productSpecs = productSpecMapper.selectList(new EntityWrapper<ProductSpec>()
                     .eq("product_id", p.getId()).orderBy("price"));
             CheckObjects.isEmpty(productSpecs, "商品规格获取失败");
             // 3-1.结果处理
@@ -252,7 +263,7 @@ public class ProductServiceImpl implements IProductService {
                 ProductDetailDTO productDetailDTO = BeanCopierUtils.copyBean(p, ProductDetailDTO.class);
 
                 // 4.商品规格处理
-                List<ProductSpec> productSpecs = productMultiSpecMapper.selectList(new EntityWrapper<ProductSpec>()
+                List<ProductSpec> productSpecs = productSpecMapper.selectList(new EntityWrapper<ProductSpec>()
                         .eq("product_id", p.getId()).orderBy("price"));
                 CheckObjects.isEmpty(productSpecs, "商品规格获取失败");
                 // 4-1.结果处理
@@ -365,7 +376,7 @@ public class ProductServiceImpl implements IProductService {
             ProductDetailDTO productDetailDTO = BeanCopierUtils.copyBean(p, ProductDetailDTO.class);
 
             // 5.商品规格处理
-            List<ProductSpec> productSpecs = productMultiSpecMapper.selectList(new EntityWrapper<ProductSpec>()
+            List<ProductSpec> productSpecs = productSpecMapper.selectList(new EntityWrapper<ProductSpec>()
                     .eq("product_id", p.getId()).orderBy("price"));
             CheckObjects.isEmpty(productSpecs, "商品规格获取失败");
             // 5-1.结果处理
