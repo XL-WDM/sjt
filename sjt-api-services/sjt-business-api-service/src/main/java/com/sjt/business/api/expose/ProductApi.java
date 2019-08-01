@@ -38,7 +38,7 @@ public interface ProductApi {
      * @param ids 商品id数组
      * @return
      */
-    @ApiOperation(value = "获取多个商品详情信息", response = ProductDetailDTO.class)
+    @ApiOperation(value = "获取多个商品详情信息", response = ShoppingCartDTO.class)
     @PostMapping("/open-api/details")
     ResultDTO<List<ShoppingCartDTO>> getProductDetails(List<Long> ids);
 
