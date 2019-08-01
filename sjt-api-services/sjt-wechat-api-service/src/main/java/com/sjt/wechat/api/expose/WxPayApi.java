@@ -1,6 +1,8 @@
 package com.sjt.wechat.api.expose;
 
 import com.sjt.common.base.result.ResultDTO;
+import com.sjt.wechat.api.dto.req.WxPayParamDTO;
+import com.sjt.wechat.api.dto.res.WxPayDTO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,9 +19,10 @@ public interface WxPayApi {
 
     /**
      * 微信小程序统一下单
+     * @param wxPayParamDTO
      * @return
      */
-    @ApiOperation(value = "微信小程序统一下单")
+    @ApiOperation(value = "微信小程序统一下单", response = WxPayDTO.class)
     @PostMapping("/unified-order")
-    ResultDTO<String> appletUnifiedOrder();
+    ResultDTO<WxPayDTO> appletUnifiedOrder(WxPayParamDTO wxPayParamDTO);
 }

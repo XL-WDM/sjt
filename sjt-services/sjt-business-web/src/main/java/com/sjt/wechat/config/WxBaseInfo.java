@@ -43,7 +43,17 @@ public class WxBaseInfo {
     private String appletAppsecret;
 
     /**
-     * 微信小程序关联的商户号
+     * 商户号
      */
-    private String appletMchId;
+    private String mchId;
+
+    /**
+     * 商户号秘钥
+     */
+    private String mchSecret;
+
+    /**
+     * 支付回调通知url
+     */
+    private String notifyUrl;
 }

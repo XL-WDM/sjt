@@ -21,4 +21,13 @@
             </if>
         )
     </select>
+
+    <select id="selectOneByUserIdAndType" parameterMap="userOauthsParame" resultMap="userOauthsResult">
+        select
+        <include refid="base_all" />
+        from t_user_oauths
+        where status = '1'
+        and user_id = #{userId}
+        and oauth_type = #{oauthType}
+    </select>
 </mapper>

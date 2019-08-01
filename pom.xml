@@ -146,11 +146,11 @@
             <version>1.0.1</version>
         </dependency>
 
-        <!-- Xstream -->
+        <!-- best-pay-sdk -->
         <dependency>
-            <groupId>com.thoughtworks.xstream</groupId>
-            <artifactId>xstream</artifactId>
-            <version>1.4.10</version>
+            <groupId>cn.springboot</groupId>
+            <artifactId>best-pay-sdk</artifactId>
+            <version>1.2.0</version>
         </dependency>
 
         <!-- 单元测试 -->

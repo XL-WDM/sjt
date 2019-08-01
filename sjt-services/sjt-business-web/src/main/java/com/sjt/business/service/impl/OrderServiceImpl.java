@@ -147,6 +147,7 @@ public class OrderServiceImpl implements IOrderService {
         order.setTotalAmount(sumTotalAmount);
         // 订单总金额(商品总金额 + 运费 - (优惠金额、红包抵扣、积分抵扣))
         order.setOrgAmount(sumTotalAmount.add(postFee).subtract(discountSumAmount));
+        order.setPayment(order.getOrgAmount());
         order.setDiscountAmount(discountSumAmount);
         order.setPostFee(postFee);
         order.setStatus(DataBaseConstant.OrderStatus.TO_BE_PAID.getCode());

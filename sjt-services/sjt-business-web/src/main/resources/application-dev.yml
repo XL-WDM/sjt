@@ -26,6 +26,8 @@ sjt:
     open-appsecret: 8ba97e7f0ed649472718d1f4abaef62d
     applet-id: wx221fcafef33f2b87
     applet-appsecret: e13e84260a7915c690525f671c00ab72
-    applet-mch-id: 1543508991
+    mch-id: 1543508991
+    mch-id-secret: 1543508991
+    notifyUrl: http://www.smallbug.top/sjt/wx/pay/notify
 #    applet-id: wxd46d12c41a64720f
 #    applet-appsecret: f73b6b99027c6232307a503336087d2c

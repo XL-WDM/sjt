@@ -39,6 +39,13 @@ public class BaseConstant {
     }
 
     /**
+     * 转译
+     */
+    public static class Unicode {
+        public static final String EQUAL = "\\u003d";
+    }
+
+    /**
      * 币种
      */
     public static class FeeType {

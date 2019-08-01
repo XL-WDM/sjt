@@ -4,9 +4,17 @@ import com.thoughtworks.xstream.XStream;
 import org.dom4j.Document;
 import org.dom4j.Element;
 import org.dom4j.io.SAXReader;
+import org.simpleframework.xml.Serializer;
+import org.simpleframework.xml.core.Persister;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import java.io.ByteArrayInputStream;
 import java.io.InputStream;
+import java.io.StringWriter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -16,11 +24,6 @@ import java.util.Map;
  * @author huyilan
  */
 public class XmlUtils {
-
-    /**
-     * 扩展xstream使其支持CDATA
-     */
-    private static XStream xstream = new XStream();
 
 	/**
 	 * 解析微信发来的请求（XML）
@@ -56,14 +59,69 @@ public class XmlUtils {
 	}
 
 	/**
-	 * 文本消息对象转换成xml
-	 * 
-	 * @param textMessage
-	 *            文本消息对象
-	 * @return xml
+	 * xml -> 对象
+	 * @param xml
+	 * @param objClass
+	 * @param <T>
+	 * @return
 	 */
-	public static <M> String messageToXml(M m) {
-		xstream.alias("xml", m.getClass());
-		return xstream.toXML(m);
+	public static <T> T toObject(String xml, Class<T> objClass) {
+		Persister serializer = new Persister();
+
+		try {
+			return serializer.read(objClass, xml);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+
+	/**
+	 * 对象 -> xml
+	 * @param obj
+	 * @return
+	 */
+	public static String toString(Object obj) {
+		Serializer serializer = new Persister();
+
+		try (StringWriter output = new StringWriter()) {
+			serializer.write(obj, output);
+
+			return output.toString();
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+
+	/**
+	 * xml -> Map
+	 * @param strXML
+	 * @return
+	 */
+	public static Map<String, String> toMap(String strXML) {
+		try (InputStream stream = new ByteArrayInputStream(strXML.getBytes("UTF-8"));) {
+
+			Map<String, String> data = new HashMap(16);
+
+			DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
+			DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
+			org.w3c.dom.Document doc = documentBuilder.parse(stream);
+			doc.getDocumentElement().normalize();
+			NodeList nodeList = doc.getDocumentElement().getChildNodes();
+
+			for(int idx = 0; idx < nodeList.getLength(); ++idx) {
+				Node node = nodeList.item(idx);
+				if (node.getNodeType() == 1) {
+					org.w3c.dom.Element element = (org.w3c.dom.Element)node;
+					data.put(element.getNodeName(), element.getTextContent());
+				}
+			}
+
+			return data;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
 	}
 }

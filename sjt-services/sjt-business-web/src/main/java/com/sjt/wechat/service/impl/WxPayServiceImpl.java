@@ -1,15 +1,25 @@
 package com.sjt.wechat.service.impl;
 
+import com.alibaba.fastjson.JSONObject;
+import com.sjt.business.constant.DataBaseConstant;
+import com.sjt.business.entity.Address;
+import com.sjt.business.entity.Order;
+import com.sjt.business.entity.UserOauths;
+import com.sjt.business.mapper.AddressMapper;
+import com.sjt.business.mapper.OrderMapper;
+import com.sjt.business.mapper.UserOauthsMapper;
+import com.sjt.business.web.config.WebUserContext;
 import com.sjt.common.base.constant.BaseConstant;
+import com.sjt.common.base.constant.ResultConstant;
 import com.sjt.common.exceptions.GlobalException;
-import com.sjt.common.utils.LocalUtils;
-import com.sjt.common.utils.MD5Utils;
-import com.sjt.common.utils.XstreamUtils;
+import com.sjt.common.utils.*;
+import com.sjt.wechat.api.dto.req.WxPayParamDTO;
+import com.sjt.wechat.api.dto.res.WxPayDTO;
 import com.sjt.wechat.config.WxBaseInfo;
 import com.sjt.wechat.constant.WechatConstant;
 import com.sjt.wechat.service.IWxPayService;
-import com.sjt.wechat.vo.req.pay.WxAppletUnifiedOrderVO;
-import io.swagger.annotations.Authorization;
+import com.sjt.wechat.vo.req.pay.WxPayUnifiedRequestVO;
+import com.sjt.wechat.vo.res.pay.WxPayUnifiedResponseVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -18,7 +28,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.client.RestTemplate;
 
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
@@ -34,66 +43,95 @@ public class WxPayServiceImpl implements IWxPayService {
     private WxBaseInfo wxBaseInfo;
 
     @Autowired
+    private OrderMapper orderMapper;
+
+    @Autowired
+    private AddressMapper addressMapper;
+
+    @Autowired
+    private UserOauthsMapper userOauthsMapper;
+
+    @Autowired
     private RestTemplate restTemplate;
 
     @Override
-    public String appletUnifiedOrder() {
+    public WxPayDTO appletUnifiedOrder(WxPayParamDTO wxPayParamDTO) {
+        // 1.参数校验
+        CheckObjects.isNull(wxPayParamDTO, ResultConstant.PARAMETERS_CANNOT_BE_NULL);
+        CheckObjects.isNull(wxPayParamDTO.getOrderId(), "请选择订单");
+        CheckObjects.isNull(wxPayParamDTO.getAddressId(), "请选择物流地址");
 
-        // 获取参数
-        String appid = wxBaseInfo.getAppletId();
-        String body = "山尖田-抗霾舒畅柠果膏";
-        String deviceInfo = "WEB";
-        String mchId = wxBaseInfo.getAppletMchId();
+        // 2.查询订单
+        Order order = orderMapper.selectById(wxPayParamDTO.getOrderId());
+        CheckObjects.isNull(order, "订单不存在");
+
+        // 3.查询物流地址
+        Address address = new Address();
+        address.setId(wxPayParamDTO.getAddressId());
+        Long userId = WebUserContext.getContext().getId();
+        address.setUserId(userId);
+        address = addressMapper.selectAddressByIdAndUserId(address);
+        CheckObjects.isNull(address, "物流地址不存在");
+
+        // 4.获取用户openid
+        UserOauths userOauths = new UserOauths();
+        userOauths.setUserId(userId);
+        userOauths.setOauthType(DataBaseConstant.OauthType.WX_APPLET.getCode());
+        userOauths = userOauthsMapper.selectOneByUserIdAndType(userOauths);
+        CheckObjects.isNull(userOauths, "用户 openid 为空");
+
+        // 5.设置物流信息
+        order.setAddressId(address.getId());
+        order.updateById();
+
+        // 6.支付信息封装
+        String body = "山尖田-支付";
+        // 随机字符串
         String nonceStr = MD5Utils.getMD5(UUID.randomUUID().toString());
-        nonceStr = "ibuaiVcKdpRxkhJA";
-
-        // 参数封装
-        WxAppletUnifiedOrderVO vo = new WxAppletUnifiedOrderVO();
-        vo.setAppid(appid);
-        vo.setMch_id(mchId);
-        vo.setDevice_info(deviceInfo);
-        vo.setSign_type(BaseConstant.Character.MD5);
+        WxPayUnifiedRequestVO vo = new WxPayUnifiedRequestVO();
+        vo.setAppid(wxBaseInfo.getAppletId());
+        vo.setMchId(wxBaseInfo.getMchId());
+        vo.setSignType(BaseConstant.Character.MD5);
         vo.setBody(body);
-        vo.setDetail("hahaha");
-        vo.setOut_trade_no("6555574723953176576");
-        vo.setFee_type(BaseConstant.FeeType.CNY);
-        vo.setTotal_fee(1);
-        vo.setSpbill_create_ip(LocalUtils.getIp());
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(BaseConstant.FormatDate.SIMPLE_DATE_TIME);
-        vo.setTime_expire(LocalDateTime.now().format(formatter));
-        vo.setTime_expire(LocalDateTime.now().plusDays(1).format(formatter));
-        vo.setNotify_url("http://www.baidu.com");
-        vo.setTrade_type("JSAPI");
-        vo.setProduct_id("6555574723953176576");
-        vo.setOpenid("otXxp5NykBfEBg18lWcdvw_RbEJc");
-        vo.setNonce_str(nonceStr);
+        vo.setOutTradeNo(order.getOrderNo());
+        vo.setNotifyUrl(wxBaseInfo.getNotifyUrl());
+        vo.setFeeType(BaseConstant.FeeType.CNY);
+        vo.setTotalFee(order.getPayment().longValue());
+        vo.setSpbillCreateIp(LocalUtils.getIp());
+        vo.setTradeType("JSAPI");
+        vo.setProductId(order.getOrderNo());
+        vo.setOpenid(userOauths.getOauthId());
+        vo.setNonceStr(nonceStr);
+        HashMap map = JSONObject.parseObject(JSONObject.toJSONString(vo), HashMap.class);
+        String sign = createSign(map, wxBaseInfo.getAppletAppsecret());
+        vo.setSign(sign);
 
-        Map<String, String> map = new HashMap<>();
-        map.put("appid", appid);
-        map.put("mch_id", mchId);
-        map.put("nonce_str", nonceStr);
-        map.put("body", body);
-        map.put("device_info", deviceInfo);
-        vo.setSign(createSign(map, wxBaseInfo.getAppletAppsecret()));
-
-        // 生成xml
-        String xml = XstreamUtils.toXml(vo, "xml");
-
-        System.out.println(xml);
-
+        // 7.发起支付
         String url = WechatConstant.UNIFIED_ORDER;
-
-        ResponseEntity<String> entity = restTemplate.postForEntity(url, xml, String.class);
+        log.info("【微信支付】 request -> {}", JsonUtils.toJson(vo));
+        ResponseEntity<String> entity = restTemplate.postForEntity(url, XmlUtils.toString(vo), String.class);
         if (HttpStatus.OK != entity.getStatusCode()) {
-            log.error("# 微信小程序统一下单失败 -> status: {}", entity.getStatusCodeValue());
-            throw new GlobalException("微信小程序统一下单失败");
+            log.error("# 【微信支付发起失败】, 网络异常 -> status: {}", entity.getStatusCodeValue());
+            throw new GlobalException("微信支付发起失败, 网络异常");
+        }
+        WxPayUnifiedResponseVO wxPayUnifiedResponseVO = XmlUtils.toObject(entity.getBody(), WxPayUnifiedResponseVO.class);
+        log.info("【微信支付】 response -> {}", JsonUtils.toJson(wxPayUnifiedResponseVO));
+        if (wxPayUnifiedResponseVO.isFail()) {
+            throw new GlobalException("微信支付发起失败, msg: " + wxPayUnifiedResponseVO.getReturnMsg());
+        }
+        if (!wxPayUnifiedResponseVO.isSuccess()) {
+            throw new GlobalException("微信支付发起失败, msg: " + wxPayUnifiedResponseVO.getErrCode());
         }
 
-        String resultXml = entity.getBody();
+        // 8.处理结果
+        WxPayDTO wxPayDTO = new WxPayDTO();
+        wxPayDTO.setNonceStr(nonceStr);
+        wxPayDTO.setPaySign(sign);
+        wxPayDTO.setSignType(BaseConstant.Character.MD5);
+        wxPayDTO.setTimeStamp(String.valueOf(System.currentTimeMillis()));
+        wxPayDTO.setPrepayId("prepay_id" + BaseConstant.Unicode.EQUAL + wxPayUnifiedResponseVO.getPrepayId());
 
-        System.out.println(resultXml);
-
-        return resultXml;
+        return wxPayDTO;
     }
 
     /**
@@ -120,7 +158,7 @@ public class WxPayServiceImpl implements IWxPayService {
             }
             builder.append(entry.getKey());
             builder.append("=");
-            builder.append(entry.getValue());
+            builder.append(String.valueOf(entry.getValue()));
         }
 
         String keyValue = builder.toString();

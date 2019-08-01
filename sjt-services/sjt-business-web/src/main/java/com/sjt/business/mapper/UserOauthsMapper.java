@@ -19,4 +19,11 @@ public interface UserOauthsMapper extends BaseMapper<UserOauths> {
      * @return
      */
     List<UserOauths> selectOneByOauthIdAndUnionId(@Param("oauthId") String oauthId, @Param("unionId") String unionId);
+
+    /**
+     * 通过 用户id, 授权类型 查询绑定状态的授权信息
+     * @param userOauths
+     * @return
+     */
+    UserOauths selectOneByUserIdAndType(UserOauths userOauths);
 }
