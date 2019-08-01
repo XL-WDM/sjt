@@ -1,5 +1,9 @@
 package com.sjt.wechat.service.impl;
 
+import com.lly835.bestpay.enums.BestPayTypeEnum;
+import com.lly835.bestpay.model.PayRequest;
+import com.lly835.bestpay.model.PayResponse;
+import com.lly835.bestpay.service.impl.BestPayServiceImpl;
 import com.sjt.business.constant.DataBaseConstant;
 import com.sjt.business.entity.Address;
 import com.sjt.business.entity.Order;
@@ -55,6 +59,9 @@ public class WxPayServiceImpl implements IWxPayService {
     @Autowired
     private RestTemplate restTemplate;
 
+    @Autowired
+    private BestPayServiceImpl bestPayService;
+
     @Override
     public WxPayDTO appletUnifiedOrder(WxPayParamDTO wxPayParamDTO) {
         // 1.参数校验
@@ -85,7 +92,18 @@ public class WxPayServiceImpl implements IWxPayService {
         order.setAddressId(address.getId());
         order.updateById();
 
-        // 6.支付信息封装
+        PayRequest payRequest = new PayRequest();
+        payRequest.setOpenid(userOauths.getOauthId());
+        payRequest.setOrderAmount(order.getPayment().doubleValue());
+        payRequest.setOrderId(order.getOrderNo());
+        payRequest.setPayTypeEnum(BestPayTypeEnum.WXPAY_H5);
+        payRequest.setSpbillCreateIp(LocalUtils.getIp());
+        payRequest.setOrderName("sjt-pay");
+
+        PayResponse pay = bestPayService.pay(payRequest);
+        System.out.println(JsonUtils.toJson(pay));
+
+        /*// 6.支付信息封装
         String body = "sjt-pay";
         // 随机字符串
         String nonceStr = MD5Utils.getMD5(UUID.randomUUID().toString());
@@ -132,7 +150,9 @@ public class WxPayServiceImpl implements IWxPayService {
         wxPayDTO.setTimeStamp(String.valueOf(System.currentTimeMillis()));
         wxPayDTO.setPrepayId("prepay_id" + BaseConstant.Unicode.EQUAL + wxPayUnifiedResponseVO.getPrepayId());
 
-        return wxPayDTO;
+        return wxPayDTO;*/
+
+        return null;
     }
 
     /**
@@ -170,5 +190,9 @@ public class WxPayServiceImpl implements IWxPayService {
         builder.append("key=").append(signKey);
 
         return MD5Utils.getMD5(builder.toString()).toUpperCase();
+    }
+
+    public static void main(String[] args) {
+
     }
 }

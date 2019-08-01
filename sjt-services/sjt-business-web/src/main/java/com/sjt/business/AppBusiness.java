@@ -2,6 +2,7 @@ package com.sjt.business;
 
 import com.sjt.common.utils.SnowflakeIdUtils;
 import com.sjt.config.mybatis.plus.annotation.EnableMybatisPlusOptimization;
+import com.sjt.wechat.config.annotation.EnableBestPay;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -18,6 +19,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @MapperScan({"com.sjt.business.mapper"})
 @EnableSwagger2
 @EnableMybatisPlusOptimization
+@EnableBestPay
 public class AppBusiness {
     public static void main(String[] args) {
         SpringApplication.run(AppBusiness.class, args);
