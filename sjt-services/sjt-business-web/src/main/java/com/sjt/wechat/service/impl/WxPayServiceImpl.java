@@ -9,6 +9,7 @@ import com.sjt.business.mapper.OrderMapper;
 import com.sjt.business.mapper.UserOauthsMapper;
 import com.sjt.business.web.config.WebUserContext;
 import com.sjt.common.base.constant.BaseConstant;
+import com.sjt.common.base.constant.CharsetConstant;
 import com.sjt.common.base.constant.ResultConstant;
 import com.sjt.common.exceptions.GlobalException;
 import com.sjt.common.utils.*;
@@ -27,6 +28,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.client.RestTemplate;
 
+import java.io.UnsupportedEncodingException;
+import java.nio.charset.Charset;
 import java.util.*;
 
 /**
@@ -106,6 +109,7 @@ public class WxPayServiceImpl implements IWxPayService {
         // 7.发起支付
         String url = WechatConstant.UNIFIED_ORDER;
         log.info("【微信支付】 request -> {}", JsonUtils.toJson(vo));
+
         ResponseEntity<String> entity = restTemplate.postForEntity(url, XmlUtils.toString(vo), String.class);
         if (HttpStatus.OK != entity.getStatusCode()) {
             log.error("# 【微信支付发起失败】, 网络异常 -> status: {}", entity.getStatusCodeValue());
