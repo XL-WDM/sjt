@@ -1,6 +1,5 @@
 package com.sjt.wechat.service.impl;
 
-import com.alibaba.fastjson.JSONObject;
 import com.sjt.business.constant.DataBaseConstant;
 import com.sjt.business.entity.Address;
 import com.sjt.business.entity.Order;
@@ -28,7 +27,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.client.RestTemplate;
 
-import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 /**
@@ -85,7 +83,7 @@ public class WxPayServiceImpl implements IWxPayService {
         order.updateById();
 
         // 6.支付信息封装
-        String body = "山尖田-支付";
+        String body = "sjt-pay";
         // 随机字符串
         String nonceStr = MD5Utils.getMD5(UUID.randomUUID().toString());
         WxPayUnifiedRequestVO vo = new WxPayUnifiedRequestVO();
@@ -96,14 +94,13 @@ public class WxPayServiceImpl implements IWxPayService {
         vo.setOutTradeNo(order.getOrderNo());
         vo.setNotifyUrl(wxBaseInfo.getNotifyUrl());
         vo.setFeeType(BaseConstant.FeeType.CNY);
-        vo.setTotalFee(order.getPayment().longValue());
+        vo.setTotalFee(order.getPayment().intValue());
         vo.setSpbillCreateIp(LocalUtils.getIp());
         vo.setTradeType("JSAPI");
         vo.setProductId(order.getOrderNo());
         vo.setOpenid(userOauths.getOauthId());
         vo.setNonceStr(nonceStr);
-        HashMap map = JSONObject.parseObject(JSONObject.toJSONString(vo), HashMap.class);
-        String sign = createSign(map, wxBaseInfo.getAppletAppsecret());
+        String sign = createSign(MapUtils.buildMap(vo), wxBaseInfo.getMchSecret());
         vo.setSign(sign);
 
         // 7.发起支付
@@ -143,34 +140,31 @@ public class WxPayServiceImpl implements IWxPayService {
      * @param nonce_str
      * @return
      */
-    private String createSign(Map<String, String> map, String key) {
-        if (map == null || StringUtils.isEmpty(key)) {
+    private String createSign(Map<String, String> map, String signKey) {
+        if (map == null || StringUtils.isEmpty(signKey)) {
             return null;
         }
 
         StringBuilder builder = new StringBuilder();
 
-        map = new TreeMap<>(map);
+        Set<Map.Entry<String, String>> entries = new TreeMap<>(map).entrySet();
+        Iterator<Map.Entry<String, String>> iterator = entries.iterator();
 
-        for (Map.Entry<String, String> entry : map.entrySet()) {
-            if (builder.length() != 0) {
-                builder.append(BaseConstant.Character.AND);
+        while (iterator.hasNext()) {
+            Map.Entry<String, String> next = iterator.next();
+            String key = next.getKey();
+            String value = next.getValue();
+            if (StringUtils.isEmpty(key) || "sign".equals(key) || StringUtils.isEmpty(value)) {
+                continue;
             }
-            builder.append(entry.getKey());
-            builder.append("=");
-            builder.append(String.valueOf(entry.getValue()));
+            builder.append(key)
+                    .append("=")
+                    .append(value)
+                    .append(BaseConstant.Character.AND);
         }
 
-        String keyValue = builder.toString();
+        builder.append("key=").append(signKey);
 
-        String signTemp = keyValue + "&key=" + key;
-
-        return MD5Utils.getMD5(signTemp);
-    }
-
-    public static void main(String[] args){
-        String s = "appid=wxd930ea5d5a258f4f&body=test&device_info=1000&mch_id=10000100&nonce_str=ibuaiVcKdpRxkhJA&key=192006250b4c09247ec02edce69f6a2d";
-        String md5 = MD5Utils.getMD5(s);
-        System.out.println(md5);
+        return MD5Utils.getMD5(builder.toString()).toUpperCase();
     }
 }

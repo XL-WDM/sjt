@@ -114,7 +114,7 @@ public class WxPayUnifiedRequestVO {
     @Element(
         name = "total_fee"
     )
-    private Long totalFee;
+    private Integer totalFee;
 
     /**
      * 终端IP

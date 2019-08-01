@@ -19,7 +19,7 @@ sjt:
   swagger:
     title: 'Swagger api 管理平台'
     enable: true
-  # 微信
+  # 微信(操作 sjt@123456)
   wechat:
     app-id: wx73770f8f029e1b50
     appsecret: 7afde07a322e7c33bc5e0fbdd340ec28
@@ -28,6 +28,6 @@ sjt:
     applet-id: wx221fcafef33f2b87
     applet-appsecret: e13e84260a7915c690525f671c00ab72
     mch-id: 1543508991
-    mch-id-secret: 1543508991
+    mch-secret: xMKkQGzG7r4xb54gaCzkocIc4zrDfkAP8EZmz
     notifyUrl: http://www.smallbug.top/sjt/wx/pay/notify
 
