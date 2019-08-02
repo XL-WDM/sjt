@@ -133,11 +133,12 @@ public class WxPayServiceImpl implements IWxPayService {
                 "微信支付发起失败, err_code: " + payResponse.getErrCode(),
                 () -> {log.error("## 【微信支付发起失败】 err_code -> {}", payResponse.getReturnMsg());});
 
-        // 8.生成签名
+        // 8.签名处理
         String timeStamp = String.valueOf(System.currentTimeMillis());
         String packAge = "prepay_id" + BaseConstant.Character.EQUAL + payResponse.getPrepayId();
         String resultNonceStr = payResponse.getNonceStr();
 
+        // 8-1.创建map
         Map<String, String> map = new HashMap(8);
         map.put("appId", payResponse.getAppid());
         map.put("timeStamp", timeStamp);
@@ -145,8 +146,8 @@ public class WxPayServiceImpl implements IWxPayService {
         map.put("package", packAge);
         map.put("signType", BaseConstant.Character.MD5);
 
+        // 8-2.生成签名
         String resultSign = PaySignatureUtils.wxSign(map, wxBaseInfo.getMchSecret());
-
 
         // 9.处理结果
         WxPayDTO wxPayDTO = new WxPayDTO();
