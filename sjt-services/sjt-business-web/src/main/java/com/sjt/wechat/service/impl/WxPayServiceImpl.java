@@ -10,7 +10,6 @@ import com.sjt.business.mapper.UserOauthsMapper;
 import com.sjt.business.web.config.WebUserContext;
 import com.sjt.common.base.constant.BaseConstant;
 import com.sjt.common.base.constant.ResultConstant;
-import com.sjt.common.exceptions.GlobalException;
 import com.sjt.common.utils.*;
 import com.sjt.wechat.api.dto.req.WxPayParamDTO;
 import com.sjt.wechat.api.dto.res.WxPayDTO;
@@ -54,6 +53,8 @@ public class WxPayServiceImpl implements IWxPayService {
     @Autowired
     private RestTemplate restTemplate;
 
+    private static final String PAY_ORDER_BODY = "山尖田-订单编号";
+
     @Override
     public WxPayDTO wxH5UnifiedOrder(WxPayParamDTO wxPayParamDTO) {
         // 1.参数校验
@@ -89,14 +90,12 @@ public class WxPayServiceImpl implements IWxPayService {
         order.updateById();
 
         // 6.支付信息封装
-        String body = "sjt-pay";
-        // 随机字符串
         String nonceStr = RandomUtils.getRandomString();
         WxPayUnifiedRequestVO vo = new WxPayUnifiedRequestVO();
         vo.setAppid(wxBaseInfo.getAppletId());
         vo.setMchId(wxBaseInfo.getMchId());
         vo.setSignType(BaseConstant.Character.MD5);
-        vo.setBody(body);
+        vo.setBody(PAY_ORDER_BODY.concat(order.getOrderNo()));
         vo.setOutTradeNo(order.getOrderNo());
         vo.setNotifyUrl(wxBaseInfo.getNotifyUrl());
         vo.setFeeType(BaseConstant.FeeType.CNY);
@@ -181,18 +180,5 @@ public class WxPayServiceImpl implements IWxPayService {
 
         // 3.处理结果
 
-    }
-
-    public static void main(String[] args){
-        HashMap<String, String> map = new HashMap<>();
-//        map.put("package", "prepay_id=wx02172350517303a36993132b1502893600");
-
-        map.put("timeStamp", "1564734096521");
-        map.put("prepayId", "wx0216282689383967acfcb8ff1402535100");
-        map.put("nonceStr", "aT863zqcmcMLLQWE");
-        map.put("signType", "MD5");
-        String si = PaySignatureUtils.wxSign(map, "ZOWWRiOSxly8gtgZE9aNWFrwp8taV4wP");
-        // C25B620F8183F93EBF3B38FCA25CB161
-        System.out.println(si);
     }
 }
