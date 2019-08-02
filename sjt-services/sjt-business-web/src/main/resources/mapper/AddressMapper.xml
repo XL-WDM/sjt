@@ -9,7 +9,7 @@
         door_number, tag, contacts_call, is_default, status
     </sql>
 
-    <select id="selectAddressByIdAndUserId" parameterMap="addressParame" resultMap="addressResult">
+    <select id="selectAddressByIdAndUserId" parameterType="java.lang.Long" resultMap="addressResult">
         select
         <include refid="base_all" />
         from t_address

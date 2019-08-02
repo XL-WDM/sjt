@@ -52,4 +52,15 @@ public class PaySignatureUtils {
 
         return MD5Utils.getMD5(builder.toString()).toUpperCase();
     }
+
+    /**
+     * 微信验签
+     * @param params
+     * @param signKey
+     * @return
+     */
+    public static Boolean vxVerify(Map<String, String> params, String signKey) {
+        String sign = wxSign(params, signKey);
+        return sign.equals(params.get("sign"));
+    }
 }

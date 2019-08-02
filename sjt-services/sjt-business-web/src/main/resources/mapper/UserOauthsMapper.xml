@@ -22,7 +22,7 @@
         )
     </select>
 
-    <select id="selectOneByUserIdAndType" parameterMap="userOauthsParame" resultMap="userOauthsResult">
+    <select id="selectOneByUserIdAndType" parameterType="java.lang.String" resultMap="userOauthsResult">
         select
         <include refid="base_all" />
         from t_user_oauths

@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.util.Map;
+
 /**
  * 微信支付
  * @author: yilan.hu
@@ -35,5 +37,5 @@ public interface WxPayApi {
      */
     @ApiOperation(value = "微信支付异步回调")
     @PostMapping("/open-api/notify")
-    ModelAndView payNotify(@RequestBody String notifyData);
+    ModelAndView payNotify(@RequestBody String notifyData, Map map);
 }

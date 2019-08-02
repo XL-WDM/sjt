@@ -15,7 +15,7 @@ public class ProdctsParamDTO extends PageParamDTO {
     /**
      * 商品分类Id
      */
-    @ApiModelProperty(value = "商品分类Id", example = "0")
+    @ApiModelProperty(value = "商品分类Id")
     private Long categoryId;
 
     /**

@@ -97,10 +97,7 @@ public class AddressServiceImpl implements IAddressService {
         final User user = WebUserContext.getContext();
 
         // 3.查询
-        Address address = new Address();
-        address.setId(id);
-        address.setUserId(user.getId());
-        address = addressMapper.selectAddressByIdAndUserId(address);
+        Address address = addressMapper.selectAddressByIdAndUserId(id, user.getId());
         CheckObjects.isNull(address, "收货地址不存在");
 
         // 4.Entity -> DTO
@@ -134,10 +131,7 @@ public class AddressServiceImpl implements IAddressService {
         final User user = WebUserContext.getContext();
 
         // 3.查询
-        Address ar = new Address();
-        ar.setId(id);
-        ar.setUserId(user.getId());
-        ar = addressMapper.selectAddressByIdAndUserId(ar);
+        Address ar = addressMapper.selectAddressByIdAndUserId(id, user.getId());
         CheckObjects.isNull(ar, "该收货地址不存在");
 
         // 3.如果修改地址为默认地址, 则更新其他地址为非默认地址
@@ -164,14 +158,11 @@ public class AddressServiceImpl implements IAddressService {
         final User user = WebUserContext.getContext();
 
         // 3.查询
-        Address ar = new Address();
-        ar.setId(id);
-        ar.setUserId(user.getId());
-        ar = addressMapper.selectAddressByIdAndUserId(ar);
-        CheckObjects.isNull(ar, "该收货地址不存在");
+        Address address = addressMapper.selectAddressByIdAndUserId(id, user.getId());
+        CheckObjects.isNull(address, "该收货地址不存在");
 
         // 4.修改地址为不可用
-        ar.setStatus(BaseConstant.Status.NO.getCode());
-        CheckObjects.predicate(ar.updateById(), b -> !b, "删除收货地址失败");
+        address.setStatus(BaseConstant.Status.NO.getCode());
+        CheckObjects.predicate(address.updateById(), b -> !b, "删除收货地址失败");
     }
 }

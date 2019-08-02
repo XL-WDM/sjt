@@ -14,17 +14,24 @@ import com.sjt.business.mapper.UserOauthsMapper;
 import com.sjt.business.web.config.WebUserContext;
 import com.sjt.common.base.constant.BaseConstant;
 import com.sjt.common.base.constant.ResultConstant;
-import com.sjt.common.utils.CheckObjects;
-import com.sjt.common.utils.JsonUtils;
-import com.sjt.common.utils.LocalUtils;
+import com.sjt.common.exceptions.GlobalException;
+import com.sjt.common.utils.*;
 import com.sjt.wechat.api.dto.req.WxPayParamDTO;
 import com.sjt.wechat.api.dto.res.WxPayDTO;
 import com.sjt.wechat.config.WxBaseInfo;
+import com.sjt.wechat.constant.WechatConstant;
 import com.sjt.wechat.service.IWxPayService;
+import com.sjt.wechat.utils.PaySignatureUtils;
+import com.sjt.wechat.vo.req.pay.WxPayUnifiedRequestVO;
+import com.sjt.wechat.vo.res.pay.WxPayUnifiedResponseVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+
+import java.util.UUID;
 
 /**
  * @author: yilan.hu
@@ -64,24 +71,20 @@ public class WxPayServiceImpl implements IWxPayService {
         CheckObjects.isNull(order, "订单不存在");
 
         // 3.查询物流地址
-        Address address = new Address();
-        address.setId(wxPayParamDTO.getAddressId());
         Long userId = WebUserContext.getContext().getId();
-        address.setUserId(userId);
-        address = addressMapper.selectAddressByIdAndUserId(address);
+        Address address = addressMapper.selectAddressByIdAndUserId(wxPayParamDTO.getAddressId(), userId);
         CheckObjects.isNull(address, "物流地址不存在");
 
         // 4.获取用户openid
-        UserOauths userOauths = new UserOauths();
-        userOauths.setUserId(userId);
-        userOauths.setOauthType(DataBaseConstant.OauthType.WX_APPLET.getCode());
-        userOauths = userOauthsMapper.selectOneByUserIdAndType(userOauths);
+        UserOauths userOauths = userOauthsMapper.selectOneByUserIdAndType(String.valueOf(userId),
+                DataBaseConstant.OauthType.WX_APPLET.getCode());
         CheckObjects.isNull(userOauths, "用户 openid 为空");
 
-        // 5.设置物流信息
+        // 5.更新物流信息
         order.setAddressId(address.getId());
         order.updateById();
 
+        // 发起支付
         PayRequest payRequest = new PayRequest();
         payRequest.setOpenid(userOauths.getOauthId());
         payRequest.setOrderAmount(1D);
@@ -131,7 +134,6 @@ public class WxPayServiceImpl implements IWxPayService {
         // 7.发起支付
         String url = WechatConstant.UNIFIED_ORDER;
         log.info("【微信支付】 request -> {}", JsonUtils.toJson(vo));
-
         ResponseEntity<String> entity = restTemplate.postForEntity(url, XmlUtils.toString(vo), String.class);
         if (HttpStatus.OK != entity.getStatusCode()) {
             log.error("# 【微信支付发起失败】, 网络异常 -> status: {}", entity.getStatusCodeValue());
@@ -139,6 +141,7 @@ public class WxPayServiceImpl implements IWxPayService {
         }
         WxPayUnifiedResponseVO wxPayUnifiedResponseVO = XmlUtils.toObject(entity.getBody(), WxPayUnifiedResponseVO.class);
         log.info("【微信支付】 response -> {}", JsonUtils.toJson(wxPayUnifiedResponseVO));
+
         if (wxPayUnifiedResponseVO.isFail()) {
             throw new GlobalException("微信支付发起失败, msg: " + wxPayUnifiedResponseVO.getReturnMsg());
         }
@@ -152,10 +155,15 @@ public class WxPayServiceImpl implements IWxPayService {
         wxPayDTO.setPaySign(sign);
         wxPayDTO.setSignType(BaseConstant.Character.MD5);
         wxPayDTO.setTimeStamp(String.valueOf(System.currentTimeMillis()));
-        wxPayDTO.setPrepayId("prepay_id" + BaseConstant.Unicode.EQUAL + wxPayUnifiedResponseVO.getPrepayId());
-
-        return wxPayDTO;*/
+        wxPayDTO.setPrepayId("prepay_id" + BaseConstant.Unicode.EQUAL + wxPayUnifiedResponseVO.getPrepayId());*/
 
         return wxPayDTO;
+    }
+
+    @Override
+    public void payNotify(String notifyData) {
+        // 1.参数校验
+        CheckObjects.isNull(notifyData, ResultConstant.PARAMETERS_CANNOT_BE_NULL);
+        throw new GlobalException("签名验证失败");
     }
 }

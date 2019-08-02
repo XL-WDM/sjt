@@ -22,8 +22,9 @@ public interface UserOauthsMapper extends BaseMapper<UserOauths> {
 
     /**
      * 通过 用户id, 授权类型 查询绑定状态的授权信息
-     * @param userOauths
+     * @param userId 用户id
+     * @param oauthType 授权类型
      * @return
      */
-    UserOauths selectOneByUserIdAndType(UserOauths userOauths);
+    UserOauths selectOneByUserIdAndType(@Param("userId") String userId, @Param("oauthType") String oauthType);
 }

@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.util.Map;
+
 /**
  * @author: yilan.hu
  * @data: 2019/7/31
@@ -27,8 +29,14 @@ public class WxPayApiService implements WxPayApi {
     }
 
     @Override
-    public ModelAndView payNotify(@RequestBody String notifyData) {
-
+    public ModelAndView payNotify(@RequestBody String notifyData, Map map) {
+        try {
+            iWxPayService.payNotify(notifyData);
+        } catch (Exception e) {
+            map.put("code", "FAIL");
+            map.put("message", "handler error: " + e.getMessage());
+            return new ModelAndView("pay/pay-notify-fail", map);
+        }
 
         return new ModelAndView("pay/pay-notify-success");
     }

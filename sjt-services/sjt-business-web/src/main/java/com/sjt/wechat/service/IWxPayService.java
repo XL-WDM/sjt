@@ -15,4 +15,10 @@ public interface IWxPayService {
      * @return
      */
     WxPayDTO wxH5UnifiedOrder(WxPayParamDTO wxPayParamDTO);
+
+    /**
+     * 微信支付异步回调
+     * @param notifyData
+     */
+    void payNotify(String notifyData);
 }
