@@ -61,6 +61,15 @@ public class WxPayServiceImpl implements IWxPayService {
         // 2.查询订单
         Order order = orderMapper.selectById(wxPayParamDTO.getOrderId());
         CheckObjects.isNull(order, "订单不存在");
+        CheckObjects.predicate(order.getStatus(),
+                s -> DataBaseConstant.OrderStatus.CANCELLED.getCode().equals(s),
+                "订单已失效");
+        CheckObjects.predicate(order.getStatus(),
+                s -> DataBaseConstant.OrderStatus.COMPLETED.getCode().equals(s),
+                "订单已完成，请勿重复支付");
+        CheckObjects.predicate(order.getStatus(),
+                s -> !DataBaseConstant.OrderStatus.TO_BE_PAID.getCode().equals(s),
+                "请勿重复支付");
 
         // 3.查询物流地址
         Long userId = WebUserContext.getContext().getId();
