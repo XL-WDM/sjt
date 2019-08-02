@@ -31,7 +31,8 @@ public class WxPayResultVO {
      * 返回信息
      */
     @Element(
-        name = "return_msg"
+        name = "return_msg",
+            required = false
     )
     private String returnMsg;
 

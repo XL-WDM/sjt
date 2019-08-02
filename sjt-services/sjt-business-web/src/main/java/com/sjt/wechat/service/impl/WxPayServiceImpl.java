@@ -1,6 +1,5 @@
 package com.sjt.wechat.service.impl;
 
-import com.lly835.bestpay.service.impl.BestPayServiceImpl;
 import com.sjt.business.constant.DataBaseConstant;
 import com.sjt.business.entity.Address;
 import com.sjt.business.entity.Order;
@@ -20,6 +19,7 @@ import com.sjt.wechat.constant.WechatConstant;
 import com.sjt.wechat.service.IWxPayService;
 import com.sjt.wechat.utils.PaySignatureUtils;
 import com.sjt.wechat.vo.req.pay.WxPayUnifiedRequestVO;
+import com.sjt.wechat.vo.res.pay.WxPayNotifyResponseVO;
 import com.sjt.wechat.vo.res.pay.WxPayUnifiedResponseVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,9 +50,6 @@ public class WxPayServiceImpl implements IWxPayService {
 
     @Autowired
     private RestTemplate restTemplate;
-
-    @Autowired
-    private BestPayServiceImpl bestPayService;
 
     @Override
     public WxPayDTO wxH5UnifiedOrder(WxPayParamDTO wxPayParamDTO) {
@@ -137,8 +134,24 @@ public class WxPayServiceImpl implements IWxPayService {
 
     @Override
     public void payNotify(String notifyData) {
+        log.info("【微信支付结果通知】 request -> {}", notifyData);
+
         // 1.参数校验
         CheckObjects.isNull(notifyData, ResultConstant.PARAMETERS_CANNOT_BE_NULL);
-        throw new GlobalException("签名验证失败");
+
+        // 2.签名验证
+        CheckObjects.predicate(PaySignatureUtils.vxVerify(XmlUtils.toMap(notifyData), wxBaseInfo.getMchSecret()),
+                b -> !b, "签名验证失败");
+
+        // 3.xml转对象
+        WxPayNotifyResponseVO wxPayNotifyResponseVO = XmlUtils.toObject(notifyData, WxPayNotifyResponseVO.class, false);
+        CheckObjects.isNull(wxPayNotifyResponseVO, "报文解析失败",
+                () -> {log.error("【微信支付结果通知】 报文解析失败");});
+        CheckObjects.predicate(wxPayNotifyResponseVO.isFail(), status -> status,
+                "微信支付结果通知返回数据失败, 处理终止",
+                () -> {log.error("【微信支付结果通知】 失败");});
+
+        // 3.处理结果
+
     }
 }

@@ -14,8 +14,8 @@ public class WxPayUnifiedResponseVO extends WxPayResultVO {
      * 小程序ID
      */
     @Element(
-            name = "appid",
-            required = false
+        name = "appid",
+        required = false
     )
     private String appid;
 
@@ -23,8 +23,8 @@ public class WxPayUnifiedResponseVO extends WxPayResultVO {
      * 商户号
      */
     @Element(
-            name = "mch_id",
-            required = false
+        name = "mch_id",
+        required = false
     )
     private String mchId;
 
@@ -32,8 +32,8 @@ public class WxPayUnifiedResponseVO extends WxPayResultVO {
      * 设备号
      */
     @Element(
-            name = "device_info",
-            required = false
+        name = "device_info",
+        required = false
     )
     private String deviceInfo;
 
@@ -41,8 +41,8 @@ public class WxPayUnifiedResponseVO extends WxPayResultVO {
      * 随机字符串
      */
     @Element(
-            name = "nonce_str",
-            required = false
+        name = "nonce_str",
+        required = false
     )
     private String nonceStr;
 
@@ -50,8 +50,8 @@ public class WxPayUnifiedResponseVO extends WxPayResultVO {
      * 签名
      */
     @Element(
-            name = "sign",
-            required = false
+        name = "sign",
+        required = false
     )
     private String sign;
 
@@ -59,8 +59,8 @@ public class WxPayUnifiedResponseVO extends WxPayResultVO {
      * 交易类型
      */
     @Element(
-            name = "trade_type",
-            required = false
+        name = "trade_type",
+        required = false
     )
     private String tradeType;
 

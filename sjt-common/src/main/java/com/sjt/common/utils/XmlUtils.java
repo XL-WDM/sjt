@@ -66,10 +66,21 @@ public class XmlUtils {
 	 * @return
 	 */
 	public static <T> T toObject(String xml, Class<T> objClass) {
+		return toObject(xml, objClass, true);
+	}
+
+	/**
+	 * xml -> 对象
+	 * @param xml
+	 * @param objClass
+	 * @param <T>
+	 * @return
+	 */
+	public static <T> T toObject(String xml, Class<T> objClass, boolean strict) {
 		Persister serializer = new Persister();
 
 		try {
-			return serializer.read(objClass, xml);
+			return serializer.read(objClass, xml, strict);
 		} catch (Exception e) {
 			e.printStackTrace();
 			return null;
