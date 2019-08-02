@@ -28,6 +28,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * @author: yilan.hu
  * @data: 2019/7/31
@@ -121,22 +124,37 @@ public class WxPayServiceImpl implements IWxPayService {
         log.info("【微信支付】 response -> {}", responseXml);
 
         // 7-2.xml -> 对象
-        WxPayUnifiedResponseVO wxPayUnifiedResponseVO = XmlUtils.toObject(responseXml, WxPayUnifiedResponseVO.class);
-        CheckObjects.isNull(wxPayUnifiedResponseVO, "微信支付发起失败", () -> {log.error("## 【微信支付】 报文解析异常");});
-        CheckObjects.predicate(wxPayUnifiedResponseVO.isFail(), b -> b,
-                "微信支付发起失败, return_msg: " + wxPayUnifiedResponseVO.getReturnMsg(),
-                () -> {log.error("## 【微信支付发起失败】 return_msg -> {}", wxPayUnifiedResponseVO.getReturnMsg());});
-        CheckObjects.predicate(wxPayUnifiedResponseVO.isSuccess(), b -> !b,
-                "微信支付发起失败, err_code: " + wxPayUnifiedResponseVO.getErrCode(),
-                () -> {log.error("## 【微信支付发起失败】 err_code -> {}", wxPayUnifiedResponseVO.getReturnMsg());});
+        WxPayUnifiedResponseVO payResponse = XmlUtils.toObject(responseXml, WxPayUnifiedResponseVO.class);
+        CheckObjects.isNull(payResponse, "微信支付发起失败", () -> {log.error("## 【微信支付】 报文解析异常");});
+        CheckObjects.predicate(payResponse.isFail(), b -> b,
+                "微信支付发起失败, return_msg: " + payResponse.getReturnMsg(),
+                () -> {log.error("## 【微信支付发起失败】 return_msg -> {}", payResponse.getReturnMsg());});
+        CheckObjects.predicate(payResponse.isSuccess(), b -> !b,
+                "微信支付发起失败, err_code: " + payResponse.getErrCode(),
+                () -> {log.error("## 【微信支付发起失败】 err_code -> {}", payResponse.getReturnMsg());});
 
-        // 8.处理结果
+        // 8.生成签名
+        String timeStamp = String.valueOf(System.currentTimeMillis());
+        String packAge = "prepay_id" + BaseConstant.Character.EQUAL + payResponse.getPrepayId();
+        String resultNonceStr = payResponse.getNonceStr();
+
+        Map<String, String> map = new HashMap(8);
+        map.put("appId", payResponse.getAppid());
+        map.put("timeStamp", timeStamp);
+        map.put("nonceStr", resultNonceStr);
+        map.put("package", packAge);
+        map.put("signType", BaseConstant.Character.MD5);
+
+        String resultSign = PaySignatureUtils.wxSign(map, wxBaseInfo.getMchSecret());
+
+
+        // 9.处理结果
         WxPayDTO wxPayDTO = new WxPayDTO();
-        wxPayDTO.setNonceStr(nonceStr);
-        wxPayDTO.setPaySign(sign);
+        wxPayDTO.setNonceStr(resultNonceStr);
         wxPayDTO.setSignType(BaseConstant.Character.MD5);
-        wxPayDTO.setTimeStamp(String.valueOf(System.currentTimeMillis()));
-        wxPayDTO.setPrepayId("prepay_id" + BaseConstant.Character.EQUAL + wxPayUnifiedResponseVO.getPrepayId());
+        wxPayDTO.setTimeStamp(timeStamp);
+        wxPayDTO.setPrepayId(packAge);
+        wxPayDTO.setPaySign(resultSign);
 
         return wxPayDTO;
     }
@@ -162,5 +180,18 @@ public class WxPayServiceImpl implements IWxPayService {
 
         // 3.处理结果
 
+    }
+
+    public static void main(String[] args){
+        HashMap<String, String> map = new HashMap<>();
+//        map.put("package", "prepay_id=wx02172350517303a36993132b1502893600");
+
+        map.put("timeStamp", "1564734096521");
+        map.put("prepayId", "wx0216282689383967acfcb8ff1402535100");
+        map.put("nonceStr", "aT863zqcmcMLLQWE");
+        map.put("signType", "MD5");
+        String si = PaySignatureUtils.wxSign(map, "ZOWWRiOSxly8gtgZE9aNWFrwp8taV4wP");
+        // C25B620F8183F93EBF3B38FCA25CB161
+        System.out.println(si);
     }
 }
