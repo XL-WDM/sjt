@@ -14,6 +14,7 @@ import com.sjt.business.mapper.UserOauthsMapper;
 import com.sjt.business.web.config.WebUserContext;
 import com.sjt.common.base.constant.BaseConstant;
 import com.sjt.common.base.constant.ResultConstant;
+import com.sjt.common.base.result.ResultDTO;
 import com.sjt.common.exceptions.GlobalException;
 import com.sjt.common.utils.*;
 import com.sjt.wechat.api.dto.req.WxPayParamDTO;
@@ -100,6 +101,7 @@ public class WxPayServiceImpl implements IWxPayService {
             CheckObjects.isNull(pay, "微信支付发起失败, result is null");
         } catch (Exception e) {
             log.error("【微信支付】 发起失败 -> {}", e);
+            throw new GlobalException(ResultDTO.error(e.getMessage()));
         }
         log.info("【微信支付】 response -> {}", JsonUtils.toJson(pay));
 
