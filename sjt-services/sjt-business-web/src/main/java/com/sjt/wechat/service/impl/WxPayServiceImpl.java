@@ -9,6 +9,7 @@ import com.sjt.business.mapper.OrderMapper;
 import com.sjt.business.mapper.UserOauthsMapper;
 import com.sjt.business.web.config.WebUserContext;
 import com.sjt.common.base.constant.BaseConstant;
+import com.sjt.common.base.constant.CharsetConstant;
 import com.sjt.common.base.constant.ResultConstant;
 import com.sjt.common.utils.*;
 import com.sjt.wechat.api.dto.req.WxPayParamDTO;
@@ -28,6 +29,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 
+import java.nio.charset.Charset;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
@@ -111,8 +113,11 @@ public class WxPayServiceImpl implements IWxPayService {
         String sign = PaySignatureUtils.wxSign(MapUtils.buildMap(vo), wxBaseInfo.getMchSecret());
         vo.setSign(sign);
 
-        // 7.发起支付
         String requestXml = XmlUtils.toString(vo);
+        CheckObjects.isEmpty(requestXml, "参数处理失败");
+        requestXml = new String(requestXml.getBytes(), Charset.forName(CharsetConstant.CHAR_UTF_8));
+
+        // 7.发起支付
         log.info("【微信支付】 request -> {}", requestXml);
         ResponseEntity<String> entity = restTemplate.postForEntity(WechatConstant.UNIFIED_ORDER,
                 requestXml,
@@ -122,7 +127,6 @@ public class WxPayServiceImpl implements IWxPayService {
                 () -> {log.error("## 【微信支付发起失败】, 网络异常 -> status: {}", entity.getStatusCodeValue());});
         // 7-1.获取body
         String responseXml = entity.getBody();
-
         log.info("【微信支付】 response -> {}", responseXml);
 
         // 7-2.xml -> 对象
