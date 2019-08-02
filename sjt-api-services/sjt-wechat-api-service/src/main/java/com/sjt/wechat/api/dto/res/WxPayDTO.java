@@ -30,7 +30,7 @@ public class WxPayDTO {
      * 统一下单接口返回的 prepay_id 参数值，提交格式如：prepay_id=***
      */
     @ApiModelProperty("统一下单接口返回的 prepay_id 参数值，提交格式如：prepay_id=***")
-    private String prepayId;
+    private String packAge;
 
 
     /**

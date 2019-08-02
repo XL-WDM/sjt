@@ -154,7 +154,7 @@ public class WxPayServiceImpl implements IWxPayService {
         wxPayDTO.setNonceStr(resultNonceStr);
         wxPayDTO.setSignType(BaseConstant.Character.MD5);
         wxPayDTO.setTimeStamp(timeStamp);
-        wxPayDTO.setPrepayId(packAge);
+        wxPayDTO.setPackAge(packAge);
         wxPayDTO.setPaySign(resultSign);
 
         return wxPayDTO;
