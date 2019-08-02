@@ -14,5 +14,5 @@ public interface IWxPayService {
      * @param wxPayParamDTO
      * @return
      */
-    WxPayDTO appletUnifiedOrder(WxPayParamDTO wxPayParamDTO);
+    WxPayDTO wxH5UnifiedOrder(WxPayParamDTO wxPayParamDTO);
 }

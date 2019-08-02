@@ -8,6 +8,7 @@ import com.sjt.wechat.service.IWxPayService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.ModelAndView;
 
 /**
  * @author: yilan.hu
@@ -20,8 +21,15 @@ public class WxPayApiService implements WxPayApi {
     private IWxPayService iWxPayService;
 
     @Override
-    public ResultDTO<WxPayDTO> appletUnifiedOrder(@RequestBody WxPayParamDTO wxPayParamDTO) {
-        WxPayDTO wxPayDTO = iWxPayService.appletUnifiedOrder(wxPayParamDTO);
+    public ResultDTO<WxPayDTO> wxH5UnifiedOrder(@RequestBody WxPayParamDTO wxPayParamDTO) {
+        WxPayDTO wxPayDTO = iWxPayService.wxH5UnifiedOrder(wxPayParamDTO);
         return ResultDTO.data(wxPayDTO);
+    }
+
+    @Override
+    public ModelAndView payNotify(@RequestBody String notifyData) {
+
+
+        return new ModelAndView("pay/pay-notify-success");
     }
 }

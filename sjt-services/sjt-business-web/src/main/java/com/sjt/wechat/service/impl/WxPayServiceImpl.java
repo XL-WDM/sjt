@@ -13,28 +13,18 @@ import com.sjt.business.mapper.OrderMapper;
 import com.sjt.business.mapper.UserOauthsMapper;
 import com.sjt.business.web.config.WebUserContext;
 import com.sjt.common.base.constant.BaseConstant;
-import com.sjt.common.base.constant.CharsetConstant;
 import com.sjt.common.base.constant.ResultConstant;
-import com.sjt.common.exceptions.GlobalException;
-import com.sjt.common.utils.*;
+import com.sjt.common.utils.CheckObjects;
+import com.sjt.common.utils.JsonUtils;
+import com.sjt.common.utils.LocalUtils;
 import com.sjt.wechat.api.dto.req.WxPayParamDTO;
 import com.sjt.wechat.api.dto.res.WxPayDTO;
 import com.sjt.wechat.config.WxBaseInfo;
-import com.sjt.wechat.constant.WechatConstant;
 import com.sjt.wechat.service.IWxPayService;
-import com.sjt.wechat.vo.req.pay.WxPayUnifiedRequestVO;
-import com.sjt.wechat.vo.res.pay.WxPayUnifiedResponseVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 import org.springframework.web.client.RestTemplate;
-
-import java.io.UnsupportedEncodingException;
-import java.nio.charset.Charset;
-import java.util.*;
 
 /**
  * @author: yilan.hu
@@ -63,7 +53,7 @@ public class WxPayServiceImpl implements IWxPayService {
     private BestPayServiceImpl bestPayService;
 
     @Override
-    public WxPayDTO appletUnifiedOrder(WxPayParamDTO wxPayParamDTO) {
+    public WxPayDTO wxH5UnifiedOrder(WxPayParamDTO wxPayParamDTO) {
         // 1.参数校验
         CheckObjects.isNull(wxPayParamDTO, ResultConstant.PARAMETERS_CANNOT_BE_NULL);
         CheckObjects.isNull(wxPayParamDTO.getOrderId(), "请选择订单");
@@ -101,8 +91,21 @@ public class WxPayServiceImpl implements IWxPayService {
         payRequest.setOrderName("sjt-pay");
 
         log.info("【微信支付】 request -> {}", JsonUtils.toJson(payRequest));
-        PayResponse pay = bestPayService.pay(payRequest);
-        System.out.println(JsonUtils.toJson(pay));
+        PayResponse pay = null;
+        try {
+            pay = bestPayService.pay(payRequest);
+            CheckObjects.isNull(pay, "微信支付发起失败, result is null");
+        } catch (Exception e) {
+            log.error("【微信支付】 发起失败 -> {}", e);
+        }
+        log.info("【微信支付】 response -> {}", JsonUtils.toJson(pay));
+
+        WxPayDTO wxPayDTO = new WxPayDTO();
+        wxPayDTO.setNonceStr(pay.getNonceStr());
+        wxPayDTO.setPaySign(pay.getPaySign());
+        wxPayDTO.setSignType(BaseConstant.Character.MD5);
+        wxPayDTO.setTimeStamp(String.valueOf(System.currentTimeMillis()));
+        wxPayDTO.setPrepayId(pay.getPackAge());
 
         /*// 6.支付信息封装
         String body = "sjt-pay";
@@ -122,7 +125,7 @@ public class WxPayServiceImpl implements IWxPayService {
         vo.setProductId(order.getOrderNo());
         vo.setOpenid(userOauths.getOauthId());
         vo.setNonceStr(nonceStr);
-        String sign = createSign(MapUtils.buildMap(vo), wxBaseInfo.getMchSecret());
+        String sign = PaySignatureUtils.wxSign(MapUtils.buildMap(vo), wxBaseInfo.getMchSecret());
         vo.setSign(sign);
 
         // 7.发起支付
@@ -153,47 +156,6 @@ public class WxPayServiceImpl implements IWxPayService {
 
         return wxPayDTO;*/
 
-        return null;
-    }
-
-    /**
-     * 生成签名
-     * @param appid
-     * @param body
-     * @param device_info
-     * @param mch_id
-     * @param nonce_str
-     * @return
-     */
-    private String createSign(Map<String, String> map, String signKey) {
-        if (map == null || StringUtils.isEmpty(signKey)) {
-            return null;
-        }
-
-        StringBuilder builder = new StringBuilder();
-
-        Set<Map.Entry<String, String>> entries = new TreeMap<>(map).entrySet();
-        Iterator<Map.Entry<String, String>> iterator = entries.iterator();
-
-        while (iterator.hasNext()) {
-            Map.Entry<String, String> next = iterator.next();
-            String key = next.getKey();
-            String value = next.getValue();
-            if (StringUtils.isEmpty(key) || "sign".equals(key) || StringUtils.isEmpty(value)) {
-                continue;
-            }
-            builder.append(key)
-                    .append("=")
-                    .append(value)
-                    .append(BaseConstant.Character.AND);
-        }
-
-        builder.append("key=").append(signKey);
-
-        return MD5Utils.getMD5(builder.toString()).toUpperCase();
-    }
-
-    public static void main(String[] args) {
-
+        return wxPayDTO;
     }
 }
