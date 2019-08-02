@@ -9,4 +9,10 @@ import com.sjt.business.entity.Order;
  */
 public interface OrderMapper extends BaseMapper<Order> {
 
+    /**
+     * 通过订单编号查询订单
+     * @param orderNo
+     * @return
+     */
+    Order selectOneByOrderNo(String orderNo);
 }

@@ -50,7 +50,7 @@ public class WxOauthServiceImpl implements IWxOauthService {
                 .replace("CODE", code);
         ResponseEntity<String> entity = restTemplate.getForEntity(url, String.class);
         if (HttpStatus.OK != entity.getStatusCode()) {
-            log.error("# 微信网页授权: AccessToken获取失败(调用微信服务响应失败) -> status: {}", entity.getStatusCodeValue());
+            log.error("## 微信网页授权: AccessToken获取失败(调用微信服务响应失败) -> status: {}", entity.getStatusCodeValue());
             throw new GlobalException("微信网页授权: AccessToken获取失败");
         }
 
@@ -58,7 +58,7 @@ public class WxOauthServiceImpl implements IWxOauthService {
         WxAccessTokenVO wxAccessTokenVO = JSONObject.parseObject(entity.getBody(), WxAccessTokenVO.class);
         CheckObjects.isNull(wxAccessTokenVO, "微信网页授权信息获取为空");
         if (!wxAccessTokenVO.isSuccess()) {
-            log.error("# 微信网页授权: AccessToken获取失败 -> errcode: {}, errmsg: {}",
+            log.error("## 微信网页授权: AccessToken获取失败 -> errcode: {}, errmsg: {}",
                     wxAccessTokenVO.getErrcode(),
                     wxAccessTokenVO.getErrmsg());
             throw new GlobalException("微信网页授权: AccessToken获取失败");
@@ -83,7 +83,7 @@ public class WxOauthServiceImpl implements IWxOauthService {
             // 4-2.VO -> DTO
             return wxAccessTokenVOToDTO(wxAccessTokenVO);
         } catch (Exception e) {
-            log.error("# 微信网页授权: AccessToken刷新失败 -> {}", e.getMessage(), e);
+            log.error("## 微信网页授权: AccessToken刷新失败 -> {}", e.getMessage(), e);
             return null;
         }
     }
@@ -102,13 +102,13 @@ public class WxOauthServiceImpl implements IWxOauthService {
         // 2-1.请求微信方获取微信用户信息
         ResponseEntity<String> entity = restTemplate.getForEntity(url, String.class);
         if (HttpStatus.OK != entity.getStatusCode()) {
-            log.error("# 微信用户信息查询: (调用微信服务响应失败) -> status: {}", entity.getStatusCodeValue());
+            log.error("## 微信用户信息查询: (调用微信服务响应失败) -> status: {}", entity.getStatusCodeValue());
             throw new GlobalException("微信用户信息查询失败");
         }
         WxSnsapiUserInfoVO wxSnsapiUserInfoVO = JSONObject.parseObject(entity.getBody(), WxSnsapiUserInfoVO.class);
         CheckObjects.isNull(wxSnsapiUserInfoVO, "微信用户信息获取为空");
         if (!wxSnsapiUserInfoVO.isSuccess()) {
-            log.error("# 微信用户信息查询失败 -> errcode: {}, errmsg: {}",
+            log.error("## 微信用户信息查询失败 -> errcode: {}, errmsg: {}",
                     wxSnsapiUserInfoVO.getErrcode(),
                     wxSnsapiUserInfoVO.getErrmsg());
             throw new GlobalException("微信用户信息查询失败");
@@ -130,7 +130,7 @@ public class WxOauthServiceImpl implements IWxOauthService {
                 .replace("JSCODE", code);
         ResponseEntity<String> entity = restTemplate.getForEntity(url, String.class);
         if (HttpStatus.OK != entity.getStatusCode()) {
-            log.error("# 微信小程序登陆: SessionKey获取失败(调用微信服务响应失败) -> status: {}", entity.getStatusCodeValue());
+            log.error("## 微信小程序登陆: SessionKey获取失败(调用微信服务响应失败) -> status: {}", entity.getStatusCodeValue());
             throw new GlobalException("微信网页授权: SessionKey获取失败");
         }
 
@@ -138,7 +138,7 @@ public class WxOauthServiceImpl implements IWxOauthService {
         WxAppletSessionKeyVO wxAppletSessionKeyVO = JSONObject.parseObject(entity.getBody(), WxAppletSessionKeyVO.class);
         CheckObjects.isNull(wxAppletSessionKeyVO, "微信网页授权信息获取为空");
         if (!wxAppletSessionKeyVO.isSuccess()) {
-            log.error("# 微信小程序登陆: SessionKey获取失败 -> errcode: {}, errmsg: {}",
+            log.error("## 微信小程序登陆: SessionKey获取失败 -> errcode: {}, errmsg: {}",
                     wxAppletSessionKeyVO.getErrcode(),
                     wxAppletSessionKeyVO.getErrmsg());
             throw new GlobalException("微信网页授权: SessionKey获取失败");

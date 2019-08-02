@@ -25,8 +25,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -160,6 +163,7 @@ public class WxPayServiceImpl implements IWxPayService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void payNotify(String notifyData) {
         log.info("【微信支付结果通知】 request -> {}", notifyData);
 
@@ -168,17 +172,39 @@ public class WxPayServiceImpl implements IWxPayService {
 
         // 2.签名验证
         CheckObjects.predicate(PaySignatureUtils.vxVerify(XmlUtils.toMap(notifyData), wxBaseInfo.getMchSecret()),
-                b -> !b, "签名验证失败");
+                b -> !b, "签名验证失败", () -> {log.error("## 【微信支付结果通知】 签名验证失败");});
 
         // 3.xml转对象
-        WxPayNotifyResponseVO wxPayNotifyResponseVO = XmlUtils.toObject(notifyData, WxPayNotifyResponseVO.class, false);
+        WxPayNotifyResponseVO wxPayNotifyResponseVO = XmlUtils.toObject(notifyData, WxPayNotifyResponseVO.class);
         CheckObjects.isNull(wxPayNotifyResponseVO, "报文解析失败",
-                () -> {log.error("【微信支付结果通知】 报文解析失败");});
+                () -> {log.error("## 【微信支付结果通知】 报文解析失败");});
         CheckObjects.predicate(wxPayNotifyResponseVO.isFail(), status -> status,
                 "微信支付结果通知返回数据失败, 处理终止",
-                () -> {log.error("【微信支付结果通知】 失败");});
+                () -> {log.error("## 【微信支付结果通知】 失败");});
 
-        // 3.处理结果
+        // 5.获取订单
+        Order order = orderMapper.selectOneByOrderNo(wxPayNotifyResponseVO.getOutTradeNo());
+        CheckObjects.isNull(order, "订单不存在", () -> {log.error("## 【微信支付结果通知】 订单不存在");});
+
+        // 6.订单状态处理(状态不为: 待支付 则为异常通知)
+        String orderStatus = order.getStatus();
+        if (DataBaseConstant.OrderStatus.CANCELLED.getCode().equals(orderStatus)) {
+            log.error("## 【微信支付结果通知】 失效订单");
+            return;
+        }
+        if (!DataBaseConstant.OrderStatus.TO_BE_PAID.getCode().equals(orderStatus)) {
+            log.error("## 【微信支付结果通知】 重复通知");
+            return;
+        }
+
+        // 7.修改订单状态
+        order.setStatus(DataBaseConstant.OrderStatus.TO_BE_SHIPPED.getCode());
+        order.setUpdateDate(LocalDateTime.now());
+        LocalDateTime paymentDate = LocalDateTime.parse(wxPayNotifyResponseVO.getTimeEnd(),
+                DateTimeFormatter.ofPattern(BaseConstant.FormatDate.SIMPLE_DATE_TIME));
+        order.setPaymentDate(paymentDate);
+
+        // 8.新增支付流水
 
     }
 }

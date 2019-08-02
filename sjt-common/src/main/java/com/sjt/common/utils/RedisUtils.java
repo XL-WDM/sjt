@@ -31,7 +31,7 @@ public class RedisUtils {
             try {
                 redisTemplate.opsForValue().set(key, o);
             } catch (Exception e) {
-                log.error("# Redis connect timeout");
+                log.error("## Redis connect timeout");
             }
         } else {
             setString(key, JSONObject.toJSONString(o));
@@ -53,7 +53,7 @@ public class RedisUtils {
                 redisTemplate.opsForValue().set(key, JSONObject.toJSON(o), time, timeUnit);
             }
         } catch (Exception e) {
-            log.error("# Redis connect timeout");
+            log.error("## Redis connect timeout");
         }
     }
 
@@ -110,7 +110,7 @@ public class RedisUtils {
             o = redisTemplate.opsForValue().get(key);
             return o == null ? null : String.valueOf(o);
         } catch (Exception e) {
-            log.error("# Redis connect timeout");
+            log.error("## Redis connect timeout");
             return null;
         }
     }

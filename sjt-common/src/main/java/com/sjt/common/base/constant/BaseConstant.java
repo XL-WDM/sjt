@@ -8,6 +8,7 @@ import lombok.Getter;
  * @data: 2019/5/24
  */
 public class BaseConstant {
+
     /**
      * 文件
      */
