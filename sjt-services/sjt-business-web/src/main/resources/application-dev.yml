@@ -15,7 +15,6 @@ sjt:
   swagger:
     enable: true
   proxy:
-    charset: utf_8
     host: 10.1.27.102
     enable-proxy: true
   # 微信

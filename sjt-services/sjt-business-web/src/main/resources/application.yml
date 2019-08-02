@@ -21,6 +21,8 @@ mybatis-plus:
     map-underscore-to-camel-case: true
     jdbc-type-for-null: 'null'
 sjt:
+  proxy:
+    charset: utf_8
   # swagger
   swagger:
     base-package: com.sjt.business.api.impl,com.sjt.wechat.api.impl
