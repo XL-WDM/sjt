@@ -31,6 +31,7 @@ public class BaseConstant {
         public static final String SLASH = "/";
         public static final String UNDERLINE = "_";
         public static final String BAR = "-";
+        public static final String EQUAL = "=";
         public static final String COMMA = ",";
         public static final String AND = "&";
         public static final String GET = "get";

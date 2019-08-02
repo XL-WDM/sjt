@@ -1,8 +1,5 @@
 package com.sjt.wechat.service.impl;
 
-import com.lly835.bestpay.enums.BestPayTypeEnum;
-import com.lly835.bestpay.model.PayRequest;
-import com.lly835.bestpay.model.PayResponse;
 import com.lly835.bestpay.service.impl.BestPayServiceImpl;
 import com.sjt.business.constant.DataBaseConstant;
 import com.sjt.business.entity.Address;
@@ -14,7 +11,6 @@ import com.sjt.business.mapper.UserOauthsMapper;
 import com.sjt.business.web.config.WebUserContext;
 import com.sjt.common.base.constant.BaseConstant;
 import com.sjt.common.base.constant.ResultConstant;
-import com.sjt.common.base.result.ResultDTO;
 import com.sjt.common.exceptions.GlobalException;
 import com.sjt.common.utils.*;
 import com.sjt.wechat.api.dto.req.WxPayParamDTO;
@@ -31,8 +27,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
-
-import java.util.UUID;
 
 /**
  * @author: yilan.hu
@@ -85,37 +79,10 @@ public class WxPayServiceImpl implements IWxPayService {
         order.setAddressId(address.getId());
         order.updateById();
 
-        // 发起支付
-        PayRequest payRequest = new PayRequest();
-        payRequest.setOpenid(userOauths.getOauthId());
-        payRequest.setOrderAmount(1D);
-        payRequest.setOrderId(order.getOrderNo());
-        payRequest.setPayTypeEnum(BestPayTypeEnum.WXPAY_H5);
-        payRequest.setSpbillCreateIp(LocalUtils.getIp());
-        payRequest.setOrderName("sjt-pay");
-
-        log.info("【微信支付】 request -> {}", JsonUtils.toJson(payRequest));
-        PayResponse pay = null;
-        try {
-            pay = bestPayService.pay(payRequest);
-            CheckObjects.isNull(pay, "微信支付发起失败, result is null");
-        } catch (Exception e) {
-            log.error("【微信支付】 发起失败 -> {}", e);
-            throw new GlobalException(ResultDTO.error(e.getMessage()));
-        }
-        log.info("【微信支付】 response -> {}", JsonUtils.toJson(pay));
-
-        WxPayDTO wxPayDTO = new WxPayDTO();
-        wxPayDTO.setNonceStr(pay.getNonceStr());
-        wxPayDTO.setPaySign(pay.getPaySign());
-        wxPayDTO.setSignType(BaseConstant.Character.MD5);
-        wxPayDTO.setTimeStamp(String.valueOf(System.currentTimeMillis()));
-        wxPayDTO.setPrepayId(pay.getPackAge());
-
-        /*// 6.支付信息封装
+        // 6.支付信息封装
         String body = "sjt-pay";
         // 随机字符串
-        String nonceStr = MD5Utils.getMD5(UUID.randomUUID().toString());
+        String nonceStr = RandomUtils.getRandomString();
         WxPayUnifiedRequestVO vo = new WxPayUnifiedRequestVO();
         vo.setAppid(wxBaseInfo.getAppletId());
         vo.setMchId(wxBaseInfo.getMchId());
@@ -134,22 +101,28 @@ public class WxPayServiceImpl implements IWxPayService {
         vo.setSign(sign);
 
         // 7.发起支付
-        String url = WechatConstant.UNIFIED_ORDER;
-        log.info("【微信支付】 request -> {}", JsonUtils.toJson(vo));
-        ResponseEntity<String> entity = restTemplate.postForEntity(url, XmlUtils.toString(vo), String.class);
-        if (HttpStatus.OK != entity.getStatusCode()) {
-            log.error("# 【微信支付发起失败】, 网络异常 -> status: {}", entity.getStatusCodeValue());
-            throw new GlobalException("微信支付发起失败, 网络异常");
-        }
-        WxPayUnifiedResponseVO wxPayUnifiedResponseVO = XmlUtils.toObject(entity.getBody(), WxPayUnifiedResponseVO.class);
-        log.info("【微信支付】 response -> {}", JsonUtils.toJson(wxPayUnifiedResponseVO));
+        String requestXml = XmlUtils.toString(vo);
+        log.info("【微信支付】 request -> {}", requestXml);
+        ResponseEntity<String> entity = restTemplate.postForEntity(WechatConstant.UNIFIED_ORDER,
+                requestXml,
+                String.class);
+        CheckObjects.predicate(entity.getStatusCode(), status -> HttpStatus.OK != status,
+                "微信支付发起失败, 网络异常",
+                () -> {log.error("## 【微信支付发起失败】, 网络异常 -> status: {}", entity.getStatusCodeValue());});
+        // 7-1.获取body
+        String responseXml = entity.getBody();
 
-        if (wxPayUnifiedResponseVO.isFail()) {
-            throw new GlobalException("微信支付发起失败, msg: " + wxPayUnifiedResponseVO.getReturnMsg());
-        }
-        if (!wxPayUnifiedResponseVO.isSuccess()) {
-            throw new GlobalException("微信支付发起失败, msg: " + wxPayUnifiedResponseVO.getErrCode());
-        }
+        log.info("【微信支付】 response -> {}", responseXml);
+
+        // 7-2.xml -> 对象
+        WxPayUnifiedResponseVO wxPayUnifiedResponseVO = XmlUtils.toObject(responseXml, WxPayUnifiedResponseVO.class);
+        CheckObjects.isNull(wxPayUnifiedResponseVO, "微信支付发起失败", () -> {log.error("## 【微信支付】 报文解析异常");});
+        CheckObjects.predicate(wxPayUnifiedResponseVO.isFail(), b -> b,
+                "微信支付发起失败, return_msg: " + wxPayUnifiedResponseVO.getReturnMsg(),
+                () -> {log.error("## 【微信支付发起失败】 return_msg -> {}", wxPayUnifiedResponseVO.getReturnMsg());});
+        CheckObjects.predicate(wxPayUnifiedResponseVO.isSuccess(), b -> !b,
+                "微信支付发起失败, err_code: " + wxPayUnifiedResponseVO.getErrCode(),
+                () -> {log.error("## 【微信支付发起失败】 err_code -> {}", wxPayUnifiedResponseVO.getReturnMsg());});
 
         // 8.处理结果
         WxPayDTO wxPayDTO = new WxPayDTO();
@@ -157,7 +130,7 @@ public class WxPayServiceImpl implements IWxPayService {
         wxPayDTO.setPaySign(sign);
         wxPayDTO.setSignType(BaseConstant.Character.MD5);
         wxPayDTO.setTimeStamp(String.valueOf(System.currentTimeMillis()));
-        wxPayDTO.setPrepayId("prepay_id" + BaseConstant.Unicode.EQUAL + wxPayUnifiedResponseVO.getPrepayId());*/
+        wxPayDTO.setPrepayId("prepay_id" + BaseConstant.Character.EQUAL + wxPayUnifiedResponseVO.getPrepayId());
 
         return wxPayDTO;
     }

@@ -3,10 +3,12 @@ package com.sjt.common.utils;
 import com.sjt.common.base.constant.BaseConstant;
 import com.sjt.common.base.result.ResultDTO;
 import com.sjt.common.exceptions.GlobalException;
+import com.sjt.common.functional.interfaces.Slot;
 import org.springframework.util.StringUtils;
 
 import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
 import java.util.function.Predicate;
 
 /**
@@ -21,8 +23,23 @@ public class CheckObjects {
         }
     }
 
+    public static void isNull(Object o, String message, Slot slot) {
+        if (o == null) {
+            slot.slot();
+            throw new GlobalException(ResultDTO.error(message));
+        }
+    }
+
     public static void isNull(Object o, ResultDTO resultModel) {
         if (StringUtils.isEmpty(o)) {
+            throw new GlobalException(resultModel);
+        }
+    }
+
+
+    public static void isNull(Object o, ResultDTO resultModel, Slot slot) {
+        if (StringUtils.isEmpty(o)) {
+            slot.slot();
             throw new GlobalException(resultModel);
         }
     }
@@ -33,8 +50,22 @@ public class CheckObjects {
         }
     }
 
+    public static void isEmpty(String s, String message, Slot slot) {
+        if (StringUtils.isEmpty(s)) {
+            slot.slot();
+            throw new GlobalException(ResultDTO.error(message));
+        }
+    }
+
     public static void isEmpty(String s, ResultDTO resultModel) {
         if (StringUtils.isEmpty(s)) {
+            throw new GlobalException(resultModel);
+        }
+    }
+
+    public static void isEmpty(String s, ResultDTO resultModel, Slot slot) {
+        if (StringUtils.isEmpty(s)) {
+            slot.slot();
             throw new GlobalException(resultModel);
         }
     }
@@ -45,8 +76,22 @@ public class CheckObjects {
         }
     }
 
+    public static void isEmpty(List list, String message, Slot slot) {
+        if (list == null || list.isEmpty()) {
+            slot.slot();
+            throw new GlobalException(ResultDTO.error(message));
+        }
+    }
+
     public static void isEmpty(Map map, String message) {
         if (map == null || map.isEmpty()) {
+            throw new GlobalException(ResultDTO.error(message));
+        }
+    }
+
+    public static void isEmpty(Map map, String message, Slot slot) {
+        if (map == null || map.isEmpty()) {
+            slot.slot();
             throw new GlobalException(ResultDTO.error(message));
         }
     }
@@ -65,6 +110,13 @@ public class CheckObjects {
 
     public static <T> void predicate(T t, Predicate<T> predicate, String message) {
         if (predicate.test(t)) {
+            throw new GlobalException(message);
+        }
+    }
+
+    public static <T> void predicate(T t, Predicate<T> predicate, String message, Slot slot) {
+        if (predicate.test(t)) {
+            slot.slot();
             throw new GlobalException(message);
         }
     }

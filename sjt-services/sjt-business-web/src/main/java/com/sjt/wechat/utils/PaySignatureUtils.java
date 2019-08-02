@@ -36,9 +36,7 @@ public class PaySignatureUtils {
             Map.Entry<String, String> next = iterator.next();
             String key = next.getKey();
             String value = next.getValue();
-            if (!StringUtils.isEmpty(key)
-                    && !"sign".equals(key)
-                    && !StringUtils.isEmpty(value)) {
+            if (StringUtils.isEmpty(key) || "sign".equals(key) || StringUtils.isEmpty(value)) {
                 continue;
             }
 
