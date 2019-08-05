@@ -2,6 +2,7 @@ package com.sjt.business.mapper;
 
 import com.baomidou.mybatisplus.mapper.BaseMapper;
 import com.sjt.business.entity.Order;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * @author: yilan.hu
@@ -14,5 +15,5 @@ public interface OrderMapper extends BaseMapper<Order> {
      * @param orderNo
      * @return
      */
-    Order selectOneByOrderNo(String orderNo);
+    Order selectOneByOrderNo(@Param("orderNo") String orderNo);
 }

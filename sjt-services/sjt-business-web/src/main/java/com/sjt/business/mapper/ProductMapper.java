@@ -14,5 +14,5 @@ public interface ProductMapper extends BaseMapper<Product> {
      * @param productId
      * @return
      */
-    Integer selectSoldOut(Long productId);
+    Integer selectSoldOut(Long productSpecId);
 }

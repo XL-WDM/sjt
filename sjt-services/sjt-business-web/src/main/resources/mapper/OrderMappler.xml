@@ -12,7 +12,7 @@
 
     <select id="selectOneByOrderNo" parameterType="java.lang.String" resultMap="orderResult">
         select
-        <include refid="base_all"/>
+        <include refid="base_all" />
         from t_order
         where order_no = #{orderNo}
     </select>

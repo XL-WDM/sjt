@@ -102,7 +102,7 @@ public class OrderServiceImpl implements IOrderService {
                     "下单失败, 商品[" + product.getProductName() + " - " + productSpec.getSpecName() + "], 至少购买一件");
             CheckObjects.predicate(num, n -> n > stock,
                     "下单失败, 商品[" + product.getProductName() + " - " + productSpec.getSpecName() + "], 库存不足, 当前库存: " + stock + "件");
-            // 2-6.跟新库存
+            // 2-6.预减库存
             int version = productSpec.getVersion();
             productSpec.setOrderStockNum(orderStockNum + num);
             productSpec.setVersion(version + 1);
@@ -113,7 +113,7 @@ public class OrderServiceImpl implements IOrderService {
 
             // 2-7.创建订单详情对象
             OrderItem oItem = new OrderItem();
-            oItem.setProductId(product.getId());
+            oItem.setProductSpecId(productSpec.getId());
             oItem.setNum(num);
             oItem.setPrice(productSpec.getPrice());
             // 2-8.订单详情商品总金额
@@ -141,7 +141,7 @@ public class OrderServiceImpl implements IOrderService {
 
         // 3.生成订单信息
         Order order = new Order();
-        order.setOrderNo(String.valueOf(snowflakeIdUtils.nextId()));
+        order.setOrderNo(String.valueOf(snowflakeIdUtils.getId()));
         Long userId = WebUserContext.getContext().getId();
         order.setUserId(userId);
         order.setTotalAmount(sumTotalAmount);

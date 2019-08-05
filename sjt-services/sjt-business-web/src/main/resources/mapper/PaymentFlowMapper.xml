@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.sjt.business.mapper.PaymentFlowMapper">
+    <parameterMap id="paymentFlowParame" type="com.sjt.business.entity.PaymentFlow" />
+    <resultMap id="paymentFlowResult" type="com.sjt.business.entity.PaymentFlow" />
+
+    <sql id="base_all">
+        id, pay_order_no, order_no, user_id, amount, integral, pay_type,
+        status, note, create_date, update_date, pay_complete_date
+    </sql>
+
+    <select id="selectPayByOrderNo" parameterType="java.lang.String" resultMap="paymentFlowResult">
+        select
+        <include refid="base_all" />
+        from t_payment_flow
+        where order_no = #{orderNo}
+    </select>
+</mapper>

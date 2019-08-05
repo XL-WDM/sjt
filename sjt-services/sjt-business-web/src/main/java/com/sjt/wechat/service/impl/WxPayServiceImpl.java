@@ -1,12 +1,9 @@
 package com.sjt.wechat.service.impl;
 
+import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.sjt.business.constant.DataBaseConstant;
-import com.sjt.business.entity.Address;
-import com.sjt.business.entity.Order;
-import com.sjt.business.entity.UserOauths;
-import com.sjt.business.mapper.AddressMapper;
-import com.sjt.business.mapper.OrderMapper;
-import com.sjt.business.mapper.UserOauthsMapper;
+import com.sjt.business.entity.*;
+import com.sjt.business.mapper.*;
 import com.sjt.business.web.config.WebUserContext;
 import com.sjt.common.base.constant.BaseConstant;
 import com.sjt.common.base.constant.ResultConstant;
@@ -31,6 +28,7 @@ import org.springframework.web.client.RestTemplate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -48,15 +46,30 @@ public class WxPayServiceImpl implements IWxPayService {
     private OrderMapper orderMapper;
 
     @Autowired
+    private OrderItemMappler orderItemMappler;
+
+    @Autowired
     private AddressMapper addressMapper;
 
     @Autowired
     private UserOauthsMapper userOauthsMapper;
 
     @Autowired
+    private PaymentFlowMapper paymentFlowMapper;
+
+    @Autowired
+    private ProductSpecMapper productSpecMapper;
+
+    @Autowired
     private RestTemplate restTemplate;
 
-    private static final String PAY_ORDER_BODY = "山尖田-订单编号";
+    @Autowired
+    private SnowflakeIdUtils snowflakeIdUtils;
+
+    private final String PAY_ORDER_BODY = "山尖田-订单编号";
+
+    /** 重试次数 */
+    private final int retryCount = 5;
 
     @Override
     public WxPayDTO wxH5UnifiedOrder(WxPayParamDTO wxPayParamDTO) {
@@ -72,27 +85,30 @@ public class WxPayServiceImpl implements IWxPayService {
                 s -> DataBaseConstant.OrderStatus.CANCELLED.getCode().equals(s),
                 "订单已失效");
         CheckObjects.predicate(order.getStatus(),
-                s -> DataBaseConstant.OrderStatus.COMPLETED.getCode().equals(s),
-                "订单已完成，请勿重复支付");
-        CheckObjects.predicate(order.getStatus(),
                 s -> !DataBaseConstant.OrderStatus.TO_BE_PAID.getCode().equals(s),
-                "请勿重复支付");
+                "重复支付");
 
-        // 3.查询物流地址
+        // 3.查询该订单是否存支付成功的流水
+        PaymentFlow paymentFlows = paymentFlowMapper.selectPayByOrderNo(order.getOrderNo());
+        CheckObjects.predicate(paymentFlows,
+                pfs -> pfs != null && DataBaseConstant.PayStatus.PAYMENTED.getCode().equals(pfs.getStatus()),
+                "重复支付");
+
+        // 4.查询物流地址
         Long userId = WebUserContext.getContext().getId();
         Address address = addressMapper.selectAddressByIdAndUserId(wxPayParamDTO.getAddressId(), userId);
         CheckObjects.isNull(address, "物流地址不存在");
 
-        // 4.获取用户openid
+        // 5.获取用户openid
         UserOauths userOauths = userOauthsMapper.selectOneByUserIdAndType(String.valueOf(userId),
                 DataBaseConstant.OauthType.WX_APPLET.getCode());
         CheckObjects.isNull(userOauths, "用户 openid 为空");
 
-        // 5.更新物流信息
+        // 6.更新物流信息
         order.setAddressId(address.getId());
         order.updateById();
 
-        // 6.支付信息封装
+        // 7.支付信息封装
         String nonceStr = RandomUtils.getRandomString();
         WxPayUnifiedRequestVO vo = new WxPayUnifiedRequestVO();
         vo.setAppid(wxBaseInfo.getAppletId());
@@ -114,7 +130,7 @@ public class WxPayServiceImpl implements IWxPayService {
         String requestXml = XmlUtils.toString(vo);
         CheckObjects.isEmpty(requestXml, "参数处理失败");
 
-        // 7.发起支付
+        // 8.发起支付
         log.info("【微信支付】 request -> {}", requestXml);
         ResponseEntity<String> entity = restTemplate.postForEntity(WechatConstant.UNIFIED_ORDER,
                 requestXml,
@@ -122,11 +138,11 @@ public class WxPayServiceImpl implements IWxPayService {
         CheckObjects.predicate(entity.getStatusCode(), status -> HttpStatus.OK != status,
                 "微信支付发起失败, 网络异常",
                 () -> {log.error("## 【微信支付发起失败】, 网络异常 -> status: {}", entity.getStatusCodeValue());});
-        // 7-1.获取body
+        // 8-1.获取body
         String responseXml = entity.getBody();
         log.info("【微信支付】 response -> {}", responseXml);
 
-        // 7-2.xml -> 对象
+        // 8-2.xml -> 对象
         WxPayUnifiedResponseVO payResponse = XmlUtils.toObject(responseXml, WxPayUnifiedResponseVO.class);
         CheckObjects.isNull(payResponse, "微信支付发起失败", () -> {log.error("## 【微信支付】 报文解析异常");});
         CheckObjects.predicate(payResponse.isFail(), b -> b,
@@ -136,12 +152,24 @@ public class WxPayServiceImpl implements IWxPayService {
                 "微信支付发起失败, err_code: " + payResponse.getErrCode(),
                 () -> {log.error("## 【微信支付发起失败】 err_code -> {}", payResponse.getReturnMsg());});
 
-        // 8.签名处理
+        // 9.创建支付流水
+        if (paymentFlows == null) {
+            PaymentFlow paymentFlow = new PaymentFlow();
+            paymentFlow.setPayNo(String.valueOf(snowflakeIdUtils.getId()));
+            paymentFlow.setOrderNo(order.getOrderNo());
+            paymentFlow.setUserId(userId);
+            paymentFlow.setAmount(order.getPayment());
+            paymentFlow.setPayType(DataBaseConstant.PayType.WECHAT.getCode());
+            paymentFlow.setStatus(DataBaseConstant.PayStatus.UNPAID.getCode());
+            paymentFlow.insert();
+        }
+
+        // 10.签名处理
         String timeStamp = String.valueOf(System.currentTimeMillis());
         String packAge = "prepay_id" + BaseConstant.Character.EQUAL + payResponse.getPrepayId();
         String resultNonceStr = payResponse.getNonceStr();
 
-        // 8-1.创建map
+        // 10-1.创建map
         Map<String, String> map = new HashMap(8);
         map.put("appId", payResponse.getAppid());
         map.put("timeStamp", timeStamp);
@@ -149,10 +177,10 @@ public class WxPayServiceImpl implements IWxPayService {
         map.put("package", packAge);
         map.put("signType", BaseConstant.Character.MD5);
 
-        // 8-2.生成签名
+        // 10-2.生成签名
         String resultSign = PaySignatureUtils.wxSign(map, wxBaseInfo.getMchSecret());
 
-        // 9.处理结果
+        // 11.处理结果
         WxPayDTO wxPayDTO = new WxPayDTO();
         wxPayDTO.setNonceStr(resultNonceStr);
         wxPayDTO.setSignType(BaseConstant.Character.MD5);
@@ -179,33 +207,69 @@ public class WxPayServiceImpl implements IWxPayService {
         WxPayNotifyResponseVO wxPayNotifyResponseVO = XmlUtils.toObject(notifyData, WxPayNotifyResponseVO.class);
         CheckObjects.isNull(wxPayNotifyResponseVO, "报文解析失败",
                 () -> {log.error("## 【微信支付结果通知】 报文解析失败");});
-        CheckObjects.predicate(wxPayNotifyResponseVO.isFail(), status -> status,
-                "微信支付结果通知返回数据失败, 处理终止",
-                () -> {log.error("## 【微信支付结果通知】 失败");});
+
+        if (wxPayNotifyResponseVO.isFail()) {
+            log.error("## 【微信支付结果通知】 微信返回失败 result_code = FAIL");
+            return;
+        }
+
+        String orderNo = wxPayNotifyResponseVO.getOutTradeNo();
 
         // 5.获取订单
-        Order order = orderMapper.selectOneByOrderNo(wxPayNotifyResponseVO.getOutTradeNo());
-        CheckObjects.isNull(order, "订单不存在", () -> {log.error("## 【微信支付结果通知】 订单不存在");});
-
-        // 6.订单状态处理(状态不为: 待支付 则为异常通知)
-        String orderStatus = order.getStatus();
-        if (DataBaseConstant.OrderStatus.CANCELLED.getCode().equals(orderStatus)) {
-            log.error("## 【微信支付结果通知】 失效订单");
-            return;
-        }
-        if (!DataBaseConstant.OrderStatus.TO_BE_PAID.getCode().equals(orderStatus)) {
-            log.error("## 【微信支付结果通知】 重复通知");
+        Order order = new Order();
+        order.setOrderNo(orderNo);
+        order = orderMapper.selectOne(order);
+        if (order == null) {
+            log.error("## 【微信支付结果通知】 订单不存在, orderNo: {}", orderNo);
             return;
         }
 
-        // 7.修改订单状态
+        // 6.查询流水
+        PaymentFlow paymentFlow = paymentFlowMapper.selectPayByOrderNo(order.getOrderNo());
+        if (paymentFlow == null) {
+            log.error("## 【微信支付结果通知】 支付流水不存在, orderNo: {}", orderNo);
+            return;
+        }
+        if (DataBaseConstant.PayStatus.PAYMENTED.getCode().equals(paymentFlow.getStatus())) {
+            log.error("## 【微信支付结果通知】 重复通知, orderNo: {}", orderNo);
+            return;
+        }
+
+        // 7.修改订单状态为已支付
         order.setStatus(DataBaseConstant.OrderStatus.TO_BE_SHIPPED.getCode());
         order.setUpdateDate(LocalDateTime.now());
         LocalDateTime paymentDate = LocalDateTime.parse(wxPayNotifyResponseVO.getTimeEnd(),
                 DateTimeFormatter.ofPattern(BaseConstant.FormatDate.SIMPLE_DATE_TIME));
         order.setPaymentDate(paymentDate);
+        order.updateById();
 
-        // 8.新增支付流水
+        // 8.更新支付流水为已支付
+        paymentFlow.setPayNo(wxPayNotifyResponseVO.getTransactionId());
+        paymentFlow.setStatus(DataBaseConstant.PayStatus.PAYMENTED.getCode());
+        paymentFlow.setUpdateDate(LocalDateTime.now());
+        paymentFlow.setPayCompleteDate(paymentDate);
+        paymentFlow.updateById();
 
+        // 9.修改库存
+        // 9-1.查询订单详情
+        List<OrderItem> orderItems = orderItemMappler.selectList(new EntityWrapper<OrderItem>()
+                .eq("order_id", order.getId()));
+        for (OrderItem orderItem : orderItems) {
+            for (int i = 0; i < retryCount; i++) {
+                // 9-2.查询商品规格
+                ProductSpec productSpec = productSpecMapper.selectById(orderItem.getProductSpecId());
+                // 9-3.减库存
+                int version = productSpec.getVersion();
+                productSpec.setStockNum(productSpec.getStockNum() - orderItem.getNum());
+                productSpec.setOrderStockNum(productSpec.getOrderStockNum() - orderItem.getNum());
+                productSpec.setVersion(version + 1);
+                boolean rows = productSpec.update(new EntityWrapper()
+                        .eq("id", productSpec.getId())
+                        .eq("version", version));
+                if (rows) {
+                    break;
+                }
+            }
+        }
     }
 }

@@ -247,6 +247,61 @@ public class DataBaseConstant {
     }
 
     @Getter
+    public enum PayType {
+        /**
+         * 支付类型(1-微信, 2-支付, 3-银联)
+         */
+        WECHAT("1", "微信"),
+        ALIPAY("2", "支付宝"),
+        UNIONPAY("3", "银联");
+
+        private PayType(String code, String name) {
+            this.code = code;
+            this.name = name;
+        }
+
+        private String code;
+        private String name;
+
+        public static PayType find(String code) {
+            for (PayType type : values()) {
+                if (type.getCode().equals(code)) {
+                    return type;
+                }
+            }
+            return null;
+        }
+    }
+
+    @Getter
+    public enum PayStatus {
+        /**
+         * 支付状态(0-取消, 1-未支付, 2-已支付, 3-支付异常)
+         */
+        CANCEL_PAY("1", "取消"),
+        UNPAID("2", "未支付"),
+        PAYMENTED("3", "已支付"),
+        ABNORMAL_PAYMENT("4", "支付异常");
+
+        private PayStatus(String code, String name) {
+            this.code = code;
+            this.name = name;
+        }
+
+        private String code;
+        private String name;
+
+        public static PayStatus find(String code) {
+            for (PayStatus status : values()) {
+                if (status.getCode().equals(code)) {
+                    return status;
+                }
+            }
+            return null;
+        }
+    }
+
+    @Getter
     public enum ProductCategoryLevel {
         /**
          * 商品分类级别(1-一级分类, 2-二级分类, 3-三级分类)
