@@ -63,12 +63,6 @@ public class ProductDetailDTO {
     private String mainImage;
 
     /**
-     * 商品详情
-     */
-    @ApiModelProperty("商品详情")
-    private String productDetails;
-
-    /**
      * 商品规格
      */
     @ApiModelProperty("商品规格")

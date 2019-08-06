@@ -2,10 +2,7 @@ package com.sjt.business.service;
 
 import com.sjt.business.api.dto.req.ProdctsParamDTO;
 import com.sjt.business.api.dto.req.QueryProductParamDTO;
-import com.sjt.business.api.dto.res.CategoryProductsDTO;
-import com.sjt.business.api.dto.res.ProductCategoryDTO;
-import com.sjt.business.api.dto.res.ProductDetailDTO;
-import com.sjt.business.api.dto.res.ShoppingCartDTO;
+import com.sjt.business.api.dto.res.*;
 
 import java.util.List;
 
@@ -30,11 +27,17 @@ public interface IProductService {
 
     /**
      * 获取商品详情
-     *
      * @param id
      * @return
      */
     ProductDetailDTO getProductDetail(Long id);
+
+    /**
+     * 获取商品详情描述内容
+     * @param id
+     * @return
+     */
+    List<ProductDetailDescDTO> getProductDetailDesc(Long id);
 
     /**
      * 通过多个ID获取商品信息

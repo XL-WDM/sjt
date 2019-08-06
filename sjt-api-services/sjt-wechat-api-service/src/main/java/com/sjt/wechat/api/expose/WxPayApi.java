@@ -35,7 +35,7 @@ public interface WxPayApi {
      * @param notifyData
      * @return
      */
-    @ApiOperation(value = "微信支付异步回调")
+    @ApiOperation(value = "微信支付异步回调", hidden = true)
     @PostMapping("/open-api/notify")
     ModelAndView payNotify(@RequestBody String notifyData, Map map);
 }

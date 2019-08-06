@@ -46,6 +46,9 @@ public class ProductServiceImpl implements IProductService {
     @Autowired
     private ProductSpecMapper productSpecMapper;
 
+    @Autowired
+    private ProductDetailDescMapper productDetailDescMapper;
+
     @Override
     public ProductCategoryDTO getProductCategory(Long id) {
         // 1.参数校验
@@ -155,6 +158,28 @@ public class ProductServiceImpl implements IProductService {
         productDetailDTO.setSoldOut(soldOut);
 
         return productDetailDTO;
+    }
+
+    @Override
+    public List<ProductDetailDescDTO> getProductDetailDesc(Long id) {
+        // 1.参数校验
+        CheckObjects.isNull(id, "商品编号不能为空");
+
+        // 2.查询商品
+        Product product = productMapper.selectById(id);
+        CheckObjects.isNull(product, "商品不存在");
+        CheckObjects.predicate(product.getPublishStatus(),
+                s -> DataBaseConstant.ProductPushStatus.INVALID.getCode().equals(s), "商品不存在");
+
+        // 3.查询商品详情内容
+        List<ProductDetailDesc> productDetailDescs = productDetailDescMapper.selectList(new EntityWrapper<ProductDetailDesc>()
+                .eq("product_id", product.getId())
+                .orderBy("sort_num"));
+
+        // 4.Entity -> DTO
+        List<ProductDetailDescDTO> productDetailDescDTOS = BeanCopierUtils.copyList(productDetailDescs, ProductDetailDescDTO.class);
+
+        return productDetailDescDTOS;
     }
 
     @Override
