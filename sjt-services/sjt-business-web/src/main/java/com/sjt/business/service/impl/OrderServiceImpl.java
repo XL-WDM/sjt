@@ -104,9 +104,10 @@ public class OrderServiceImpl implements IOrderService {
                     "下单失败, 商品[" + product.getProductName() + " - " + productSpec.getSpecName() + "], 库存不足, 当前库存: " + stock + "件");
             // 2-6.预减库存
             int version = productSpec.getVersion();
-            productSpec.setOrderStockNum(orderStockNum + num);
-            productSpec.setVersion(version + 1);
-            boolean rows = productSpec.update(new EntityWrapper<ProductSpec>()
+            ProductSpec ps = new ProductSpec();
+            ps.setOrderStockNum(orderStockNum + num);
+            ps.setVersion(version + 1);
+            boolean rows = ps.update(new EntityWrapper<ProductSpec>()
                     .eq("id", productSpec.getId())
                     .eq("version", version));
             CheckObjects.predicate(rows, r -> !r, "下单失败, 库存系统繁忙");

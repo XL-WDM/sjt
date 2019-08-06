@@ -69,12 +69,14 @@ public class OrderOverdueJob {
             ProductSpec productSpec = productSpecMapper.selectById(orderItem.getProductSpecId());
             int version = productSpec.getVersion();
 
-            productSpec.setOrderStockNum(productSpec.getOrderStockNum() - orderItem.getNum());
-            productSpec.setVersion(version + 1);
-            Integer rows = productSpecMapper.update(productSpec, new EntityWrapper<ProductSpec>()
+            // 更新库存
+            ProductSpec ps = new ProductSpec();
+            ps.setOrderStockNum(productSpec.getOrderStockNum() - orderItem.getNum());
+            ps.setVersion(version + 1);
+            boolean update = ps.update(new EntityWrapper()
                     .eq("id", productSpec.getId())
                     .eq("version", version));
-            if (rows == 0) {
+            if (!update) {
                 throw new GlobalException("并发更新预减库存失败");
             }
             log.info("【过期订单job】 订单: {}, 已处理失效", order.getOrderNo());

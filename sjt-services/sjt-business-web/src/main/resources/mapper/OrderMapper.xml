@@ -21,6 +21,7 @@
         select
         <include refid="base_all" />
         from t_order
-        where timestampdiff(DAY, create_date, now()) &gt;= 1
+        where status = '1'
+        and timestampdiff(DAY, create_date, now()) &gt;= 1
     </select>
 </mapper>

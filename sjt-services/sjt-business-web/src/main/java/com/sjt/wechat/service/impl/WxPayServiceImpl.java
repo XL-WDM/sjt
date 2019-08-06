@@ -258,13 +258,14 @@ public class WxPayServiceImpl implements IWxPayService {
                 ProductSpec productSpec = productSpecMapper.selectById(orderItem.getProductSpecId());
                 // 9-3.减库存
                 int version = productSpec.getVersion();
-                productSpec.setStockNum(productSpec.getStockNum() - orderItem.getNum());
-                productSpec.setOrderStockNum(productSpec.getOrderStockNum() - orderItem.getNum());
-                productSpec.setVersion(version + 1);
-                boolean rows = productSpec.update(new EntityWrapper()
+                ProductSpec ps = new ProductSpec();
+                ps.setStockNum(productSpec.getStockNum() - orderItem.getNum());
+                ps.setOrderStockNum(productSpec.getOrderStockNum() - orderItem.getNum());
+                ps.setVersion(version + 1);
+                boolean b = ps.update(new EntityWrapper()
                         .eq("id", productSpec.getId())
                         .eq("version", version));
-                if (rows) {
+                if (b) {
                     break;
                 }
             }
