@@ -40,5 +40,4 @@ sjt:
                     /doc.html,
                     /error,
                     /auth/sign,
-                    /**/open-api/**,
-                    /.well-known/pki-validation/fileauth.txt
+                    /**/open-api/**
