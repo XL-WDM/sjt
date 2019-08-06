@@ -16,4 +16,11 @@
         from t_order
         where order_no = #{orderNo}
     </select>
+    
+    <select id="selectOverdueOrder" resultMap="orderResult">
+        select
+        <include refid="base_all" />
+        from t_order
+        where timestampdiff(DAY, create_date, now()) &gt;= 1
+    </select>
 </mapper>

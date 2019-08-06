@@ -7,6 +7,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 /**
@@ -18,6 +19,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @MapperScan({"com.sjt.business.mapper"})
 @EnableSwagger2
 @EnableMybatisPlusOptimization
+@EnableScheduling
 public class AppBusiness {
     public static void main(String[] args) {
         SpringApplication.run(AppBusiness.class, args);
