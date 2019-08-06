@@ -216,9 +216,7 @@ public class WxPayServiceImpl implements IWxPayService {
         String orderNo = wxPayNotifyResponseVO.getOutTradeNo();
 
         // 5.获取订单
-        Order order = new Order();
-        order.setOrderNo(orderNo);
-        order = orderMapper.selectOne(order);
+        Order order = orderMapper.selectOneByOrderNo(orderNo);
         if (order == null) {
             log.error("## 【微信支付结果通知】 订单不存在, orderNo: {}", orderNo);
             return;

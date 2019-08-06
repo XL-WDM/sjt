@@ -39,7 +39,6 @@ public class OrderOverdueJob {
     @Scheduled(fixedRate = BaseConstant.Time.MINUTE)
     private void job() {
         // 1.查询过期订单
-        Order order1 = orderMapper.selectOneByOrderNo("13321132421434113");
         List<Order> orders = orderMapper.selectOverdueOrder();
         for (Order order : orders) {
             try {

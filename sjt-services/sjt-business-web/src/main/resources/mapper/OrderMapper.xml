@@ -16,7 +16,7 @@
         from t_order
         where order_no = #{orderNo}
     </select>
-    
+
     <select id="selectOverdueOrder" resultMap="orderResult">
         select
         <include refid="base_all" />
