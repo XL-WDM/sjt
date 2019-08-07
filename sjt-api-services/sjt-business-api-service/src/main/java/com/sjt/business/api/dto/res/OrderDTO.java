@@ -54,6 +54,9 @@ public class OrderDTO {
     /**
      * 订单详情
      */
-    @ApiModelProperty(value = "订单id", dataType = "List")
+    @ApiModelProperty(value = "订单详情", dataType = "List")
     private List<OrderItemDTO> orderItems;
+
+    @ApiModelProperty("收货地址")
+    private AddressDTO address;
 }

@@ -5,14 +5,12 @@ import com.baomidou.mybatisplus.plugins.Page;
 import com.sjt.business.api.dto.req.OrderItemParamDTO;
 import com.sjt.business.api.dto.req.OrderParamDTO;
 import com.sjt.business.api.dto.req.PlaceOrderParamDTO;
+import com.sjt.business.api.dto.res.AddressDTO;
 import com.sjt.business.api.dto.res.OrderDTO;
 import com.sjt.business.api.dto.res.OrderItemDTO;
 import com.sjt.business.api.dto.res.PlaceOrderDTO;
 import com.sjt.business.constant.DataBaseConstant;
-import com.sjt.business.entity.Order;
-import com.sjt.business.entity.OrderItem;
-import com.sjt.business.entity.Product;
-import com.sjt.business.entity.ProductSpec;
+import com.sjt.business.entity.*;
 import com.sjt.business.mapper.*;
 import com.sjt.business.service.IOrderService;
 import com.sjt.business.web.config.WebUserContext;
@@ -125,9 +123,9 @@ public class OrderServiceImpl implements IOrderService {
 
             oItem.setDiscountAmount(new BigDecimal("0"));
 
-            oItem.setProductName(product.getProductName());
+            oItem.setProductName(productSpec.getSpecName());
             oItem.setProductDescript(product.getDescript());
-            oItem.setProductImg(product.getMainImage());
+            oItem.setProductImg(productSpec.getSpecImage());
 
             // 2-10.添加到集合
             orderDetails.add(oItem);
@@ -157,9 +155,9 @@ public class OrderServiceImpl implements IOrderService {
 
         // 4.生成订单详情
         Long orderId = order.getId();
-        for (OrderItem orderDetail : orderDetails) {
-            orderDetail.setOrderId(orderId);
-            boolean insertOrderDetail = orderDetail.insert();
+        for (OrderItem item : orderDetails) {
+            item.setOrderId(orderId);
+            boolean insertOrderDetail = item.insert();
             CheckObjects.predicate(insertOrderDetail, b -> !b, "订单详情生成失败");
         }
 
@@ -272,6 +270,15 @@ public class OrderServiceImpl implements IOrderService {
                 orderItemDTOS.add(orderItemDTO);
             }
             orderDTO.setOrderItems(orderItemDTOS);
+        }
+
+        // 4.获取收货地址
+        if (order.getAddressId() != null) {
+            // 4-1.查询
+            Address address = addressMapper.selectById(order.getAddressId());
+            // 4-2.Entity -> DTO
+            AddressDTO addressDTO = BeanCopierUtils.copyBean(address, AddressDTO.class);
+            orderDTO.setAddress(addressDTO);
         }
 
         return orderDTO;
