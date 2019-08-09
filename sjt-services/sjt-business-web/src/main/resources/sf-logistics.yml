@@ -1,0 +1,12 @@
+clientCode: WKWLKJ
+checkword: checkword
+url: https://bsp-oisp.sf-express.com/bsp-oisp/sfexpressService
+routeXml: <Request service='RouteService' lang='zh-CN'>\n\
+          <Head>CLIENT_CODE</Head>\n\
+          <Body>\n\
+          <RouteRequest\n\
+          tracking_type='TRACKING_TYPE'\n\
+          method_type='1'\n\
+          tracking_number='NUMBER'/>\n\
+          </Body>\n\
+          </Request>

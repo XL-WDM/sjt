@@ -1,1 +1,1 @@
-mvn install:install-file -Dfile=SF-CSIM-EXPRESS-SDK-V1.6.jar -DgroupId=com.shunfen -DartifactId=sf-sjk -Dversion=1.6.0 -Dpackaging=jar
+mvn install:install-file -Dfile=SF-CSIM-EXPRESS-SDK-V1.6.jar -DgroupId=com.shunfeng -DartifactId=sf-sdk -Dversion=1.6.0 -Dpackaging=jar
