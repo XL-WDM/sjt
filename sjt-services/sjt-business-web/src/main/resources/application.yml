@@ -39,5 +39,7 @@ sjt:
                     /webjars/**,
                     /doc.html,
                     /error,
-                    /auth/sign,
-                    /**/open-api/**
+                    /oauth/sign,
+                    /oauth/business/sign,
+                    /**/open-api/**,
+                    /**/open-page/**

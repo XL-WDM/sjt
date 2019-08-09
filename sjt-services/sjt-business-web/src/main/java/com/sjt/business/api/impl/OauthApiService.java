@@ -12,8 +12,10 @@ import com.sjt.common.utils.ResponseUtils;
 import com.sjt.common.utils.SpringUtils;
 import com.sjt.wechat.api.dto.res.WxAccessTokenDTO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletResponse;
 
@@ -43,5 +45,10 @@ public class OauthApiService implements OauthApi {
         // 设置 cookie
         ResponseUtils.setCookie(response, WxCookieConstant.WX_OAUTH_ACCESS_TOKEN, token);
         return ResultDTO.success();
+    }
+
+    @GetMapping("/business/sign")
+    public ModelAndView businessLoginPage() {
+        return new ModelAndView("login/index");
     }
 }

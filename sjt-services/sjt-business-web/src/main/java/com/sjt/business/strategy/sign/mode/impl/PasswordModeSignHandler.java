@@ -30,17 +30,18 @@ public class PasswordModeSignHandler implements SignModeHandler {
     public UserModel check(SignParamDTO signParamDTO) {
         // 1.校验
         String password = signParamDTO.getPassword();
+        CheckObjects.isEmpty(password, "请输入您密码");
+
         String username = signParamDTO.getUsername();
         String phone = signParamDTO.getPhone();
         String email = signParamDTO.getEmail();
 
-        CheckObjects.isEmpty(password, "请输入您密码");
-        try {
+        /*try {
             password = CryptoEncryptUtils.aesDecrypt(password);
             CheckObjects.isEmpty(password, "密码密文格式不正确");
         } catch (Exception e) {
             throw new GlobalException("密码密文格式不正确");
-        }
+        }*/
 
         String pwd = MD5Utils.getMD5(password, EncryptionSlotConstant.PASSWORD_SLOT);
         CheckObjects.isEmpty(pwd, "密码不正确");

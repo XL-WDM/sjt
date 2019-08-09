@@ -8,8 +8,10 @@ import com.sjt.business.api.expose.OrderApi;
 import com.sjt.business.service.IOrderService;
 import com.sjt.common.base.result.ResultDTO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.ModelAndView;
 
 import java.util.List;
 
@@ -40,5 +42,11 @@ public class OrderApiService implements OrderApi {
     public ResultDTO<OrderDTO> getOrderDetail(Long orderId) {
         OrderDTO orderDetail = iOrderService.getOrderDetail(orderId);
         return ResultDTO.data(orderDetail);
+    }
+
+    @GetMapping("/order-manage")
+    public ModelAndView getPayOrder() {
+
+        return new ModelAndView("order/index");
     }
 }
