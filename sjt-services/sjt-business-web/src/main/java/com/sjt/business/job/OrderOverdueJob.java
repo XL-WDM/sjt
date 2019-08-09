@@ -79,7 +79,7 @@ public class OrderOverdueJob {
             if (!update) {
                 throw new GlobalException("并发更新预减库存失败");
             }
-            log.info("【过期订单job】 订单: {}, 已处理失效", order.getOrderNo());
+            log.info("【订单过期处理job】 订单: {}, 已处理", order.getOrderNo());
         }
     }
 }

@@ -28,6 +28,13 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-freemarker</artifactId>
         </dependency>
+
+        <!-- 顺丰sdk -->
+        <dependency>
+            <groupId>com.shunfeng</groupId>
+            <artifactId>sf-sdk</artifactId>
+            <version>1.6.0</version>
+        </dependency>
     </dependencies>
 
     <build>

@@ -1,0 +1,6 @@
+﻿<Request service='OrderSearchService' lang='zh-CN'>
+<Head>CLIENT_CODE</Head>
+<Body>
+<OrderSearch orderid='QIAO-20180104001'/>
+</Body>
+</Request>
