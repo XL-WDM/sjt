@@ -26,12 +26,16 @@ public class ShunFengServiceImpl implements IShunFengService {
     @Override
     public Object routeQuery(String orderNo) {
 
-        //
-        String reqXml = sfLogistics.getRouteXml().replace("TRACKING_NUMBER", orderNo);
+        // 获取配置信息
+        String reqXml = sfLogistics.getRouteXml();
         String clientCode = sfLogistics.getClientCode();
         String checkword = sfLogistics.getCheckword();
-        reqXml = reqXml.replace("CLIENT_CODE", clientCode);
         String url = sfLogistics.getUrl();
+
+        // 处理报文
+        reqXml = reqXml.replace("CLIENT_CODE", clientCode)
+                       .replace("TRACKING_TYPE", "1")
+                       .replace("NUMBER", orderNo);
         String verifyCode = getVerifyCode(reqXml , checkword);
 
         log.info("【顺丰物流查询】 request -> {}", reqXml);
