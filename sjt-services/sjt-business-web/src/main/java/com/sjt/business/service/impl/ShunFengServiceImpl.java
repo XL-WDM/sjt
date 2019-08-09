@@ -30,15 +30,15 @@ public class ShunFengServiceImpl implements IShunFengService {
         String reqXml = sfLogistics.getRouteXml().replace("TRACKING_NUMBER", orderNo);
         String clientCode = sfLogistics.getClientCode();
         String checkword = sfLogistics.getCheckword();
-        String myReqXML = reqXml.replace("CLIENT_CODE", clientCode);
+        reqXml = reqXml.replace("CLIENT_CODE", clientCode);
         String url = sfLogistics.getUrl();
-        String verifyCode = getVerifyCode(myReqXML, checkword);
+        String verifyCode = getVerifyCode(reqXml , checkword);
 
-        System.out.println("请求报文：" + myReqXML);
-        String respXml = CallExpressServiceTools.callSfExpressServiceByCSIM(url, myReqXML, clientCode, checkword);
-        System.out.println("响应报文：" + respXml);
+        log.info("【顺丰物流查询】 request -> {}", reqXml);
+        String respXml = CallExpressServiceTools.callSfExpressServiceByCSIM(url, reqXml, clientCode, checkword);
+        log.info("【顺丰物流查询】 result -> {}", respXml);
 
-        return reqXml;
+        return respXml;
     }
 
     private String getVerifyCode(String reqXML, String checkword) {
