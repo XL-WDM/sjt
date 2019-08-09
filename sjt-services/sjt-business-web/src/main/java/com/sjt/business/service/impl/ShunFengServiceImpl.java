@@ -9,11 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import java.io.FileInputStream;
-import java.io.InputStream;
-import java.util.HashMap;
-import java.util.Map;
-
 /**
  * @author: yilan.hu
  * @data: 2019/8/9
@@ -29,10 +24,10 @@ public class ShunFengServiceImpl implements IShunFengService {
     private SfLogistics sfLogistics;
 
     @Override
-    public void routeQuery() {
+    public Object routeQuery(String orderNo) {
 
         //
-        String reqXml = sfLogistics.getRouteXml().replace("TRACKING_NUMBER", "123123123123123");
+        String reqXml = sfLogistics.getRouteXml().replace("TRACKING_NUMBER", orderNo);
         String clientCode = sfLogistics.getClientCode();
         String checkword = sfLogistics.getCheckword();
         String myReqXML = reqXml.replace("CLIENT_CODE", clientCode);
@@ -42,6 +37,8 @@ public class ShunFengServiceImpl implements IShunFengService {
         System.out.println("请求报文：" + myReqXML);
         String respXml = CallExpressServiceTools.callSfExpressServiceByCSIM(url, myReqXML, clientCode, checkword);
         System.out.println("响应报文：" + respXml);
+
+        return reqXml;
     }
 
     private String getVerifyCode(String reqXML, String checkword) {

@@ -17,9 +17,9 @@ public class LogisticsManageApiService implements LogisticsManageApi {
     private IShunFengService iShunFengService;
 
     @Override
-    public ResultDTO queryLogistics(String orderId) {
-        iShunFengService.routeQuery();
+    public ResultDTO queryLogistics(String orderNo) {
+        Object o = iShunFengService.routeQuery(orderNo);
 
-        return ResultDTO.success();
+        return ResultDTO.data(o);
     }
 }

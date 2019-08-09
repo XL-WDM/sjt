@@ -8,6 +8,8 @@ public interface IShunFengService {
 
     /**
      * 路由查询-通过运单号
+     * @param orderNo
+     * @return
      */
-    void routeQuery();
+    Object routeQuery(String orderNo);
 }

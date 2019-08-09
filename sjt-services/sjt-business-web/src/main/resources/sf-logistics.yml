@@ -1,5 +1,5 @@
 clientCode: WKWLKJ
-checkword: checkword
+checkword: 6ObwuMJqkvdSqx5VpdIHDQYmRbGoObv6
 url: https://bsp-oisp.sf-express.com/bsp-oisp/sfexpressService
 routeXml: <Request service='RouteService' lang='zh-CN'>\n\
           <Head>CLIENT_CODE</Head>\n\
