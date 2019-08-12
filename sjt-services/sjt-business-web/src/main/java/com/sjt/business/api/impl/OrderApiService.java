@@ -1,17 +1,17 @@
 package com.sjt.business.api.impl;
 
+import com.sjt.business.api.dto.req.OrderManageParamDTO;
 import com.sjt.business.api.dto.req.OrderParamDTO;
 import com.sjt.business.api.dto.req.PlaceOrderParamDTO;
 import com.sjt.business.api.dto.res.OrderDTO;
+import com.sjt.business.api.dto.res.OrderManageInfoDTO;
 import com.sjt.business.api.dto.res.PlaceOrderDTO;
 import com.sjt.business.api.expose.OrderApi;
 import com.sjt.business.service.IOrderService;
 import com.sjt.common.base.result.ResultDTO;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.ModelAndView;
 
 import java.util.List;
 
@@ -44,9 +44,8 @@ public class OrderApiService implements OrderApi {
         return ResultDTO.data(orderDetail);
     }
 
-    @GetMapping("/order-manage")
-    public ModelAndView getPayOrder() {
-
-        return new ModelAndView("order/index");
+    @Override
+    public ResultDTO<List<OrderManageInfoDTO>> getOrders(OrderManageParamDTO orderManageParamDTO) {
+        return null;
     }
 }

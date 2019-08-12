@@ -1,19 +1,19 @@
 package com.sjt.business.service.impl;
 
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
+import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.sjt.business.api.dto.req.OrderItemParamDTO;
+import com.sjt.business.api.dto.req.OrderManageParamDTO;
 import com.sjt.business.api.dto.req.OrderParamDTO;
 import com.sjt.business.api.dto.req.PlaceOrderParamDTO;
-import com.sjt.business.api.dto.res.AddressDTO;
-import com.sjt.business.api.dto.res.OrderDTO;
-import com.sjt.business.api.dto.res.OrderItemDTO;
-import com.sjt.business.api.dto.res.PlaceOrderDTO;
+import com.sjt.business.api.dto.res.*;
 import com.sjt.business.constant.DataBaseConstant;
 import com.sjt.business.entity.*;
 import com.sjt.business.mapper.*;
 import com.sjt.business.service.IOrderService;
 import com.sjt.business.web.config.WebUserContext;
+import com.sjt.common.base.constant.BaseConstant;
 import com.sjt.common.base.constant.ResultConstant;
 import com.sjt.common.utils.BeanCopierUtils;
 import com.sjt.common.utils.CheckObjects;
@@ -25,8 +25,12 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * @author: yilan.hu
@@ -282,5 +286,55 @@ public class OrderServiceImpl implements IOrderService {
         }
 
         return orderDTO;
+    }
+
+    @Override
+    public Integer getOrderManageCountByPage(OrderManageParamDTO orderManageParamDTO) {
+
+        return null;
+    }
+
+    @Override
+    public List<OrderManageInfoDTO> getOrderManageListByPage(OrderManageParamDTO orderManageParamDTO) {
+        // 参数校验
+        CheckObjects.isNull(orderManageParamDTO, ResultConstant.PARAMETERS_CANNOT_BE_NULL);
+        Integer pageNo = orderManageParamDTO.getPageNo();
+        Integer pageSize = orderManageParamDTO.getPageSize();
+        CheckObjects.isPage(pageNo, pageSize);
+        String status = orderManageParamDTO.getStatus();
+        if (!StringUtils.isEmpty(status)) {
+            DataBaseConstant.OrderStatus orderStatus = DataBaseConstant.OrderStatus.find(status);
+            CheckObjects.isNull(orderStatus, "订单状态输入有误");
+        }
+
+        // 订单查询
+        Wrapper<Order> entityWrapper = new EntityWrapper<Order>()
+                .eq("1", "1")
+                .andNew()
+                .eq(!StringUtils.isEmpty(status), "status", status);
+
+        String startDate = orderManageParamDTO.getStartDate();
+        String endDate = orderManageParamDTO.getEndDate();
+        if (!StringUtils.isEmpty(startDate)) {
+            entityWrapper.andNew().ge("create_date",
+                    LocalDateTime.parse(startDate, DateTimeFormatter.ofPattern(BaseConstant.FormatDate.DATE)));
+        }
+        if (!StringUtils.isEmpty(endDate)) {
+            entityWrapper.andNew().le("create_date",
+                    LocalDateTime.parse(endDate, DateTimeFormatter.ofPattern(BaseConstant.FormatDate.DATE)));
+        }
+        List<Order> orders = orderMapper.selectPage(new Page<Order>(pageNo, pageSize), entityWrapper);
+
+
+        List<OrderManageInfoDTO> orderManageInfoDTOS = orders.stream().map(order -> {
+            // Entity -> DTO
+            OrderManageInfoDTO orderManage = BeanCopierUtils.copyBean(order, OrderManageInfoDTO.class);
+
+
+            return orderManage;
+        }).collect(Collectors.toList());
+
+
+        return orderManageInfoDTOS;
     }
 }

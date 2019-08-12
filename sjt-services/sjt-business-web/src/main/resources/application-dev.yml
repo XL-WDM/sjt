@@ -11,6 +11,8 @@ logging:
     org.springframework.web: INFO
     com.sjt.business.mapper: INFO
 sjt:
+  cross:
+    origin: '*'
   # swagger
   swagger:
     enable: true

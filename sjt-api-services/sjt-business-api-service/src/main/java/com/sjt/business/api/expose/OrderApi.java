@@ -1,8 +1,10 @@
 package com.sjt.business.api.expose;
 
+import com.sjt.business.api.dto.req.OrderManageParamDTO;
 import com.sjt.business.api.dto.req.OrderParamDTO;
 import com.sjt.business.api.dto.req.PlaceOrderParamDTO;
 import com.sjt.business.api.dto.res.OrderDTO;
+import com.sjt.business.api.dto.res.OrderManageInfoDTO;
 import com.sjt.business.api.dto.res.PlaceOrderDTO;
 import com.sjt.common.base.result.ResultDTO;
 import io.swagger.annotations.*;
@@ -49,4 +51,14 @@ public interface OrderApi {
     @ApiOperation(value = "获取订单详情")
     @GetMapping("/detail")
     ResultDTO<OrderDTO> getOrderDetail(Long orderId);
+
+
+    /**
+     * 订单管理查询
+     * @param orderManageParamDTO
+     * @return
+     */
+    @ApiOperation(value = "订单管理查询", response = OrderManageInfoDTO.class, hidden = true)
+    @GetMapping("/manage/query")
+    ResultDTO<List<OrderManageInfoDTO>> getOrders(OrderManageParamDTO orderManageParamDTO);
 }

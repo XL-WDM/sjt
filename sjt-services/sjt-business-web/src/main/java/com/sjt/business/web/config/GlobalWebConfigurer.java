@@ -37,12 +37,14 @@ public class GlobalWebConfigurer implements WebMvcConfigurer {
     public void addCorsMappings(CorsRegistry registry) {
         if (cross != null) {
             CorsRegistration corsRegistration = registry.addMapping("/**");
-            if (!StringUtils.isEmpty(cross.getOrigin())) {
-                corsRegistration.allowedOrigins(cross.getOrigin())
-                        // 允许cookie跨域
-                        .allowCredentials(true)
-                        // 预检命令缓存
-                        .maxAge(BaseConstant.Second.DAY);
+
+            String[] origin = cross.getOrigin();
+            if (origin != null && origin.length > 0) {
+                corsRegistration.allowedOrigins(origin)
+                // 允许cookie跨域
+                .allowCredentials(true)
+                // 预检命令缓存
+                .maxAge(BaseConstant.Second.DAY);
             }
             if (cross.getHeders() != null && cross.getHeders().length > 0) {
                 corsRegistration.allowedHeaders(cross.getHeders());
