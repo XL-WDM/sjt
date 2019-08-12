@@ -46,6 +46,9 @@ public class OrderApiService implements OrderApi {
 
     @Override
     public ResultDTO<List<OrderManageInfoDTO>> getOrders(OrderManageParamDTO orderManageParamDTO) {
-        return null;
+        List<OrderManageInfoDTO> rows = iOrderService.getOrderManageListByPage(orderManageParamDTO);
+        Integer total = iOrderService.getOrderManageCountByPage(orderManageParamDTO);
+
+        return ResultDTO.page(total, rows);
     }
 }

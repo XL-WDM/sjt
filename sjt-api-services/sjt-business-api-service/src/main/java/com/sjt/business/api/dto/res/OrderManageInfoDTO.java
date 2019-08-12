@@ -27,18 +27,6 @@ public class OrderManageInfoDTO {
     private String orderNo;
 
     /**
-     * 用户信息
-     */
-    @ApiModelProperty("用户信息")
-    private SignUserDTO user;
-
-    /**
-     * 收货地址
-     */
-    @ApiModelProperty("收货地址")
-    private AddressDTO address;
-
-    /**
      * 订单总金额(单位：分)
      */
     @ApiModelProperty("订单总金额(单位：分)")

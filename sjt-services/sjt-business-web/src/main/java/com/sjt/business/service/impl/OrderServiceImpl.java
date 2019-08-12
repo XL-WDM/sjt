@@ -57,6 +57,9 @@ public class OrderServiceImpl implements IOrderService {
     @Autowired
     private OrderItemMappler orderItemMappler;
 
+    @Autowired
+    private UserMapper userMapper;
+
     @Override
     @Transactional(rollbackFor = Exception.class)
     public PlaceOrderDTO placeOrder(PlaceOrderParamDTO placeOrderParamDTO) {
@@ -290,27 +293,16 @@ public class OrderServiceImpl implements IOrderService {
 
     @Override
     public Integer getOrderManageCountByPage(OrderManageParamDTO orderManageParamDTO) {
-
-        return null;
-    }
-
-    @Override
-    public List<OrderManageInfoDTO> getOrderManageListByPage(OrderManageParamDTO orderManageParamDTO) {
-        // 参数校验
+        // 1.参数校验
         CheckObjects.isNull(orderManageParamDTO, ResultConstant.PARAMETERS_CANNOT_BE_NULL);
-        Integer pageNo = orderManageParamDTO.getPageNo();
-        Integer pageSize = orderManageParamDTO.getPageSize();
-        CheckObjects.isPage(pageNo, pageSize);
         String status = orderManageParamDTO.getStatus();
         if (!StringUtils.isEmpty(status)) {
             DataBaseConstant.OrderStatus orderStatus = DataBaseConstant.OrderStatus.find(status);
             CheckObjects.isNull(orderStatus, "订单状态输入有误");
         }
 
-        // 订单查询
+        // 2.订单查询
         Wrapper<Order> entityWrapper = new EntityWrapper<Order>()
-                .eq("1", "1")
-                .andNew()
                 .eq(!StringUtils.isEmpty(status), "status", status);
 
         String startDate = orderManageParamDTO.getStartDate();
@@ -323,17 +315,51 @@ public class OrderServiceImpl implements IOrderService {
             entityWrapper.andNew().le("create_date",
                     LocalDateTime.parse(endDate, DateTimeFormatter.ofPattern(BaseConstant.FormatDate.DATE)));
         }
-        List<Order> orders = orderMapper.selectPage(new Page<Order>(pageNo, pageSize), entityWrapper);
 
+        // 3.返回
+        return orderMapper.selectCount(entityWrapper);
+    }
 
+    @Override
+    public List<OrderManageInfoDTO> getOrderManageListByPage(OrderManageParamDTO orderManageParamDTO) {
+        // 1.参数校验
+        CheckObjects.isNull(orderManageParamDTO, ResultConstant.PARAMETERS_CANNOT_BE_NULL);
+        Integer pageNo = orderManageParamDTO.getPageNo();
+        Integer pageSize = orderManageParamDTO.getPageSize();
+        CheckObjects.isPage(pageNo, pageSize);
+        String status = orderManageParamDTO.getStatus();
+        if (!StringUtils.isEmpty(status)) {
+            DataBaseConstant.OrderStatus orderStatus = DataBaseConstant.OrderStatus.find(status);
+            CheckObjects.isNull(orderStatus, "订单状态输入有误");
+        }
+
+        // 2.订单查询
+        Wrapper<Order> entityWrapper = new EntityWrapper<Order>()
+                .eq(!StringUtils.isEmpty(orderManageParamDTO.getOrderNo()), "order_no", orderManageParamDTO.getOrderNo())
+                .eq(!StringUtils.isEmpty(status), "status", status);
+
+        String startDate = orderManageParamDTO.getStartDate();
+        String endDate = orderManageParamDTO.getEndDate();
+        if (!StringUtils.isEmpty(startDate)) {
+            entityWrapper.andNew().ge("create_date",
+                    LocalDateTime.parse(startDate, DateTimeFormatter.ofPattern(BaseConstant.FormatDate.DATE)));
+        }
+        if (!StringUtils.isEmpty(endDate)) {
+            entityWrapper.andNew().le("create_date",
+                    LocalDateTime.parse(endDate, DateTimeFormatter.ofPattern(BaseConstant.FormatDate.DATE)));
+        }
+        List<Order> orders = orderMapper.selectPage(new Page<Order>(pageNo, pageSize),
+                entityWrapper.orderBy("create_date", false));
+
+        // 3.结果处理
         List<OrderManageInfoDTO> orderManageInfoDTOS = orders.stream().map(order -> {
-            // Entity -> DTO
+            // 3-1.Entity -> DTO
             OrderManageInfoDTO orderManage = BeanCopierUtils.copyBean(order, OrderManageInfoDTO.class);
-
+            // 3-2.分 -> 元
+            orderManage.setPayment(PriceUtils.centToYuan(orderManage.getPayment()));
 
             return orderManage;
         }).collect(Collectors.toList());
-
 
         return orderManageInfoDTOS;
     }

@@ -1,6 +1,6 @@
 spring:
   profiles:
-    active: dev
+    active: test
 server:
   port: 8181
   servlet:
@@ -40,6 +40,5 @@ sjt:
                     /doc.html,
                     /error,
                     /oauth/sign,
-                    /oauth/business/sign,
                     /**/open-api/**,
                     /**/open-page/**
