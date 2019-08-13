@@ -59,4 +59,11 @@ public class OrderApiService implements OrderApi {
 
         return ResultDTO.success();
     }
+
+    @Override
+    public ResultDTO<OrderDTO> getOrderManageDetail(Long orderId) {
+        OrderDTO orderDTO = iOrderService.getOrderManageDetail(orderId);
+
+        return ResultDTO.data(orderDTO);
+    }
 }

@@ -394,4 +394,47 @@ public class OrderServiceImpl implements IOrderService {
         order.setUpdateDate(LocalDateTime.now());
         boolean rows = order.update(new EntityWrapper<Order>().eq("id", o.getId()));
     }
+
+    @Override
+    public OrderDTO getOrderManageDetail(Long orderId) {
+        // 1.参数校验
+        CheckObjects.isNull(orderId, "请选择需要查询的订单");
+        Order order = orderMapper.selectById(orderId);
+        CheckObjects.isNull(order, "订单不存在");
+
+        // 3-1.Entity -> DTO
+        OrderDTO orderDTO = BeanCopierUtils.copyBean(order, OrderDTO.class);
+        // 3-2.分 -> 元
+        orderDTO.setTotalAmount(PriceUtils.centToYuan(orderDTO.getTotalAmount()));
+        orderDTO.setOrgAmount(PriceUtils.centToYuan(orderDTO.getOrgAmount()));
+        orderDTO.setPostFee(PriceUtils.centToYuan(orderDTO.getPostFee()));
+
+
+        // 3-3.获取订单详情
+        List<OrderItem> orderItems = orderItemMappler.selectList(new EntityWrapper<OrderItem>()
+                .eq("order_id", order.getId()));
+
+        // 3-4.设置订单详情信息
+        if (orderItems != null && !orderItems.isEmpty()) {
+            List<OrderItemDTO> orderItemDTOS = new ArrayList<>();
+            for (OrderItem orderItem : orderItems) {
+                OrderItemDTO orderItemDTO = BeanCopierUtils.copyBean(orderItem, OrderItemDTO.class);
+                // 分 -> 元
+                orderItemDTO.setPrice(PriceUtils.centToYuan(orderItemDTO.getPrice()));
+                orderItemDTOS.add(orderItemDTO);
+            }
+            orderDTO.setOrderItems(orderItemDTOS);
+        }
+
+        // 4.获取收货地址
+        if (order.getAddressId() != null) {
+            // 4-1.查询
+            Address address = addressMapper.selectById(order.getAddressId());
+            // 4-2.Entity -> DTO
+            AddressDTO addressDTO = BeanCopierUtils.copyBean(address, AddressDTO.class);
+            orderDTO.setAddress(addressDTO);
+        }
+
+        return orderDTO;
+    }
 }

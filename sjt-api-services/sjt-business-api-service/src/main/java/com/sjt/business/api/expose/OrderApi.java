@@ -70,6 +70,17 @@ public interface OrderApi {
      * @param orderEditParamDTO
      * @return
      */
+    @ApiOperation(value = "订单管理-物流单号录入", hidden = true)
     @PostMapping("/manage/logistics/import")
     ResultDTO editOrder(@RequestBody OrderEditParamDTO orderEditParamDTO);
+
+    /**
+     * 获取订单管理详情
+     * @param orderId
+     * @return
+     */
+    @ApiImplicitParam(name = "orderId", value = "订单编号", required = true)
+    @ApiOperation(value = "获取订单管理详情", response = OrderDTO.class)
+    @GetMapping("/manage/detail")
+    ResultDTO<OrderDTO> getOrderManageDetail(Long orderId);
 }

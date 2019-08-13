@@ -63,4 +63,11 @@ public interface IOrderService {
      * @param orderEditParamDTO
      */
     void editOrder(OrderEditParamDTO orderEditParamDTO);
+
+    /**
+     * 订单管理-订单详情
+     * @param orderId
+     * @return
+     */
+    OrderDTO getOrderManageDetail(Long orderId);
 }
