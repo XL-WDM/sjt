@@ -40,5 +40,6 @@ sjt:
                     /doc.html,
                     /error,
                     /auth/sign,
+                    /portal/**,
                     /**/open-api/**,
                     /**/open-page/**
