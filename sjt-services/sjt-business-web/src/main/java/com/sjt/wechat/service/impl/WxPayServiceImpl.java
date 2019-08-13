@@ -108,9 +108,6 @@ public class WxPayServiceImpl implements IWxPayService {
         order.setContactName(address.getContacts());
         order.setContactPhone(address.getPhone());
         StringBuilder build = new StringBuilder()
-                .append(address.getProvince())
-                .append(address.getCity())
-                .append(address.getCounty())
                 .append(address.getAddress())
                 .append(address.getDoorNumber());
         order.setAddress(build.toString());
