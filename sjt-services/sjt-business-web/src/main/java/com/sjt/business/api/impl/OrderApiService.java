@@ -1,5 +1,6 @@
 package com.sjt.business.api.impl;
 
+import com.sjt.business.api.dto.req.OrderEditParamDTO;
 import com.sjt.business.api.dto.req.OrderManageParamDTO;
 import com.sjt.business.api.dto.req.OrderParamDTO;
 import com.sjt.business.api.dto.req.PlaceOrderParamDTO;
@@ -50,5 +51,12 @@ public class OrderApiService implements OrderApi {
         Integer total = iOrderService.getOrderManageCountByPage(orderManageParamDTO);
 
         return ResultDTO.page(total, rows);
+    }
+
+    @Override
+    public ResultDTO editOrder(@RequestBody OrderEditParamDTO orderEditParamDTO) {
+        iOrderService.editOrder(orderEditParamDTO);
+
+        return ResultDTO.success();
     }
 }

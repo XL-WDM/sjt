@@ -3,10 +3,7 @@ package com.sjt.business.service.impl;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.baomidou.mybatisplus.plugins.Page;
-import com.sjt.business.api.dto.req.OrderItemParamDTO;
-import com.sjt.business.api.dto.req.OrderManageParamDTO;
-import com.sjt.business.api.dto.req.OrderParamDTO;
-import com.sjt.business.api.dto.req.PlaceOrderParamDTO;
+import com.sjt.business.api.dto.req.*;
 import com.sjt.business.api.dto.res.*;
 import com.sjt.business.constant.DataBaseConstant;
 import com.sjt.business.entity.*;
@@ -30,9 +27,9 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
+ * 订单逻辑处理
  * @author: yilan.hu
  * @data: 2019/7/18
  */
@@ -309,11 +306,13 @@ public class OrderServiceImpl implements IOrderService {
         String endDate = orderManageParamDTO.getEndDate();
         if (!StringUtils.isEmpty(startDate)) {
             entityWrapper.andNew().ge("create_date",
-                    LocalDateTime.parse(startDate, DateTimeFormatter.ofPattern(BaseConstant.FormatDate.DATE)));
+                    LocalDateTime.parse(startDate + " " + BaseConstant.FormatDate.TIME_STRING_START,
+                            DateTimeFormatter.ofPattern(BaseConstant.FormatDate.DATE_TIME)));
         }
         if (!StringUtils.isEmpty(endDate)) {
             entityWrapper.andNew().le("create_date",
-                    LocalDateTime.parse(endDate, DateTimeFormatter.ofPattern(BaseConstant.FormatDate.DATE)));
+                    LocalDateTime.parse(endDate + " " + BaseConstant.FormatDate.TIME_STRING_END,
+                            DateTimeFormatter.ofPattern(BaseConstant.FormatDate.DATE_TIME)));
         }
 
         // 3.返回
@@ -342,11 +341,13 @@ public class OrderServiceImpl implements IOrderService {
         String endDate = orderManageParamDTO.getEndDate();
         if (!StringUtils.isEmpty(startDate)) {
             entityWrapper.andNew().ge("create_date",
-                    LocalDateTime.parse(startDate, DateTimeFormatter.ofPattern(BaseConstant.FormatDate.DATE)));
+                    LocalDateTime.parse(startDate + " " + BaseConstant.FormatDate.TIME_STRING_START,
+                            DateTimeFormatter.ofPattern(BaseConstant.FormatDate.DATE_TIME)));
         }
         if (!StringUtils.isEmpty(endDate)) {
             entityWrapper.andNew().le("create_date",
-                    LocalDateTime.parse(endDate, DateTimeFormatter.ofPattern(BaseConstant.FormatDate.DATE)));
+                    LocalDateTime.parse(endDate + " " + BaseConstant.FormatDate.TIME_STRING_END,
+                            DateTimeFormatter.ofPattern(BaseConstant.FormatDate.DATE_TIME)));
         }
         List<Order> orders = orderMapper.selectPage(new Page<Order>(pageNo, pageSize),
                 entityWrapper.orderBy("create_date", false));
@@ -362,5 +363,35 @@ public class OrderServiceImpl implements IOrderService {
         }).collect(Collectors.toList());
 
         return orderManageInfoDTOS;
+    }
+
+    @Override
+    public void editOrder(OrderEditParamDTO orderEditParamDTO) {
+        // 1.参数校验
+        CheckObjects.isNull(orderEditParamDTO, ResultConstant.PARAMETERS_CANNOT_BE_NULL);
+        Long orderId = orderEditParamDTO.getOrderId();
+        CheckObjects.isNull(orderId, "订单编号不能为空");
+        CheckObjects.isNull(orderEditParamDTO.getShippingCode(), "物流单号不能为空");
+
+        // 2.查询订单
+        Order o = orderMapper.selectById(orderId);
+        CheckObjects.isNull(o, "订单不存在");
+        CheckObjects.predicate(o.getStatus(), s -> {
+            return DataBaseConstant.OrderStatus.TO_BE_PAID.getCode().equals(s);
+        }, "订单未支付");
+
+        // 3.更新物流单号信息
+        Order order = new Order();
+        if (DataBaseConstant.OrderStatus.TO_BE_SHIPPED.getCode().equals(o.getStatus())) {
+            // 3-1.更新订单为待收货
+            order.setStatus(DataBaseConstant.OrderStatus.TO_BE_RECEIVED.getCode());
+            // 3-2.更新订单发货时间
+            order.setConsignDate(LocalDateTime.now());
+        }
+        // 3-3.订单 物流单号
+        order.setShippingCode(orderEditParamDTO.getShippingCode());
+        // 3-4.订单更新时间
+        order.setUpdateDate(LocalDateTime.now());
+        boolean rows = order.update(new EntityWrapper<Order>().eq("id", o.getId()));
     }
 }

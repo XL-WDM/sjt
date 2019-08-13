@@ -3,15 +3,23 @@ package com.sjt.business.web.config;
 import com.sjt.business.web.interceptor.UserSignatureInterceptors;
 import com.sjt.common.base.constant.BaseConstant;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.filter.CorsFilter;
 import org.springframework.web.servlet.config.annotation.*;
+
+import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  * @author: yilan.hu
  * @data: 2019/5/30
  */
-@Component
+@Configuration
 public class GlobalWebConfigurer implements WebMvcConfigurer {
 
     @Autowired(required = false)
@@ -22,10 +30,9 @@ public class GlobalWebConfigurer implements WebMvcConfigurer {
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        InterceptorRegistration oAuth = registry.addInterceptor(userSignatureInterceptors);
-        oAuth.addPathPatterns("/**");
-        if (cross.getApiWhiteList() != null) {
-            oAuth.excludePathPatterns(cross.getApiWhiteList());
+        InterceptorRegistration oAuth = registry.addInterceptor(userSignatureInterceptors).addPathPatterns("/**");
+        if (cross.getApiWhiteList() != null && cross.getApiWhiteList().length > 0) {
+            oAuth.excludePathPatterns(Arrays.asList(cross.getApiWhiteList()));
         }
     }
 

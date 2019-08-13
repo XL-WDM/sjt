@@ -83,6 +83,9 @@ public class BaseConstant {
         public static final String SIMPLE_DATE_TIME = "yyyyMMddHHmmss";
         public static final String DATE = "yyyy-MM-dd";
         public static final String DATE_TIME = "yyyy-MM-dd HH:mm:ss";
+
+        public static final String TIME_STRING_START = "00:00:00";
+        public static final String TIME_STRING_END = "23:59:59";
     }
 
     /**

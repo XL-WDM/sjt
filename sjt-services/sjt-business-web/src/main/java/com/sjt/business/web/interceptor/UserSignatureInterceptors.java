@@ -6,6 +6,7 @@ import com.sjt.business.mapper.UserMapper;
 import com.sjt.business.mapper.UserSignLogMapper;
 import com.sjt.business.web.config.WebUserContext;
 import com.sjt.common.base.result.ResultDTO;
+import com.sjt.common.exceptions.GlobalException;
 import com.sjt.common.utils.ResponseUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

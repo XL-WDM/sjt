@@ -24,4 +24,10 @@ public interface OrderMapper extends BaseMapper<Order> {
      * @return
      */
     List<Order> selectOverdueOrder();
+
+    /**
+     * 查询待收货超过7天的订单
+     * @return
+     */
+    List<Order> selectAutoCompleteOrder();
 }

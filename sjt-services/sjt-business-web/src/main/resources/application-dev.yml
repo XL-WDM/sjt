@@ -12,7 +12,7 @@ logging:
     com.sjt.business.mapper: INFO
 sjt:
   cross:
-    origin: '*'
+    origin: 'http://localhost:8080'
   # swagger
   swagger:
     enable: true

@@ -1,5 +1,6 @@
 package com.sjt.business.service;
 
+import com.sjt.business.api.dto.req.OrderEditParamDTO;
 import com.sjt.business.api.dto.req.OrderManageParamDTO;
 import com.sjt.business.api.dto.req.OrderParamDTO;
 import com.sjt.business.api.dto.req.PlaceOrderParamDTO;
@@ -56,4 +57,10 @@ public interface IOrderService {
      * @return
      */
     List<OrderManageInfoDTO> getOrderManageListByPage(OrderManageParamDTO orderManageParamDTO);
+
+    /**
+     * 订单管理-物流单录入
+     * @param orderEditParamDTO
+     */
+    void editOrder(OrderEditParamDTO orderEditParamDTO);
 }

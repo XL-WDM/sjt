@@ -20,6 +20,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 /**
+ * 订单未支付超过1天自动失效
  * @author: yilan.hu
  * @data: 2019/8/6
  */
@@ -54,15 +55,17 @@ public class OrderOverdueJob {
      * @param order
      */
     @Transactional(rollbackFor = Exception.class)
-    private void overdueOrder(Order order) {
+    private void overdueOrder(Order o) {
         // 1.更新订单状态
+        Order order = new Order();
         order.setStatus(DataBaseConstant.OrderStatus.CANCELLED.getCode());
         order.setUpdateDate(LocalDateTime.now());
+        order.setCloseDate(LocalDateTime.now());
         order.updateById();
 
         // 2.查询订单详情
         List<OrderItem> orderItems = orderItemMappler.selectList(new EntityWrapper<OrderItem>()
-                .eq("order_id", order.getId()));
+                .eq("order_id", o.getId()));
 
         // 2.回退预减库存
         for (OrderItem orderItem : orderItems) {
@@ -79,7 +82,7 @@ public class OrderOverdueJob {
             if (!update) {
                 throw new GlobalException("并发更新预减库存失败");
             }
-            log.info("【订单过期处理job】 订单: {}, 已处理", order.getOrderNo());
+            log.info("【订单过期处理job】 订单: {}, 已处理", o.getOrderNo());
         }
     }
 }
