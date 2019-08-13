@@ -4,9 +4,15 @@ import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.sjt.business.api.dto.req.*;
-import com.sjt.business.api.dto.res.*;
+import com.sjt.business.api.dto.res.OrderDTO;
+import com.sjt.business.api.dto.res.OrderItemDTO;
+import com.sjt.business.api.dto.res.OrderManageInfoDTO;
+import com.sjt.business.api.dto.res.PlaceOrderDTO;
 import com.sjt.business.constant.DataBaseConstant;
-import com.sjt.business.entity.*;
+import com.sjt.business.entity.Order;
+import com.sjt.business.entity.OrderItem;
+import com.sjt.business.entity.Product;
+import com.sjt.business.entity.ProductSpec;
 import com.sjt.business.mapper.*;
 import com.sjt.business.service.IOrderService;
 import com.sjt.business.web.config.WebUserContext;
@@ -276,15 +282,6 @@ public class OrderServiceImpl implements IOrderService {
             orderDTO.setOrderItems(orderItemDTOS);
         }
 
-        // 4.获取收货地址
-        if (order.getAddressId() != null) {
-            // 4-1.查询
-            Address address = addressMapper.selectById(order.getAddressId());
-            // 4-2.Entity -> DTO
-            AddressDTO addressDTO = BeanCopierUtils.copyBean(address, AddressDTO.class);
-            orderDTO.setAddress(addressDTO);
-        }
-
         return orderDTO;
     }
 
@@ -424,15 +421,6 @@ public class OrderServiceImpl implements IOrderService {
                 orderItemDTOS.add(orderItemDTO);
             }
             orderDTO.setOrderItems(orderItemDTOS);
-        }
-
-        // 4.获取收货地址
-        if (order.getAddressId() != null) {
-            // 4-1.查询
-            Address address = addressMapper.selectById(order.getAddressId());
-            // 4-2.Entity -> DTO
-            AddressDTO addressDTO = BeanCopierUtils.copyBean(address, AddressDTO.class);
-            orderDTO.setAddress(addressDTO);
         }
 
         return orderDTO;

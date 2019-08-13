@@ -36,11 +36,6 @@ public class Order extends Model<Order> implements Serializable {
     private Long userId;
 
     /**
-     * 收货地址id
-     */
-    private Long addressId;
-
-    /**
      * 商品总金额(单位：分)
      */
     private BigDecimal totalAmount;
@@ -109,6 +104,21 @@ public class Order extends Model<Order> implements Serializable {
      * 物流单号
      */
     private String shippingCode;
+
+    /**
+     * 联系人
+     */
+    private String contactName;
+
+    /**
+     * 联系电话
+     */
+    private String contactPhone;
+
+    /**
+     * 地址
+     */
+    private String address;
 
     /**
      * 买家留言

@@ -105,7 +105,15 @@ public class WxPayServiceImpl implements IWxPayService {
         CheckObjects.isNull(userOauths, "用户 openid 为空");
 
         // 6.更新物流信息
-        order.setAddressId(address.getId());
+        order.setContactName(address.getContacts());
+        order.setContactPhone(address.getPhone());
+        StringBuilder build = new StringBuilder()
+                .append(address.getProvince())
+                .append(address.getCity())
+                .append(address.getCounty())
+                .append(address.getAddress())
+                .append(address.getDoorNumber());
+        order.setAddress(build.toString());
         order.updateById();
 
         // 7.支付信息封装
