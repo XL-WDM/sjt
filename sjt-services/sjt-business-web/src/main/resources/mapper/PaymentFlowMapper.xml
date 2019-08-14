@@ -5,7 +5,7 @@
     <resultMap id="paymentFlowResult" type="com.sjt.business.entity.PaymentFlow" />
 
     <sql id="base_all">
-        id, pay_order_no, order_no, user_id, amount, integral, pay_type,
+        id, pay_no, order_no, pay_order_no, user_id, amount, integral, pay_type,
         status, note, create_date, update_date, pay_complete_date
     </sql>
 
