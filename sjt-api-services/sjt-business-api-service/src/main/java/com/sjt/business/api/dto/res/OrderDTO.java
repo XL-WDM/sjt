@@ -52,6 +52,12 @@ public class OrderDTO {
     private String status;
 
     /**
+     * 物流单号
+     */
+    @ApiModelProperty("物流单号")
+    private String shippingCode;
+
+    /**
      * 订单详情
      */
     @ApiModelProperty(value = "订单详情", dataType = "List")
