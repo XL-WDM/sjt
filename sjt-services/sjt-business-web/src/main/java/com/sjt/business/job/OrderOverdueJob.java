@@ -61,7 +61,7 @@ public class OrderOverdueJob {
         order.setStatus(DataBaseConstant.OrderStatus.CANCELLED.getCode());
         order.setUpdateDate(LocalDateTime.now());
         order.setCloseDate(LocalDateTime.now());
-        order.updateById();
+        order.update(new EntityWrapper().eq("id", o.getId()));
 
         // 2.查询订单详情
         List<OrderItem> orderItems = orderItemMappler.selectList(new EntityWrapper<OrderItem>()
