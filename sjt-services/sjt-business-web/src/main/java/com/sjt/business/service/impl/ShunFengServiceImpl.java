@@ -107,6 +107,8 @@ public class ShunFengServiceImpl implements IShunFengService {
         log.info("【顺丰路由查询】 request -> {}", reqXml);
         String respXml = CallExpressServiceTools.callSfExpressServiceByCSIM(url, reqXml, clientCode, checkword);
         log.info("【顺丰路由查询】 result -> {}", respXml);
+        CheckObjects.isEmpty(respXml, "物流查询失败",
+                () -> {log.error("## 【顺丰路由查询】 发起失败, Response XML is empty");});
 
         SfResponse sfResponse = XmlUtils.toObject(respXml, SfResponse.class);
         CheckObjects.isNull(sfResponse, "物流查询失败");
