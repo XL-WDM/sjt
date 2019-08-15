@@ -22,8 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * @author: yilan.hu
@@ -119,12 +118,23 @@ public class ShunFengServiceImpl implements IShunFengService {
         SfRouteResponse routeResponse = bodyOpt.orElse(new SfResponseBody()).getRouteResponse();
         Optional<SfRouteResponse> routeResOpt = Optional.of(routeResponse);
         List<SfRoute> routes = routeResOpt.orElse(new SfRouteResponse()).getRoutes();
-        CheckObjects.isEmpty(routes, "物流查询失败", () -> {
-            log.error("## 【顺丰路由查询】 发起失败, routes is empty");
-        });
+        if (routes == null || routes.isEmpty()) {
+            return new ArrayList<SfRouteDTO>();
+        }
 
-        // BO -> DTO
-        List<SfRouteDTO> sfRouteDTOS = BeanCopierUtils.copyList(routes, SfRouteDTO.class);
+        // 4.BO -> DTO 并根据路由节点时间倒序排序
+        TreeMap<String, SfRouteDTO> routeMap = new TreeMap<>();
+        routes.stream().forEach(route -> {
+            // 4-1.BO -> DTO
+            SfRouteDTO sfRouteDTO = BeanCopierUtils.copyBean(route, SfRouteDTO.class);
+            routeMap.put(route.getAcceptTime(), sfRouteDTO);
+        });
+        // 4-2.倒序
+        NavigableMap<String, SfRouteDTO> descRouteMap = routeMap.descendingMap();
+        List<SfRouteDTO> sfRouteDTOS = new ArrayList<>();
+        descRouteMap.forEach((k, v) -> {
+            sfRouteDTOS.add(v);
+        });
 
         return sfRouteDTOS;
     }
