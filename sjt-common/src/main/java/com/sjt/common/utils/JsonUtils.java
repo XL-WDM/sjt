@@ -15,6 +15,10 @@ public class JsonUtils {
      * @return
      */
     public static String toJson(Object o) {
+        if (o == null) {
+            return "";
+        }
+
         GsonBuilder gsonBuilder = new GsonBuilder();
         gsonBuilder.setPrettyPrinting();
         Gson gson = gsonBuilder.create();
