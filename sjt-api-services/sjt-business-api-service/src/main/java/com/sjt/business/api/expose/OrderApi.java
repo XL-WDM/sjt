@@ -31,7 +31,7 @@ public interface OrderApi {
      * @param placeOrderParamDTO
      * @return
      */
-    @ApiOperation(value = "下单")
+    @ApiOperation(value = "下单", response = PlaceOrderDTO.class)
     @PostMapping("/place-order")
     ResultDTO<PlaceOrderDTO> placeOrder(@RequestBody PlaceOrderParamDTO placeOrderParamDTO);
 
@@ -51,7 +51,7 @@ public interface OrderApi {
      * @return
      */
     @ApiImplicitParam(name = "orderId", value = "订单编号", required = true)
-    @ApiOperation(value = "获取订单详情")
+    @ApiOperation(value = "获取订单详情", response = OrderDTO.class)
     @GetMapping("/detail")
     ResultDTO<OrderDTO> getOrderDetail(Long orderId);
 

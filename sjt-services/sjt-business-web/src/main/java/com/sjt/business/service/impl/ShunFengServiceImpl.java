@@ -50,7 +50,7 @@ public class ShunFengServiceImpl implements IShunFengService {
         Order order = orderMapper.selectOneByOrderNo(orderNo);
         CheckObjects.isNull(order, "订单不存在");
         CheckObjects.predicate(order.getUserId(),
-                id -> id.equals(WebUserContext.getContext().getId()),
+                id -> !id.equals(WebUserContext.getContext().getId()),
                 "订单不存在");
         CheckObjects.predicate(order.getStatus(), s -> {
             return DataBaseConstant.OrderStatus.TO_BE_PAID.getCode().equals(s) ||
