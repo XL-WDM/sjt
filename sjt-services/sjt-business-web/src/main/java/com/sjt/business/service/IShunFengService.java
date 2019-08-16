@@ -1,5 +1,6 @@
 package com.sjt.business.service;
 
+import com.sjt.business.api.dto.res.RouteInfoDTO;
 import com.sjt.business.api.dto.res.SfRouteDTO;
 
 import java.util.List;
@@ -15,7 +16,7 @@ public interface IShunFengService {
      * @param orderNo
      * @return
      */
-    List<SfRouteDTO> platformRouteQuery(String orderNo);
+    RouteInfoDTO platformRouteQuery(String orderNo);
 
     /**
      * 路由查询-通过运单号)

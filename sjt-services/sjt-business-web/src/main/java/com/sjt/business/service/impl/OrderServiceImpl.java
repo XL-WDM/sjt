@@ -385,9 +385,11 @@ public class OrderServiceImpl implements IOrderService {
             // 3-2.更新订单发货时间
             order.setConsignDate(LocalDateTime.now());
         }
-        // 3-3.订单 物流单号
+        // 3-3.物流名称
+        order.setShippingName("顺丰快递");
+        // 3-4.物流单号
         order.setShippingCode(orderEditParamDTO.getShippingCode());
-        // 3-4.订单更新时间
+        // 3-5.订单更新时间
         order.setUpdateDate(LocalDateTime.now());
         boolean rows = order.update(new EntityWrapper<Order>().eq("id", o.getId()));
     }

@@ -2,6 +2,7 @@ package com.sjt.business.service.impl;
 
 import com.sf.csim.express.service.CallExpressServiceTools;
 import com.sf.csim.express.service.VerifyCodeUtil;
+import com.sjt.business.api.dto.res.RouteInfoDTO;
 import com.sjt.business.api.dto.res.SfRouteDTO;
 import com.sjt.business.config.sf.SfLogistics;
 import com.sjt.business.constant.DataBaseConstant;
@@ -42,7 +43,7 @@ public class ShunFengServiceImpl implements IShunFengService {
     private OrderMapper orderMapper;
 
     @Override
-    public List<SfRouteDTO> platformRouteQuery(String orderNo) {
+    public RouteInfoDTO platformRouteQuery(String orderNo) {
 
         // 1.参数校验
         CheckObjects.isEmpty(orderNo, "订单号不能为空");
@@ -57,9 +58,13 @@ public class ShunFengServiceImpl implements IShunFengService {
                     DataBaseConstant.OrderStatus.CANCELLED.getCode().equals(s);
         }, "当前订单状态无法查询物流");
 
+        RouteInfoDTO routeInfoDTO = new RouteInfoDTO();
+        routeInfoDTO.setShippingName(order.getShippingName());
+        routeInfoDTO.setShippingCode(order.getShippingCode());
         List<SfRouteDTO> sfRouteDTOS = routeQuery(order.getShippingCode(), order.getContactPhone());
+        routeInfoDTO.setRoutes(sfRouteDTOS);
 
-        return sfRouteDTOS;
+        return routeInfoDTO;
     }
 
     @Override

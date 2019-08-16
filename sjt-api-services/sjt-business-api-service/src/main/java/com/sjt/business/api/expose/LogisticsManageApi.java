@@ -1,5 +1,6 @@
 package com.sjt.business.api.expose;
 
+import com.sjt.business.api.dto.res.RouteInfoDTO;
 import com.sjt.business.api.dto.res.SfRouteDTO;
 import com.sjt.common.base.result.ResultDTO;
 import io.swagger.annotations.Api;
@@ -20,22 +21,22 @@ import java.util.List;
 public interface LogisticsManageApi {
 
     /**
-     * 用户物流查询
+     * 物流查询(电商平台)
      * @param orderNo
      * @return
      */
     @ApiImplicitParam(value = "订单号", name = "orderNo")
     @ApiOperation(value = "物流查询(电商平台)", response = SfRouteDTO.class)
     @GetMapping("/query")
-    ResultDTO<List<SfRouteDTO>> queryLogistics(String orderNo);
+    ResultDTO<RouteInfoDTO> queryLogistics(String orderNo);
 
     /**
-     * 物流查询
+     * 物流查询(管理平台)
      * @param orderNo
      * @return
      */
     @ApiImplicitParam(value = "订单号", name = "orderNo")
-    @ApiOperation(value = "物流查询(后台)", response = SfRouteDTO.class)
+    @ApiOperation(value = "物流查询(管理平台)", response = SfRouteDTO.class)
     @GetMapping("/manage/query")
     ResultDTO<List<SfRouteDTO>> manageQueryLogistics(String orderNo);
 }

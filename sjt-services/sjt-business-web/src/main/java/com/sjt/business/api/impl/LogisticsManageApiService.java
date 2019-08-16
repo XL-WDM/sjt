@@ -1,5 +1,6 @@
 package com.sjt.business.api.impl;
 
+import com.sjt.business.api.dto.res.RouteInfoDTO;
 import com.sjt.business.api.dto.res.SfRouteDTO;
 import com.sjt.business.api.expose.LogisticsManageApi;
 import com.sjt.business.service.IShunFengService;
@@ -20,10 +21,10 @@ public class LogisticsManageApiService implements LogisticsManageApi {
     private IShunFengService iShunFengService;
 
     @Override
-    public ResultDTO<List<SfRouteDTO>> queryLogistics(String orderNo) {
-        List<SfRouteDTO> sfRouteDTOS = iShunFengService.platformRouteQuery(orderNo);
+    public ResultDTO<RouteInfoDTO> queryLogistics(String orderNo) {
+        RouteInfoDTO routeInfoDTO = iShunFengService.platformRouteQuery(orderNo);
 
-        return ResultDTO.data(sfRouteDTOS);
+        return ResultDTO.data(routeInfoDTO);
     }
 
     @Override
