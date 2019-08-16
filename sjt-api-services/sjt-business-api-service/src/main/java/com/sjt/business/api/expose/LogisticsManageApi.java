@@ -26,7 +26,7 @@ public interface LogisticsManageApi {
      * @return
      */
     @ApiImplicitParam(value = "订单号", name = "orderNo")
-    @ApiOperation(value = "物流查询(电商平台)", response = SfRouteDTO.class)
+    @ApiOperation(value = "物流查询(电商平台)", response = RouteInfoDTO.class)
     @GetMapping("/query")
     ResultDTO<RouteInfoDTO> queryLogistics(String orderNo);
 
