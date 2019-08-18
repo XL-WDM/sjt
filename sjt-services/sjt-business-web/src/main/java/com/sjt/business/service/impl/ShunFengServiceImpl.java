@@ -114,9 +114,9 @@ public class ShunFengServiceImpl implements IShunFengService {
         CheckObjects.predicate(sfResponse.isSuccess(), succ -> !succ,
                 "物流查询失败",
                 () -> {log.error("## 【顺丰路由查询】 发起失败 -> message: {}", JsonUtils.toJson(sfResponse.getError()));});
-        Optional<SfResponseBody> bodyOpt = Optional.of(sfResponse.getBody());
+        Optional<SfResponseBody> bodyOpt = Optional.ofNullable(sfResponse.getBody());
         SfRouteResponse routeResponse = bodyOpt.orElse(new SfResponseBody()).getRouteResponse();
-        Optional<SfRouteResponse> routeResOpt = Optional.of(routeResponse);
+        Optional<SfRouteResponse> routeResOpt = Optional.ofNullable(routeResponse);
         List<SfRoute> routes = routeResOpt.orElse(new SfRouteResponse()).getRoutes();
         if (routes == null || routes.isEmpty()) {
             return new ArrayList<SfRouteDTO>();

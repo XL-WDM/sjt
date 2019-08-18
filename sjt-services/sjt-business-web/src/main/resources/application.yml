@@ -41,5 +41,6 @@ sjt:
                     /error,
                     /auth/sign,
                     /portal/**,
+                    /mp3/**,
                     /**/open-api/**,
                     /**/open-page/**

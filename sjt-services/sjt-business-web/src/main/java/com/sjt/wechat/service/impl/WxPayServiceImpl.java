@@ -17,6 +17,7 @@ import com.sjt.wechat.utils.PaySignatureUtils;
 import com.sjt.wechat.vo.req.pay.WxPayUnifiedRequestVO;
 import com.sjt.wechat.vo.res.pay.WxPayNotifyResponseVO;
 import com.sjt.wechat.vo.res.pay.WxPayUnifiedResponseVO;
+import com.sjt.wechat.websocket.OrderPayNotifyWebSocket;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -65,6 +66,9 @@ public class WxPayServiceImpl implements IWxPayService {
 
     @Autowired
     private SnowflakeIdUtils snowflakeIdUtils;
+
+    @Autowired
+    private OrderPayNotifyWebSocket orderPayNotifyWebSocket;
 
     private final String PAY_ORDER_BODY = "山尖田-订单编号";
 
@@ -275,5 +279,8 @@ public class WxPayServiceImpl implements IWxPayService {
                 }
             }
         }
+
+        // 10.通知商户平台有新的订单
+        orderPayNotifyWebSocket.sendMessage(orderNo);
     }
 }

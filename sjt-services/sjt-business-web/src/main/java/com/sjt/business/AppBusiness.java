@@ -2,6 +2,7 @@ package com.sjt.business;
 
 import com.sjt.common.utils.SnowflakeIdUtils;
 import com.sjt.config.mybatis.plus.annotation.EnableMybatisPlusOptimization;
+import com.sjt.config.websocket.annotation.EnableWebSocket;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -20,6 +21,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @EnableSwagger2
 @EnableMybatisPlusOptimization
 @EnableScheduling
+@EnableWebSocket
 public class AppBusiness {
     public static void main(String[] args) {
         SpringApplication.run(AppBusiness.class, args);
