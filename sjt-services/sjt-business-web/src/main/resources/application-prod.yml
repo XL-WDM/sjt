@@ -6,7 +6,7 @@ spring:
     driver-class-name: com.mysql.jdbc.Driver
     username: root
     password: uAiqwVwjJ8-i
-    url: jdbc:mysql://172.16.131.42:3306/sjt?characterEncoding=utf8&useSSL=true&serverTimezone=Hongkong
+    url: jdbc:mysql://172.16.131.42:3306/sjt?characterEncoding=utf8&useSSL=true&serverTimezone=Asia/Shanghai
 # logback
 logging:
   level:
