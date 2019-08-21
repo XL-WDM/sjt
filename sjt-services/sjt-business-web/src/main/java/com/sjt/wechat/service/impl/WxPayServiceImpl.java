@@ -17,7 +17,6 @@ import com.sjt.wechat.utils.PaySignatureUtils;
 import com.sjt.wechat.vo.req.pay.WxPayUnifiedRequestVO;
 import com.sjt.wechat.vo.res.pay.WxPayNotifyResponseVO;
 import com.sjt.wechat.vo.res.pay.WxPayUnifiedResponseVO;
-import com.sjt.wechat.websocket.AbstractUserWebSocket;
 import com.sjt.wechat.websocket.OrderPayNotifyWebSocket;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -283,7 +282,7 @@ public class WxPayServiceImpl implements IWxPayService {
 
         // 10.通知商户平台有新的订单
         try {
-            orderPayNotifyWebSocket.send(orderNo);
+            orderPayNotifyWebSocket.sendMessage(orderNo);
         } catch (Exception e) {
             log.error("## 【微信支付结果通知】 通知商户失败", e);
         }
