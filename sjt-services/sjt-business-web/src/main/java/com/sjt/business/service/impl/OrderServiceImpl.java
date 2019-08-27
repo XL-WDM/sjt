@@ -185,6 +185,7 @@ public class OrderServiceImpl implements IOrderService {
 
         // 2.查询
         Order order = orderMapper.selectById(orderId);
+        CheckObjects.isNull(order, "订单不存在");
 
         // 3.订单是否属于登陆用户
         CheckObjects.predicate(order.getUserId(),
@@ -244,6 +245,7 @@ public class OrderServiceImpl implements IOrderService {
 
         // 2.查询
         Order o = orderMapper.selectById(orderId);
+        CheckObjects.isNull(o, "订单不存在");
 
         // 3.订单是否属于登陆用户
         CheckObjects.predicate(o.getUserId(),
