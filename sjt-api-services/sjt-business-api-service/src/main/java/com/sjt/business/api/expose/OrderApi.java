@@ -35,6 +35,25 @@ public interface OrderApi {
     @PostMapping("/place-order")
     ResultDTO<PlaceOrderDTO> placeOrder(@RequestBody PlaceOrderParamDTO placeOrderParamDTO);
 
+    /**
+     * 取消订单
+     * @param orderId
+     * @return
+     */
+    @ApiImplicitParam(value = "订单id", name = "orderId")
+    @ApiOperation(value = "取消订单")
+    @PostMapping("/cancel-order")
+    ResultDTO cancelOrder(Long orderId);
+
+    /**
+     * 确认收货
+     * @param orderId
+     * @return
+     */
+    @ApiImplicitParam(value = "订单id", name = "orderId")
+    @ApiOperation(value = "确认收货")
+    @PostMapping("/confirm-order")
+    ResultDTO confirmOrder(Long orderId);
 
     /**
      * 订单查询

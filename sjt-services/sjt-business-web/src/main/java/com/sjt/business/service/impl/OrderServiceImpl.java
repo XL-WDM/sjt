@@ -179,6 +179,91 @@ public class OrderServiceImpl implements IOrderService {
     }
 
     @Override
+    public void cancelOrder(Long orderId) {
+        // 1.参数校验
+        CheckObjects.isNull(orderId, "订单编号不能为空");
+
+        // 2.查询
+        Order order = orderMapper.selectById(orderId);
+
+        // 3.订单是否属于登陆用户
+        CheckObjects.predicate(order.getUserId(),
+                uid -> !uid.equals(WebUserContext.getContext().getId()),
+                "订单不存在");
+
+        // 4.订单是否为待支付状态
+        CheckObjects.predicate(order.getStatus(),
+                s -> !DataBaseConstant.OrderStatus.TO_BE_PAID.getCode().equals(s),
+                "无法取消当前订单");
+
+        // 5.取消订单
+        fallbackOrder(orderId);
+    }
+
+    /**
+     * 订单 失效\取消 处理
+     * @param orderId
+     */
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public void fallbackOrder(Long orderId) {
+        // 1.校验
+        CheckObjects.isNull(orderId, "订单编号不能为空");
+
+        // 2.更新订单状态
+        Order order = new Order();
+        order.setStatus(DataBaseConstant.OrderStatus.CANCELLED.getCode());
+        order.setUpdateDate(LocalDateTime.now());
+        order.setCloseDate(LocalDateTime.now());
+        order.update(new EntityWrapper().eq("id", orderId));
+
+        // 3.查询订单详情
+        List<OrderItem> orderItems = orderItemMappler.selectList(new EntityWrapper<OrderItem>()
+                .eq("order_id", orderId));
+
+        // 4.回退预减库存
+        for (OrderItem orderItem : orderItems) {
+            ProductSpec productSpec = productSpecMapper.selectById(orderItem.getProductSpecId());
+            int version = productSpec.getVersion();
+
+            // 更新库存
+            ProductSpec ps = new ProductSpec();
+            ps.setOrderStockNum(productSpec.getOrderStockNum() - orderItem.getNum());
+            ps.setVersion(version + 1);
+            boolean update = ps.update(new EntityWrapper()
+                    .eq("id", productSpec.getId())
+                    .eq("version", version));
+            CheckObjects.predicate(update, u -> !u, "订单处理繁忙");
+        }
+    }
+
+    @Override
+    public void confirmOrder(Long orderId) {
+        // 1.参数校验
+        CheckObjects.isNull(orderId, "订单编号不能为空");
+
+        // 2.查询
+        Order o = orderMapper.selectById(orderId);
+
+        // 3.订单是否属于登陆用户
+        CheckObjects.predicate(o.getUserId(),
+                uid -> !uid.equals(WebUserContext.getContext().getId()),
+                "订单不存在");
+
+        // 4.订单是否为待收货状态
+        CheckObjects.predicate(o.getStatus(),
+                s -> !DataBaseConstant.OrderStatus.TO_BE_RECEIVED.getCode().equals(s),
+                "当前订单无法确认收货");
+
+        // 5.更新订单状态
+        Order order = new Order();
+        order.setStatus(DataBaseConstant.OrderStatus.COMPLETED.getCode());
+        order.setUpdateDate(LocalDateTime.now());
+        order.setEndDate(LocalDateTime.now());
+        order.update(new EntityWrapper().eq("id", orderId));
+    }
+
+    @Override
     public Integer getOrderCountByPage(OrderParamDTO orderParamDTO) {
         // 1.参数校验
         CheckObjects.isNull(orderParamDTO, ResultConstant.PARAMETERS_CANNOT_BE_NULL);

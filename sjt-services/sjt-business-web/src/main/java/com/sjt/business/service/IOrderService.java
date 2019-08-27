@@ -24,6 +24,24 @@ public interface IOrderService {
     PlaceOrderDTO placeOrder(PlaceOrderParamDTO placeOrderParamDTO);
 
     /**
+     * 取消订单
+     * @param orderId
+     */
+    void cancelOrder(Long orderId);
+
+    /**
+     * 订单 失效\取消 处理
+     * @param orderId
+     */
+    void fallbackOrder(Long orderId);
+
+    /**
+     * 确认收货
+     * @param orderId
+     */
+    void confirmOrder(Long orderId);
+
+    /**
      * 获取订单总数
      * @param orderParamDTO
      * @return

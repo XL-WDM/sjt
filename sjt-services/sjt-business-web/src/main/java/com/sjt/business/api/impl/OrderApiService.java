@@ -33,6 +33,20 @@ public class OrderApiService implements OrderApi {
     }
 
     @Override
+    public ResultDTO cancelOrder(Long orderId) {
+        iOrderService.cancelOrder(orderId);
+
+        return ResultDTO.success();
+    }
+
+    @Override
+    public ResultDTO confirmOrder(Long orderId) {
+        iOrderService.confirmOrder(orderId);
+
+        return ResultDTO.success();
+    }
+
+    @Override
     public ResultDTO<List<OrderDTO>> getOrder(OrderParamDTO orderParamDTO) {
         List<OrderDTO> rows = iOrderService.getOrderListByPage(orderParamDTO);
         Integer total = iOrderService.getOrderCountByPage(orderParamDTO);
