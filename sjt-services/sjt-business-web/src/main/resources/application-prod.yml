@@ -5,8 +5,8 @@ spring:
   datasource:
     driver-class-name: com.mysql.jdbc.Driver
     username: root
-    password: uAiqwVwjJ8-i
-    url: jdbc:mysql://172.16.131.42:3306/sjt?characterEncoding=utf8&useSSL=true&serverTimezone=Asia/Shanghai
+    password: 123.com
+    url: jdbc:mysql://192.168.8.9:3306/sjt?characterEncoding=utf8&useSSL=true&serverTimezone=Asia/Shanghai
 # logback
 logging:
   level:
@@ -29,5 +29,5 @@ sjt:
     applet-appsecret: e13e84260a7915c690525f671c00ab72
     mch-id: 1543508991
     mch-secret: ZOWWRiOSxly8gtgZE9aNWFrwp8taV4wP
-    notifyUrl: http://www.smallbug.top/sjt/wx/pay/open-api/notify
+    notifyUrl: https://www.lcpmkt.com/sjt/wx/pay/open-api/notify
 
