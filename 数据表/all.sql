@@ -30,7 +30,7 @@ create table t_user
 	constraint t_user_identity_card_uindex
 		unique (identity_card)
 )
-comment '用户信息表' engine=InnoDB
+comment '用户信息表' engine=InnoDB CHARSET=utf-8
 ;
 
 
@@ -51,7 +51,7 @@ create table t_user_oauths
 	constraint t_user_oauths_t_user_id_fk
 		foreign key (user_id) references t_user (id)
 )
-comment '用户授权登录表' engine=InnoDB
+comment '用户授权登录表' engine=InnoDB CHARSET=utf-8
 ;
 
 create index t_user_oauths_t_user_id_fk
@@ -72,7 +72,7 @@ create table t_user_sign_log
 	constraint t_user_sign_log_token_uindex
 		unique (token)
 )
-comment '用户登录日志表' engine=InnoDB
+comment '用户登录日志表' engine=InnoDB CHARSET=utf-8
 ;
 
 
@@ -92,7 +92,7 @@ create table t_wx_oauth_access_token
 	constraint t_wx_oauth_access_token_access_token_uindex
 		unique (access_token)
 )
-comment '网页授权记录表' engine=InnoDB
+comment '网页授权记录表' engine=InnoDB CHARSET=utf-8
 ;
 
 
@@ -114,7 +114,7 @@ create table t_wx_snsapi_userinfo
 	constraint t_wx_snsapi_userinfo_openid_uindex
 		unique (openid)
 )
-comment '微信用户信息' engine=InnoDB
+comment '微信用户信息' engine=InnoDB CHARSET=utf-8
 ;
 
 
@@ -132,7 +132,7 @@ create table t_notes
 	create_date datetime default CURRENT_TIMESTAMP not null comment '创建时间',
 	update_date datetime default CURRENT_TIMESTAMP not null comment '更新时间'
 )
-comment '山田日记' engine=InnoDB
+comment '山田日记' engine=InnoDB CHARSET=utf-8
 ;
 
 
@@ -152,7 +152,7 @@ create table t_banner
 	create_date datetime default CURRENT_TIMESTAMP not null comment '创建时间',
 	update_date datetime default CURRENT_TIMESTAMP not null comment '更新时间'
 )
-comment 'banner配置表' engine=InnoDB
+comment 'banner配置表' engine=InnoDB CHARSET=utf-8
 ;
 
 INSERT INTO sjt.t_banner (id, banner_name, banner_type, img_url, img_version, url, url_type, status, sort_num, create_date, update_date) VALUES (1, '轮播图1', '1', 'http://www.smallbug.top/images/banner/banner_top_01.png', 1563160127343, 'https://www.baidu.com/', '2', '1', 1, '2019-07-15 11:11:12', '2019-07-15 11:11:12');
@@ -211,7 +211,7 @@ create table t_product_category
 	constraint t_product_category_t_product_category_id_fk
 		foreign key (pid) references t_product_category (id)
 )
-comment '商品分类表' engine=InnoDB
+comment '商品分类表' engine=InnoDB CHARSET=utf-8
 ;
 
 create index t_product_category_t_product_category_id_fk
@@ -244,7 +244,7 @@ create table t_supplier_info
 	create_date datetime default CURRENT_TIMESTAMP not null comment '创建时间',
 	update_date datetime default CURRENT_TIMESTAMP not null comment '更新时间'
 )
-comment '供应商信息表' engine=InnoDB
+comment '供应商信息表' engine=InnoDB CHARSET=utf-8
 ;
 
 INSERT INTO sjt.t_supplier_info (id, supplier_name, supplier_type, link_man, phone, bank_name, bank_account, address, status, create_date, update_date) VALUES (1, '山田尖', '1', '山田尖', '15555555555', '交通银行', '44444444444444', '上海', '1', '2019-07-11 17:21:30', '2019-07-11 17:21:30');
@@ -280,7 +280,7 @@ create table t_product_info
 	constraint t_product_info_t_product_category_id_fk_3
 		foreign key (three_level_category) references t_product_category (id)
 )
-comment '商品信息表' engine=InnoDB
+comment '商品信息表' engine=InnoDB CHARSET=utf-8
 ;
 
 create index t_product_info_t_product_category_id_fk
@@ -326,7 +326,7 @@ create table t_product_pic
 	constraint t_product_pic_t_product_info_id_fk
 		foreign key (product_id) references t_product_info (id)
 )
-comment '商品图片表' engine=InnoDB
+comment '商品图片表' engine=InnoDB CHARSET=utf-8
 ;
 
 create index t_product_pic_t_product_info_id_fk
@@ -426,7 +426,7 @@ create table t_product_properties
 	constraint t_product_properties_t_product_info_id_fk
 		foreign key (product_id) references t_product_info (id)
 )
-comment '商品属性表' engine=InnoDB
+comment '商品属性表' engine=InnoDB CHARSET=utf-8
 ;
 
 create index t_product_properties_t_product_info_id_fk
@@ -502,7 +502,7 @@ create table t_product_stock
 	constraint t_product_stock_t_product_info_id_fk
 		foreign key (product_id) references t_product_info (id)
 )
-comment '商品库存表' engine=InnoDB
+comment '商品库存表' engine=InnoDB CHARSET=utf-8
 ;
 
 create index t_product_stock_t_product_info_id_fk
@@ -525,7 +525,7 @@ create table t_product_spec
 	constraint t_product_multi_spec_t_product_info_id_fk
 		foreign key (product_id) references t_product_info (id)
 )
-comment '商品规格信息' engine=InnoDB
+comment '商品规格信息' engine=InnoDB CHARSET=utf-8
 ;
 
 create index t_product_multi_spec_t_product_info_id_fk
@@ -589,7 +589,7 @@ create table t_order
 	constraint t_order_t_user_id_fk
 		foreign key (user_id) references t_user (id)
 )
-comment '订单信息表' engine=InnoDB
+comment '订单信息表' engine=InnoDB CHARSET=utf-8
 ;
 
 create index t_order_t_user_id_fk
@@ -617,7 +617,7 @@ create table t_order_item
 	constraint t_order_item_t_product_spec_id_fk
 		foreign key (product_spec_id) references t_product_spec (id)
 )
-comment '订单详情表' engine=InnoDB
+comment '订单详情表' engine=InnoDB CHARSET=utf-8
 ;
 
 create index t_order_item_t_order_id_fk
@@ -654,7 +654,7 @@ create table t_payment_flow
 	constraint t_payment_flow_t_user_id_fk
 		foreign key (user_id) references t_user (id)
 )
-comment '支付流水表' engine=InnoDB
+comment '支付流水表' engine=InnoDB CHARSET=utf-8
 ;
 
 create index t_payment_flow_t_order_order_no_fk
@@ -677,7 +677,7 @@ create table t_product_detail_desc
 	constraint t_product_detail_desc_t_product_info_id_fk
 		foreign key (product_id) references t_product_info (id)
 )
-comment '商品详情描述内容' engine=InnoDB
+comment '商品详情描述内容' engine=InnoDB CHARSET=utf-8
 ;
 
 create index t_product_detail_desc_t_product_info_id_fk
