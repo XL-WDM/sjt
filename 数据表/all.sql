@@ -187,7 +187,7 @@ create table t_address
 	constraint t_address_t_user_id_fk
 		foreign key (user_id) references t_user (id)
 )
-comment '收货地址表' engine=InnoDB
+comment '收货地址表' engine=InnoDB CHARSET=utf-8
 ;
 
 create index t_address_t_user_id_fk
