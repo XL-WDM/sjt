@@ -1,4 +1,3 @@
-drop table t_user;
 
 -- ########################### 用户信息表 ###########################
 create table t_user
@@ -32,6 +31,7 @@ create table t_user
 )
 comment '用户信息表' engine=InnoDB CHARSET=utf8
 ;
+INSERT INTO sjt.t_user (id, username, email, phone, password, face_url, nickname, sex, birtrday, identity_card_type, identity_card, user_point, member_level, status, register_date, update_date, version) VALUES (2, 'test', null, null, '49DF90E9A008FB3B3C21018A33D20103', null, null, '0', null, null, null, 0, '0', '1', '2019-07-26 13:57:45', '2019-07-26 13:57:44', 0);
 
 
 
